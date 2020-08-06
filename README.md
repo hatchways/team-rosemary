@@ -3,5 +3,3 @@
 Members:
 
 -   George Wan
-
--   Varun Rampal
