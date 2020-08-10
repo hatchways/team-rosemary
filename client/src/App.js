@@ -1,20 +1,56 @@
 import React from "react";
-import { MuiThemeProvider } from "@material-ui/core";
-import { BrowserRouter, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 
-import { theme } from "./themes/theme";
-import LandingPage from "./pages/Landing";
 
-import "./App.css";
+import { Login } from './pages/Login';
+import {Dashboard} from './pages/Dashboard';
+
+
+// One single <Login /> without router, BtnTop/BtnLogin changes App.state/context, App.state changes Login.props, Login.props changes the page functions
+
+/* Login page behaviors
+Login: {
+  btnTop: {
+    text: 'Create',
+    onclick: redirect to <Signup />
+  },
+  btnLogin: {
+    text: 'Log In',
+    onclick: {
+      res: redirect to <Dashboard />,
+      rej: information not matching database
+    }
+  }
+}
+Signup: {
+  btnTop: {
+    text: 'Login',
+    onclick: redirect to <Login />
+  },
+  btnLogin: {
+    text: 'Create',
+    onclick: {
+      res: redirect to <Login />,
+      rej: account existed / invalid password
+    }
+  }
+}
+*/
 
 function App() {
   return (
-    <MuiThemeProvider theme={theme}>
-      <BrowserRouter>
-        <Route path="/" component={LandingPage} />
-      </BrowserRouter>
-    </MuiThemeProvider>
-  );
+    <>
+      <Login page="login" />
+      <Login page="signup" />
+      <Dashboard />
+    </>
+
+  )
 }
 
 export default App;
