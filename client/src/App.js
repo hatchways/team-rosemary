@@ -6,9 +6,10 @@ import {
   Link
 } from "react-router-dom";
 
+import { Context } from './utils/context';
 
 import { Login } from './pages/Login';
-import {Dashboard} from './pages/Dashboard';
+import { Dashboard } from './pages/Dashboard';
 
 
 // One single <Login /> without router, BtnTop/BtnLogin changes App.state/context, App.state changes Login.props, Login.props changes the page functions
@@ -42,15 +43,22 @@ Signup: {
 }
 */
 
-function App() {
-  return (
-    <>
-      <Login page="login" />
-      <Login page="signup" />
-      <Dashboard />
-    </>
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
 
-  )
+    }
+  }
+  render() {
+    return (
+      <Context.Provider>
+        <Dashboard />
+        <Login page="login" />
+        <Login page="signup" />
+      </Context.Provider>
+    )
+  }
 }
 
 export default App;

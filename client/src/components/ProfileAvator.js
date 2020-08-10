@@ -1,8 +1,7 @@
 import React from 'react';
 
-import { Box } from "@material-ui/core";
+import { Avatar, Box } from "@material-ui/core";
 
-import Avatar from '@material-ui/core/Avatar';
 
 import User from '../assets/user.png';
 
@@ -13,7 +12,8 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    margin: '0 2rem'
+    margin: '0 2rem',
+    color: '#000'
   },
   'avator': {
     margin: '0 1rem'

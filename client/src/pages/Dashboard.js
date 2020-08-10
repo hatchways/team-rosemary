@@ -1,7 +1,6 @@
 import React from "react";
 
-import { LoginUploadBtn } from '../components/LoginUploadBtn';
-import {ProfileAvator} from '../components/ProfileAvator';
+import { Header } from '../components/Header';
 
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -12,21 +11,15 @@ const useStyles = makeStyles({
     // alignItems:'center',
     width: '100%',
     height: '100vh'
-  },
-  'header': {
-    display: 'flex',
-    justifyContent: 'flex-end'
   }
 });
 
+// Header (Nav) and Menu reusable
 export function Dashboard(props) {
   const classes = useStyles();
   return (
     <div className={classes.container}>
-      <header className={classes.header}>
-        <LoginUploadBtn>Upload Receipt</LoginUploadBtn>
-        <ProfileAvator />
-      </header>
+      <Header />
     </div>
   )
 }
