@@ -9,6 +9,6 @@ const Picture = mongoose.model('Picture', new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'receipt',
     },
-});
+}));
 
 module.exports.Picture = Picture;
