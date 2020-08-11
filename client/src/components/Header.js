@@ -15,6 +15,8 @@ const useStyles = makeStyles({
   'header': {
     display: 'flex',
     // alignItems: 'center',
+    justifyContent: 'flex-end',
+    height: '5rem',
     backgroundColor: 'white',
     color: '#000'
   },
@@ -32,7 +34,6 @@ export function Header(props) {
     <AppBar component="header">
       <Toolbar className={classes.header}>
         <Menu />
-        <h2 className={classes.title}>Dashboard</h2>
         <LoginUploadBtn>Upload Receipt</LoginUploadBtn>
         <ProfileAvator />
       </Toolbar>
