@@ -6,8 +6,10 @@ const {
 
 const express = require('express');
 const router = express.Router();
+const checkAuth = require('../middleware/check-auth');
 
 const usersController = require('../controllers/users-controller');
+
 
 router.post(
   '/signup',
@@ -22,5 +24,7 @@ router.post(
   validate,
   usersController.login
 );
+
+//router.use(checkAuth);
 
 module.exports = router;
