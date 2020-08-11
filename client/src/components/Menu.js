@@ -1,19 +1,10 @@
 import React, { useState } from 'react';
 
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
 
 import { Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Paper } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
-import { Dashboard } from '../pages/Dashboard';
-import { Reports } from '../pages/Reports';
-import { Receipts } from '../pages/Receipts';
 
 import { Logo } from './Logo';
 

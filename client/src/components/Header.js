@@ -1,7 +1,5 @@
 import React, { useContext } from "react";
 
-import { Context } from '../utils/context';
-
 import { AppBar, IconButton, Toolbar } from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu';
 
