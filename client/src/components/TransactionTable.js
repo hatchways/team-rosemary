@@ -22,10 +22,11 @@ const useStyles = makeStyles({
   }
 })
 
+// May merge all Tables into one Template
 export function TransactionTable(props) {
   const data = [
-    { name: 'App Store', expense: 12, date: 'Nov 11, 2019', cat: 'Services' },
-    { name: 'Starbucks', expense: 20, date: 'Nov 10, 2019', cat: 'Food and Drinks' },
+    { avatar: '?', name: 'App Store', expense: 12, date: 'Nov 11, 2019', cat: 'Services' },
+    { avatar: '?', name: 'Starbucks', expense: 20, date: 'Nov 10, 2019', cat: 'Food and Drinks' },
   ];
 
   const classes = useStyles();
@@ -37,7 +38,7 @@ export function TransactionTable(props) {
           {data.map((cat, index) => (
             <TableRow key={index + ' ' + cat.name}>
               <TableCell component="th" scope="row" className={classes["th-container"]}>
-                <Avatar className={classes.avator}>?</Avatar>
+                <Avatar className={classes.avator}>{cat.avatar}</Avatar>
                 {cat.name}
               </TableCell>
               <TableCell>{`-$${cat.expense.toLocaleString()}`}</TableCell>

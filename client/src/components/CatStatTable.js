@@ -22,11 +22,12 @@ const useStyles = makeStyles({
   }
 })
 
+// May merge all Tables into one Template
 export function CatStatTable(props) {
   const data = [
-    { cat: 'Food and Drinks', expense: 348 },
-    { cat: 'Travel', expense: 1529 },
-    { cat: 'Food and Drinks', expense: 291 },
+    { avatar: '?', cat: 'Food and Drinks', expense: 348 },
+    { avatar: '?', cat: 'Travel', expense: 1529 },
+    { avatar: '?', cat: 'Food and Drinks', expense: 291 },
   ];
 
   const classes = useStyles();
@@ -38,7 +39,7 @@ export function CatStatTable(props) {
           {data.map((cat, index) => (
             <TableRow key={index + ' ' + cat.cat}>
               <TableCell component="th" scope="row" className={classes["th-container"]}>
-                <Avatar className={classes.avator}>?</Avatar>
+                <Avatar className={classes.avator}>{cat.avatar}</Avatar>
                 {cat.cat}
               </TableCell>
               <TableCell>{`-$${cat.expense.toLocaleString()}`}</TableCell>

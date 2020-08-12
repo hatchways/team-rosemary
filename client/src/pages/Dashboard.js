@@ -80,32 +80,6 @@ export function Dashboard(props) {
           </Panel>
         </Grid>
       </Grid>
-      {/* <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <h2 className={classes.title}>Dashboard</h2>
-        </Grid>
-        <Grid item xs={6} lg={4}>
-          <Panel title="TOTAL EXPENSES">
-            <FormControl className={classes.formControl}>
-              <Select value={month} onChange={handleChange}>
-                <MenuItem value='November'>November</MenuItem>
-              </Select>
-            </FormControl>
-            <Chart />
-          </Panel>
-        </Grid>
-        <Grid item xs={6} lg={4}>
-          <Panel title="TOP CATEGORIES">
-            <CatStatTable />
-          </Panel>
-        </Grid>
-        <Grid item xs={12} lg={8}>
-          <h3>Recent Transactions</h3>
-          <Panel>
-            <TransactionTable />
-          </Panel>
-        </Grid>
-      </Grid> */}
     </div>
   )
 }
