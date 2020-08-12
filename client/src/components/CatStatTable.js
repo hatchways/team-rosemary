@@ -11,11 +11,11 @@ import TableRow from '@material-ui/core/TableRow';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
-  'th-container': {
+  container: {
     display: 'flex',
     alignItems: 'center',
   },
-  'avator': {
+  avator: {
     marginRight: '1rem',
     width: '1.2rem',
     height: '1.2rem'
@@ -38,7 +38,7 @@ export function CatStatTable(props) {
         <TableBody>
           {data.map((cat, index) => (
             <TableRow key={index + ' ' + cat.cat}>
-              <TableCell component="th" scope="row" className={classes["th-container"]}>
+              <TableCell component="th" scope="row" className={classes.container}>
                 <Avatar className={classes.avator}>{cat.avatar}</Avatar>
                 {cat.cat}
               </TableCell>

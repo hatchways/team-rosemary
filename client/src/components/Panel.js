@@ -5,14 +5,13 @@ import Paper from '@material-ui/core/paper';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
-  'panel-container': {
+  container: {
     position: 'relative',
-    padding: '1.5rem',
-    // minWidth: '20rem',
-    height: '12rem',
+    padding: '1rem',
+    height: '16rem',
     borderRadius: '1rem'
   },
-  'panel-title': {
+  title: {
     fontSize: '0.8rem',
     color: 'green'
   }
@@ -21,8 +20,8 @@ const useStyles = makeStyles({
 export function Panel(props) {
   const classes = useStyles();
   return (
-    <Paper className={classes["panel-container"]}>
-      {props.title && <h4 className={classes["panel-title"]}>{props.title}</h4>}
+    <Paper className={classes.container}>
+      {props.title && <h4 className={classes.title}>{props.title}</h4>}
       {props.children}
     </Paper>
   )

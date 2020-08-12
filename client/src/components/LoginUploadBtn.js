@@ -7,7 +7,7 @@ const useStyles = makeStyles({
   btnLoginUpload: {
     width: '9rem',
     height: '3rem',
-    color: '#00a152',
+    color: '#00a152', // #38cc89
     borderColor: '#00a152',
     textTransform: 'none'
   }
