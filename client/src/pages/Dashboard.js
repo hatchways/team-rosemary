@@ -17,6 +17,17 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex"
   },
+  toolbar: {
+    [theme.breakpoints.up("sm")]: {
+      ...theme.mixins.toolbar,
+      backgroundColor: theme.palette.primary.main,
+      opacity: 0.4,
+      color: theme.palette.primary.contrastText
+    }
+  },
+  toolbarMain: {
+    backgroundColor: "initial"
+  },
   main: {
     flexGrow: 1,
     minHeight: '100vh',
