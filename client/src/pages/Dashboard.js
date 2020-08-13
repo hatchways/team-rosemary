@@ -13,7 +13,7 @@ import { Menu } from '../components/Menu';
 
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     display: "flex"
   },
@@ -32,7 +32,11 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     minHeight: '100vh',
     padding: theme.spacing(3),
-    overflowX: 'hidden'
+    overflowX: 'hidden',
+    [theme.breakpoints.down("xs")]: {
+      marginTop: '3rem',
+      padding: theme.spacing(1)
+    }
   },
   formControl: {
     position: 'absolute',
@@ -56,12 +60,12 @@ export function Dashboard(props) {
       <main className={classes.main}>
         <div className={`${classes.utilbar} ${classes.utilbarMain}`} />
         <Grid container spacing={3}>
-          <Grid item xs={12}>
+          <Grid item xs={12} lg={10}>
             <h2>Dashboard</h2>
           </Grid>
         </Grid>
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={9} md={6}>
+          <Grid item xs={12} sm={9} md={6} lg={5}>
             <Panel title="TOTAL EXPENSES">
               <FormControl className={classes.formControl}>
                 <Select value={month} onChange={handleChange}>
@@ -71,19 +75,19 @@ export function Dashboard(props) {
               <Chart />
             </Panel>
           </Grid>
-          <Grid item xs={12} sm={9} md={6}>
+          <Grid item xs={12} sm={9} md={6} lg={5}>
             <Panel title="TOP CATEGORIES">
               <CatStatTable />
             </Panel>
           </Grid>
         </Grid>
         <Grid container spacing={3}>
-          <Grid item xs={12}>
+          <Grid item xs={12} lg={10}>
             <h3>Recent Transactions</h3>
           </Grid>
         </Grid>
         <Grid container spacing={3}>
-          <Grid item xs={12}>
+          <Grid item xs={12} lg={10}>
             <Panel>
               <TransactionTable />
             </Panel>
