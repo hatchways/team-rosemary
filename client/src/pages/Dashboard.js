@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex"
   },
-  toolbar: {
+  utilbar: {
     [theme.breakpoints.up("sm")]: {
       ...theme.mixins.toolbar,
       backgroundColor: theme.palette.primary.main,
@@ -25,13 +25,14 @@ const useStyles = makeStyles((theme) => ({
       color: theme.palette.primary.contrastText
     }
   },
-  toolbarMain: {
+  utilbarMain: {
     backgroundColor: "initial"
   },
   main: {
     flexGrow: 1,
     minHeight: '100vh',
-    padding: theme.spacing(3)
+    padding: theme.spacing(3),
+    overflowX: 'hidden'
   },
   formControl: {
     position: 'absolute',
@@ -53,14 +54,14 @@ export function Dashboard(props) {
       <CssBaseline />
       <Menu />
       <main className={classes.main}>
-        <div className={`${classes.toolbar} ${classes.toolbarMain}`} />
+        <div className={`${classes.utilbar} ${classes.utilbarMain}`} />
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <h2>Dashboard</h2>
           </Grid>
         </Grid>
         <Grid container spacing={3}>
-          <Grid item xs={6} lg={4}>
+          <Grid item xs={12} sm={9} md={6}>
             <Panel title="TOTAL EXPENSES">
               <FormControl className={classes.formControl}>
                 <Select value={month} onChange={handleChange}>
@@ -70,7 +71,7 @@ export function Dashboard(props) {
               <Chart />
             </Panel>
           </Grid>
-          <Grid item xs={6} lg={4}>
+          <Grid item xs={12} sm={9} md={6}>
             <Panel title="TOP CATEGORIES">
               <CatStatTable />
             </Panel>
@@ -82,7 +83,7 @@ export function Dashboard(props) {
           </Grid>
         </Grid>
         <Grid container spacing={3}>
-          <Grid item xs={12} lg={8}>
+          <Grid item xs={12}>
             <Panel>
               <TransactionTable />
             </Panel>

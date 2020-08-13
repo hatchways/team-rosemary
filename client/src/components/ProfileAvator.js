@@ -7,25 +7,32 @@ import User from '../assets/user.png';
 
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     margin: '0 2rem',
-    color: '#000'
+    [theme.breakpoints.down("xs")]: {
+      margin: 0
+    }
   },
   avator: {
-    margin: '0 1rem'
+    marginRight: '1rem'
+  },
+  text: {
+    [theme.breakpoints.down("xs")]: {
+      display: 'none'
+    }
   }
-})
+}))
 
 export function ProfileAvator(props) {
   const classes = useStyles();
   return (
     <div className={classes.container}>
       <Avatar alt="User Avator" src={User} className={classes.avator} />
-      <div>Profile</div>
+      <div className={classes.text}>Profile</div>
     </div>
   )
 }

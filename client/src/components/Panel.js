@@ -8,6 +8,7 @@ const useStyles = makeStyles({
   container: {
     position: 'relative',
     padding: '1rem',
+    minWidth: '20rem',
     height: '16rem',
     borderRadius: '1rem'
   },

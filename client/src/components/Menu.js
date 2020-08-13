@@ -12,6 +12,12 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 
+import { LoginUploadBtn } from '../components/LoginUploadBtn';
+import { ProfileAvator } from '../components/ProfileAvator';
+import { Logo } from '../components/Logo';
+
+import logo from '../assets/logo.png';
+
 import { makeStyles } from "@material-ui/core/styles";
 
 const drawerWidth = "15rem";
@@ -32,15 +38,27 @@ const useStyles = makeStyles(theme => ({
       marginLeft: drawerWidth
     }
   },
+  toolbar: {
+    display: 'flex',
+    // alignItems: 'center',
+    justifyContent: 'flex-end',
+    // height: '5rem',
+    backgroundColor: '#fafafa',
+    color: 'initial'
+  },
   // menuButton will be the logo
   menuButton: {
-    marginRight: theme.spacing(2),
+    width: '2rem',
+    marginLeft: '0.8rem',
+    marginRight: 'auto',
+    borderRadius: '50%',
+    cursor: 'pointer',
     [theme.breakpoints.up("sm")]: {
       display: "none"
     }
   },
   // necessary for content to be below app bar
-  toolbar: {
+  utilbar: {
     [theme.breakpoints.up("sm")]: {
       ...theme.mixins.toolbar,
       backgroundColor: theme.palette.primary.main,
@@ -48,8 +66,8 @@ const useStyles = makeStyles(theme => ({
       color: theme.palette.primary.contrastText
     }
   },
-  toolbarMain: {
-    backgroundColor: "initial"
+  utilbarMain: {
+    backgroundColor: "#fafafa"
   },
   drawerPaper: {
     width: drawerWidth,
@@ -58,6 +76,25 @@ const useStyles = makeStyles(theme => ({
   drawerPaperXs: {
     width: drawerWidth,
     backgroundColor: "#fafafa"
+  },
+  logoContainer: {
+    ...theme.mixins.toolbar,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    margin: 0,
+    [theme.breakpoints.up("sm")]: {
+      ...theme.mixins.toolbar,
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      color: '#fafafa'
+    }
+  },
+  logo: {
+    width: '15%',
+    marginRight: '2rem'
   }
 }));
 
@@ -71,10 +108,11 @@ export function Menu(props) {
   // Use radio instead of button for the listitems to solve the focus problem?
   const drawer = (
     <>
-      <div className={classes.toolbar}>Logo here, will not use theme.mixins.toolbar</div>
+      <div className={classes.utilbar}></div>
+      <Logo title logoStyle={classes} />
       <List className={classes.list}>
         {["Dashboard", "Reports", "Receipts"].map((text, index) => (
-          <ListItem component="li" button key={text}>
+          <ListItem component="li" button key={text + ' ' + index}>
             <ListItemIcon>
               {/* Icon display only onfocus */}
               <FiberManualRecordIcon />
@@ -89,14 +127,15 @@ export function Menu(props) {
   return (
     <header>
       <AppBar className={classes.appBar}>
-        <Toolbar>
-          <IconButton color="inherit" edge="start" className={classes.menuButton}
-            onClick={handleDrawerToggle}>
-            <MenuIcon /> {/*Should be the logo */}
-          </IconButton>
-          <Typography variant="h6" noWrap>
-            Responsive drawer (will remove)
-          </Typography>
+        <Toolbar className={classes.toolbar}>
+          <img
+            src={logo}
+            alt="logo"
+            className={classes.menuButton}
+            onClick={handleDrawerToggle}
+          />
+          <LoginUploadBtn>Upload Receipt</LoginUploadBtn>
+          <ProfileAvator />
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer}>
