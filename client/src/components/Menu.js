@@ -2,10 +2,8 @@ import React, { useState } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import Toolbar from "@material-ui/core/Toolbar";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 
@@ -20,14 +18,41 @@ import { makeStyles } from "@material-ui/core/styles";
 const drawerWidth = "15rem";
 
 const useStyles = makeStyles(theme => ({
+  invisible: {
+    visibility: 'hidden'
+  },
+  hidden: {
+    display: 'none'
+  },
+  btnOnfocus: {
+    backgroundColor: '#4366a7',
+    color: '#38cc89'
+  },
   drawer: {
     [theme.breakpoints.up("sm")]: {
       width: drawerWidth,
       flexShrink: 0
     }
   },
-  list: {
+  tabs: {
     marginTop: theme.spacing(3)
+  },
+  tabRoot: {
+    width: '70%',
+    margin: '0.4rem auto',
+    borderRadius: '0.5rem',
+    minHeight: '2rem',
+    textTransform: 'none'
+  },
+  tabWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'normal',
+    alignItems: 'baseline'
+  },
+  tabIcon: {
+    marginRight: '1rem',
+    marginBottom: 0,
+    fontSize: '0.7rem'
   },
   appBar: {
     [theme.breakpoints.up("sm")]: {
@@ -43,7 +68,6 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#fafafa',
     color: 'initial'
   },
-  // menuButton will be the logo
   menuButton: {
     width: '2rem',
     marginLeft: '0.8rem',
@@ -54,25 +78,21 @@ const useStyles = makeStyles(theme => ({
       display: "none"
     }
   },
-  // necessary for content to be below app bar
   utilbar: {
     [theme.breakpoints.up("sm")]: {
       ...theme.mixins.toolbar,
-      backgroundColor: theme.palette.primary.main,
+      backgroundColor: '#314f85',
       opacity: 0.4,
-      color: theme.palette.primary.contrastText
+      color: '#fafafa'
     }
   },
   utilbarMain: {
-    backgroundColor: "#fafafa"
+    backgroundColor: '#fafafa'
   },
   drawerPaper: {
     width: drawerWidth,
-    backgroundColor: "rgba(0, 0, 255, 0.4)"
-  },
-  drawerPaperXs: {
-    width: drawerWidth,
-    backgroundColor: "#fafafa"
+    backgroundColor: '#1b3460',
+    color: '#fafafa'
   },
   logoContainer: {
     ...theme.mixins.toolbar,
@@ -99,25 +119,44 @@ const useStyles = makeStyles(theme => ({
 export function Menu(props) {
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [page, setPage] = useState('Dashboard');
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
+  const handleChange = (e, page) => {
+    setPage(page);
+  }
 
-  // Set current onfocus according to url?
-  // Use radio instead of button for the listitems to solve the focus problem?
   const drawer = (
     <>
       <div className={classes.utilbar}></div>
       <Logo title logoStyle={classes} />
-      <List className={classes.list}>
-        {["Dashboard", "Reports", "Receipts"].map((text, index) => (
-          <ListItem component="li" button key={text + ' ' + index}>
-            <ListItemIcon>
-              {/* Icon display only onfocus */}
-              <FiberManualRecordIcon />
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
+      <Tabs
+        orientation="vertical"
+        value={page}
+        className={classes.tabs}
+        classes={{
+          indicator: classes.hidden
+        }}
+        onChange={handleChange}
+      >
+        {['Dashboard', 'Reports', 'Receipts'].map(tab => {
+          return (
+            <Tab
+              icon={
+                <FiberManualRecordIcon className={
+                  `${classes.tabIcon} ${tab === page || classes.invisible}`
+                } />
+              }
+              label={tab}
+              value={tab}
+              classes={{
+                root: classes.tabRoot,
+                wrapper: classes.tabWrapper,
+                selected: classes.btnOnfocus
+              }}
+            />
+          )
+        })}
+      </Tabs>
     </>
   );
 
@@ -141,7 +180,7 @@ export function Menu(props) {
             variant="temporary"
             open={mobileOpen}
             classes={{
-              paper: `${classes.drawerPaper} ${classes.drawerPaperXs}`
+              paper: classes.drawerPaper
             }}
             ModalProps={{
               keepMounted: true,

@@ -20,19 +20,23 @@ const useStyles = makeStyles(theme => ({
   utilbar: {
     [theme.breakpoints.up("sm")]: {
       ...theme.mixins.toolbar,
-      backgroundColor: theme.palette.primary.main,
+      backgroundColor: '#fafafa',
       opacity: 0.4,
       color: theme.palette.primary.contrastText
     }
   },
   utilbarMain: {
-    backgroundColor: "initial"
+    backgroundColor: "#fafbff"
   },
   main: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
     flexGrow: 1,
     minHeight: '100vh',
     padding: theme.spacing(3),
     overflowX: 'hidden',
+    backgroundColor: '#fafbff',
     [theme.breakpoints.down("xs")]: {
       marginTop: '3rem',
       padding: theme.spacing(1)
@@ -59,13 +63,13 @@ export function Dashboard(props) {
       <Menu />
       <main className={classes.main}>
         <div className={`${classes.utilbar} ${classes.utilbarMain}`} />
-        <Grid container spacing={3}>
-          <Grid item xs={12} lg={10}>
+        <Grid container spacing={3} xs={12} lg={10}>
+          <Grid item xs={12}>
             <h2>Dashboard</h2>
           </Grid>
         </Grid>
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={9} md={6} lg={5}>
+        <Grid container spacing={3} xs={12} lg={10}>
+          <Grid item xs={12} md={6}>
             <Panel title="TOTAL EXPENSES">
               <FormControl className={classes.formControl}>
                 <Select value={month} onChange={handleChange}>
@@ -75,19 +79,19 @@ export function Dashboard(props) {
               <Chart />
             </Panel>
           </Grid>
-          <Grid item xs={12} sm={9} md={6} lg={5}>
+          <Grid item xs={12} md={6}>
             <Panel title="TOP CATEGORIES">
               <CatStatTable />
             </Panel>
           </Grid>
         </Grid>
-        <Grid container spacing={3}>
-          <Grid item xs={12} lg={10}>
+        <Grid container spacing={3} xs={12} lg={10}>
+          <Grid item xs={12}>
             <h3>Recent Transactions</h3>
           </Grid>
         </Grid>
-        <Grid container spacing={3}>
-          <Grid item xs={12} lg={10}>
+        <Grid container spacing={3} xs={12} lg={10}>
+          <Grid item xs={12}>
             <Panel>
               <TransactionTable />
             </Panel>

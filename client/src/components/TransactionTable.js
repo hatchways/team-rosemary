@@ -12,13 +12,20 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
   container: {
+    whiteSpace: 'nowrap'
+  },
+  thead: {
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   avator: {
     marginRight: '1rem',
     width: '2rem',
     height: '2rem'
+  },
+  txtCat: {
+    color: 'grey',
+    opacity: '0.8'
   }
 })
 
@@ -33,17 +40,19 @@ export function TransactionTable(props) {
 
   return (
     <TableContainer>
-      <Table>
+      <Table className={classes.container}>
         <TableBody>
           {data.map((cat, index) => (
             <TableRow key={index + ' ' + cat.name}>
-              <TableCell component="th" scope="row" className={classes.container}>
-                <Avatar className={classes.avator}>{cat.avatar}</Avatar>
-                {cat.name}
+              <TableCell component="th" scope="row">
+                <div className={classes.thead}>
+                  <Avatar component="span" className={classes.avator}>{cat.avatar}</Avatar>
+                  {cat.name}
+                </div>
               </TableCell>
               <TableCell>{`-$${cat.expense.toLocaleString()}`}</TableCell>
               <TableCell>{cat.date}</TableCell>
-              <TableCell>{cat.cat}</TableCell>
+              <TableCell className={classes.txtCat}>{cat.cat}</TableCell>
             </TableRow>
           ))}
         </TableBody>

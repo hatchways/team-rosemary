@@ -12,8 +12,11 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
   container: {
+    whiteSpace: 'nowrap'
+  },
+  thead: {
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   avator: {
     marginRight: '1rem',
@@ -34,13 +37,15 @@ export function CatStatTable(props) {
 
   return (
     <TableContainer>
-      <Table>
+      <Table className={classes.container}>
         <TableBody>
           {data.map((cat, index) => (
             <TableRow key={index + ' ' + cat.cat}>
-              <TableCell component="th" scope="row" className={classes.container}>
-                <Avatar className={classes.avator}>{cat.avatar}</Avatar>
-                {cat.cat}
+              <TableCell component="th" scope="row">
+                <div className={classes.thead}>
+                  <Avatar className={classes.avator}>{cat.avatar}</Avatar>
+                  {cat.cat}
+                </div>
               </TableCell>
               <TableCell>{`-$${cat.expense.toLocaleString()}`}</TableCell>
             </TableRow>

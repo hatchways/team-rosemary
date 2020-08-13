@@ -2,6 +2,9 @@ import React from "react";
 
 import { Dashboard } from './pages/Dashboard';
 
+import { ThemeProvider } from '@material-ui/core/styles';
+import { themeNoRipple } from './themes/theme';
+
 
 class App extends React.Component {
   constructor(props) {
@@ -12,7 +15,9 @@ class App extends React.Component {
   }
   render() {
     return (
-      <Dashboard />
+      <ThemeProvider theme={themeNoRipple}>
+        <Dashboard />
+      </ThemeProvider>
     )
   }
 }

@@ -8,16 +8,16 @@ const useStyles = makeStyles(theme => ({
   container: {
     position: 'relative',
     padding: '1rem',
-    minWidth: '20rem',
+    // minWidth: '20rem',
     height: '16rem',
     borderRadius: '1rem',
     [theme.breakpoints.down("xs")]: {
-      minWidth: '19rem'
+      // minWidth: '19rem'
     }
   },
   title: {
     fontSize: '0.8rem',
-    color: 'green'
+    color: '#38cc89'
   }
 }));
 
