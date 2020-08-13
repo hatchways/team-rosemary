@@ -22,7 +22,7 @@ const createReceipt = async (req, res, next) => {
 
         return res.json(receipt);
     } catch (err) {
-        const error = new HttpError('server error', 500);
+        const error = new HttpError('Server Error', 500);
         return next(error);
     }
 };
@@ -32,16 +32,27 @@ const createReceipt = async (req, res, next) => {
 // @access Private
 const updateReceipt = async (req, res, next) => {
     try {
+        // check
+        const receipt = await Receipt.findById(req.params.id);
+        if (!receipt) {
+            const error = new HttpError('Receipt not found', 404);
+            return next(error);
+        }
+        if (receipt.user != req.userData.userId) {
+            const error = new HttpError('Not Authorized', 401);
+            return next(error);
+        }
+
         //update receipt
-        const receipt = await Receipt.findOneAndUpdate(
+        const newReceipt = await Receipt.findOneAndUpdate(
             { _id: req.params.id },
             req.body,
             { new: true }
         );
-        await receipt.save();
-        return res.json(receipt);
+        await newReceipt.save();
+        return res.json(newReceipt);
     } catch (err) {
-        const error = new HttpError('server error', 500);
+        const error = new HttpError('Server Error', 500);
         return next(error);
     }
 };
@@ -53,11 +64,16 @@ const getReceipt = async (req, res, next) => {
     try {
         const receipt = await Receipt.findById(req.params.id);
         if (!receipt) {
-            return res.status(404).json({ msg: 'Receipt not found' });
+            const error = new HttpError('Receipt not found', 404);
+            return next(error);
+        }
+        if (receipt.user != req.userData.userId) {
+            const error = new HttpError('Not Authorized', 401);
+            return next(error);
         }
         res.json(receipt);
     } catch (err) {
-        const error = new HttpError('server error', 500);
+        const error = new HttpError('Server Error', 500);
         return next(error);
     }
 };
