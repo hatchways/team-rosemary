@@ -5,7 +5,7 @@ const Receipt = mongoose.model(
     new mongoose.Schema({
         user: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'user',
+            ref: 'users',
         },
         title: {
             type: String,
@@ -22,8 +22,7 @@ const Receipt = mongoose.model(
             type: String,
         },
         picture: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'picture',
+            type: String,
         },
     })
 );
