@@ -7,7 +7,7 @@ import { Header } from './components/Header';
 import { Dashboard } from './pages/Dashboard';
 
 import { ThemeProvider } from '@material-ui/core/styles';
-import { themeNoRipple } from './themes/theme';
+import { theme } from './themes/theme';
 
 
 class App extends React.Component {
@@ -21,7 +21,7 @@ class App extends React.Component {
     return (
       <Box display="flex">
         <CssBaseline />
-        <ThemeProvider theme={themeNoRipple}>
+        <ThemeProvider theme={theme}>
           <Header /> {/*Router inside*/}
           <Dashboard /> {/*Will be linked by the router*/}
         </ThemeProvider>

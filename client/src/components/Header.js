@@ -115,10 +115,10 @@ export function Header(props) {
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [page, setPage] = useState('Dashboard');
-  const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
+  const handleDrawerToggle = () => setMobileOpen(!mobileOpen)
   const handleChange = (e, page) => {
     setPage(page);
-  }
+  };
 
   const isMobile = useMediaQuery(useTheme().breakpoints.down('xs'));
 
@@ -167,6 +167,7 @@ export function Header(props) {
               indicator: classes.hidden
             }}
             onChange={handleChange}
+            onClick={isMobile && handleDrawerToggle}
           >
             {['Dashboard', 'Reports', 'Receipts'].map(tab => {
               return (
