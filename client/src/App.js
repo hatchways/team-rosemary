@@ -1,5 +1,9 @@
 import React from "react";
 
+import Box from "@material-ui/core/Box";
+import CssBaseline from "@material-ui/core/CssBaseline";
+
+import { Header } from './components/Header';
 import { Dashboard } from './pages/Dashboard';
 
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -15,9 +19,13 @@ class App extends React.Component {
   }
   render() {
     return (
-      <ThemeProvider theme={themeNoRipple}>
-        <Dashboard />
-      </ThemeProvider>
+      <Box display="flex">
+        <CssBaseline />
+        <ThemeProvider theme={themeNoRipple}>
+          <Header /> {/*Router inside*/}
+          <Dashboard /> {/*Will be linked by the router*/}
+        </ThemeProvider>
+      </Box>
     )
   }
 }

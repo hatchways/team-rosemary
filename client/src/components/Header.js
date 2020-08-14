@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Drawer from "@material-ui/core/Drawer";
-import Hidden from "@material-ui/core/Hidden";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Toolbar from "@material-ui/core/Toolbar";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 
-import { LoginUploadBtn } from '../components/LoginUploadBtn';
-import { ProfileAvator } from '../components/ProfileAvator';
-import { Logo } from '../components/Logo';
+import { useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+
+import { LoginUploadBtn } from './LoginUploadBtn';
+import { ProfileAvator } from './ProfileAvator';
+import { Logo } from './Logo';
 
 import logo from '../assets/logo.png';
 
@@ -79,12 +81,9 @@ const useStyles = makeStyles(theme => ({
     }
   },
   utilbar: {
-    [theme.breakpoints.up("sm")]: {
-      ...theme.mixins.toolbar,
-      backgroundColor: '#314f85',
-      opacity: 0.4,
-      color: '#fafafa'
-    }
+    ...theme.mixins.toolbar,
+    backgroundColor: '#314f85',
+    opacity: 0.4,
   },
   utilbarMain: {
     backgroundColor: '#fafafa'
@@ -96,18 +95,14 @@ const useStyles = makeStyles(theme => ({
   },
   logoContainer: {
     ...theme.mixins.toolbar,
+    position: 'absolute',
+    top: 0,
+    left: 0,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    margin: 0,
-    [theme.breakpoints.up("sm")]: {
-      ...theme.mixins.toolbar,
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      color: '#fafafa'
-    }
+    margin: 0
   },
   logo: {
     width: '15%',
@@ -116,7 +111,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 // Can be HOC or render props
-export function Menu(props) {
+export function Header(props) {
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [page, setPage] = useState('Dashboard');
@@ -125,40 +120,7 @@ export function Menu(props) {
     setPage(page);
   }
 
-  const drawer = (
-    <>
-      <div className={classes.utilbar}></div>
-      <Logo title logoStyle={classes} />
-      <Tabs
-        orientation="vertical"
-        value={page}
-        className={classes.tabs}
-        classes={{
-          indicator: classes.hidden
-        }}
-        onChange={handleChange}
-      >
-        {['Dashboard', 'Reports', 'Receipts'].map(tab => {
-          return (
-            <Tab
-              icon={
-                <FiberManualRecordIcon className={
-                  `${classes.tabIcon} ${tab === page || classes.invisible}`
-                } />
-              }
-              label={tab}
-              value={tab}
-              classes={{
-                root: classes.tabRoot,
-                wrapper: classes.tabWrapper,
-                selected: classes.btnOnfocus
-              }}
-            />
-          )
-        })}
-      </Tabs>
-    </>
-  );
+  const isMobile = useMediaQuery(useTheme().breakpoints.down('xs'));
 
   return (
     <header>
@@ -175,36 +137,58 @@ export function Menu(props) {
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer}>
-        <Hidden smUp>
-          <Drawer
-            variant="temporary"
-            open={mobileOpen}
-            classes={{
-              paper: classes.drawerPaper
-            }}
-            ModalProps={{
+        <Drawer
+          classes={{
+            paper: classes.drawerPaper
+          }}
+          {...(isMobile ? {
+            variant: "temporary",
+            open: mobileOpen,
+            ModalProps: {
               keepMounted: true,
               BackdropProps: {
                 invisible: true
               }
-            }}
-            onClose={handleDrawerToggle}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        <Hidden xsDown>
-          <Drawer
+            },
+            onClose: handleDrawerToggle
+          } : {
+              variant: "permanent",
+              open: true
+            }
+          )}
+        >
+          <div className={classes.utilbar}></div>
+          <Logo title logoStyle={classes} />
+          <Tabs
+            orientation="vertical"
+            value={page}
+            className={classes.tabs}
             classes={{
-              paper: classes.drawerPaper
+              indicator: classes.hidden
             }}
-            variant="permanent"
-            open
+            onChange={handleChange}
           >
-            {drawer}
-          </Drawer>
-        </Hidden>
+            {['Dashboard', 'Reports', 'Receipts'].map(tab => {
+              return (
+                <Tab
+                  icon={
+                    <FiberManualRecordIcon className={
+                      `${classes.tabIcon} ${tab === page || classes.invisible}`
+                    } />
+                  }
+                  label={tab}
+                  value={tab}
+                  classes={{
+                    root: classes.tabRoot,
+                    wrapper: classes.tabWrapper,
+                    selected: classes.btnOnfocus
+                  }}
+                />
+              )
+            })}
+          </Tabs>
+        </Drawer>
       </nav>
-    </header>
+    </header >
   )
 }
