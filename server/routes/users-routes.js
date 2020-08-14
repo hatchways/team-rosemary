@@ -6,10 +6,11 @@ const {
 
 const express = require('express');
 const router = express.Router();
-const checkAuth = require('../middleware/check-auth');
+//const checkAuth = require('../middleware/check-auth');
 
 const usersController = require('../controllers/users-controller');
 
+//router.use(checkAuth);
 
 router.post(
   '/signup',
@@ -25,6 +26,6 @@ router.post(
   usersController.login
 );
 
-//router.use(checkAuth);
+
 
 module.exports = router;

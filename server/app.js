@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const  HttpError = require('./helpers/http-error');
 const { json, urlencoded } = express;
+var bodyParser = require('body-parser')
 
 // import routes
 const usersRoutes = require('./routes/users-routes');
@@ -14,8 +15,11 @@ require('dotenv').config({
     path: `${__dirname}/.env.${process.env.NODE_ENV}`,
 });
 
+console.log(`${__dirname}/.env.${process.env.NODE_ENV}`);
+
 
 var app = express();
+app.use(bodyParser.json());
 
 app.use(logger("dev"));
 app.use(json());
@@ -31,7 +35,6 @@ app.use((req, res, next) => {
     'Origin, X-Requested-With, Content-Type, Accept, Authorization'
   );
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
-
   next();
 });
 
@@ -54,7 +57,7 @@ app.use((error, req, res, next) => {
   
  
   // Connect to database and start server
-  const port = process.env.PORT || 5000;
+  const port = process.env.PORT || 6000;
   const dbConnection = process.env.DB_CONNECTION_STRING;
  
   mongoose
