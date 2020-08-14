@@ -22,7 +22,7 @@ const createReceipt = async (req, res, next) => {
 
         return res.json(receipt);
     } catch (err) {
-        const error = new HttpError('Server Error', 500);
+        const error = new HttpError('Internal Server Error', 500);
         return next(error);
     }
 };
