@@ -1,20 +1,33 @@
 import React from "react";
-import { MuiThemeProvider } from "@material-ui/core";
-import { BrowserRouter, Route } from "react-router-dom";
 
-import { theme } from "./themes/theme";
-import LandingPage from "./pages/Landing";
+import Box from "@material-ui/core/Box";
+import CssBaseline from "@material-ui/core/CssBaseline";
 
-import "./App.css";
+import { Header } from './components/Header';
+import { Dashboard } from './pages/Dashboard';
 
-function App() {
-  return (
-    <MuiThemeProvider theme={theme}>
-      <BrowserRouter>
-        <Route path="/" component={LandingPage} />
-      </BrowserRouter>
-    </MuiThemeProvider>
-  );
+import { ThemeProvider } from '@material-ui/core/styles';
+import { theme } from './themes/theme';
+
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+
+    }
+  }
+  render() {
+    return (
+      <Box display="flex">
+        <CssBaseline />
+        <ThemeProvider theme={theme}>
+          <Header /> {/*Router inside*/}
+          <Dashboard /> {/*Will be linked by the router*/}
+        </ThemeProvider>
+      </Box>
+    )
+  }
 }
 
 export default App;
