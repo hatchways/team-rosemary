@@ -28,4 +28,5 @@ router.use(checkAuth);
 
 router.get('/receipts', usersController.getAllReceipt);
 
+
 module.exports = router;
