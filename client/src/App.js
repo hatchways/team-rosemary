@@ -5,16 +5,17 @@ import { BrowserRouter, Route,
   Switch } from "react-router-dom";
 
 import { theme } from "./themes/theme";
-import LandingPage from "./pages/Landing";
 import SigninPage from "./auth/pages/SignInPage";
 import SignUpPage from "./auth/pages/SignUpPage";
 import { AuthContext } from './shared/context/auth-context';
+import { useAuth } from './shared/hooks/auth-hook';
 
 
 import "./App.css";
 
 const  App = () => {
-  
+  const { token, login, logout, userId } = useAuth();
+
   let routes;
 
   routes = (
@@ -32,31 +33,21 @@ const  App = () => {
   );
 
   return (
+    <AuthContext.Provider
+      value={{
+        isLoggedIn: !!token,
+        token: token,
+        userId: userId,
+        login: login,
+        logout: logout
+      }}>
+  
    <BrowserRouter>
+     {routes}
+   </BrowserRouter>
    
-    {routes}
-  </BrowserRouter>
-
+   </AuthContext.Provider>
   );
-
-  // return (
-  //   <div className="App">
-  //     <header className="App-header">
-  //       {/* <img src={logo} className="App-logo" alt="logo" /> */}
-  //       <p>
-  //         Edit <code>src/App.js</code> and save to reload.
-  //       </p>
-  //       <a
-  //         className="App-link"
-  //         href="https://reactjs.org"
-  //         target="_blank"
-  //         rel="noopener noreferrer"
-  //       >
-  //         Learn React
-  //       </a>
-  //     </header>
-  //   </div>
-  // );
 }
 
 export default App;

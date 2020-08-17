@@ -57,7 +57,7 @@ app.use((error, req, res, next) => {
   
  
   // Connect to database and start server
-  const port = process.env.PORT || 6000;
+  const port = process.env.PORT || 5000;
   const dbConnection = process.env.DB_CONNECTION_STRING;
  
   mongoose
