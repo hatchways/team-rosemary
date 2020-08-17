@@ -1,12 +1,10 @@
 import React from "react";
-import { MuiThemeProvider } from "@material-ui/core";
 import { BrowserRouter, Route,
   Redirect,
   Switch } from "react-router-dom";
 
-import { theme } from "./themes/theme";
-import SigninPage from "./auth/pages/SignInPage";
-import SignUpPage from "./auth/pages/SignUpPage";
+import SigninPage from "./user/pages/SignInPage";
+import SignUpPage from "./user/pages/SignUpPage";
 import { AuthContext } from './shared/context/auth-context';
 import { useAuth } from './shared/hooks/auth-hook';
 

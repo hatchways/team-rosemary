@@ -1,30 +1,40 @@
-import React, { Component } from 'react';
+import React, { useContext } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-
 import { Link } from "react-router-dom";
-// import Link from '@material-ui/core/Link';
-
+import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import axios from 'axios';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
+
+import loginBg from '../../assets/login-bg.png';
+import { AuthContext } from '../../shared/context/auth-context';
+import { useHttpClient } from '../../shared/hooks/http-hook';
+import ErrorModal from '../../shared/components/UIElements/ErrorModal';
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 
 import Copyright from '../../shared/components/FooterElements/Copyright';
-import { red } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    height: '100vh',
+  },
+  image: {
+    backgroundImage: `url(${loginBg})`,
+    backgroundRepeat: 'no-repeat',
+    backgroundColor:
+      theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  },
   paper: {
-    marginTop: theme.spacing(8),
+    margin: theme.spacing(8, 4),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -40,14 +50,8 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-  helperText: {
-    color: red,
-  },
 }));
 
-function Alert(props) {
-  return <MuiAlert elevation={6} variant='filled' {...props} />;
-}
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('Name is required'),
@@ -62,29 +66,15 @@ const validationSchema = Yup.object().shape({
     .oneOf([Yup.ref('password')], 'Password does not match'),
 });
 
-const endpoint = 'http://localhost:6000/api/user/signup';
-
 export default function SignUp() {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-
-  const handleClick = () => {
-    setOpen(true);
-  };
-
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  };
+  const auth = useContext(AuthContext);
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
   const {
     handleSubmit,
     handleChange,
     handleBlur,
-    values,
     errors,
     touched,
     isValid,
@@ -96,44 +86,38 @@ export default function SignUp() {
       confirmpassword: '',
     },
     validationSchema,
-    onSubmit(values) {
+    async onSubmit(values) {
 
-        const config = {
-            headers: {
-                'Content-Type': 'application/json',
-              },
-              data: {
-                name: values.name,
-                email: values.email,
-                password: values.password
-              }
-        };
-         axios
-            .post(endpoint, values,config)
-            .then((resp) => {
-              console.log(resp);
-    
-              console.log(resp.status);
-            })
-            .catch((err) => {
-              if (err.response) {
-                if (401 === err.response.status) {
-                  setOpen(true);
-                }
-              } else if (err.request) {
-                // client never received a response, or request never left
-              } else {
-                // anything else
-              }
-            });
-   
-    },
-  });
+      try {
+        const endpoint = process.env.REACT_APP_API_BASE_URL + 'user/login';
+        const responseData = await sendRequest(
+          endpoint,
+          'POST',
+          JSON.stringify({
+            name: values.name,
+            email: values.email,
+            password: values.password
+          }),
+          {
+            'Content-Type': 'application/json',
+          }
+        );
+        auth.login(responseData.userId, responseData.token);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+ });
 
   return (
-    <Container component='main' maxWidth='xs'>
+    <Grid container component="main" className={classes.root}>
       <CssBaseline />
+      <ErrorModal error={error} onClear={clearError} />
+     <Grid item xs={false} sm={4} md={7} className={classes.image} />
+      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
       <div className={classes.paper}>
+      {isLoading && <LoadingSpinner asOverlay />}
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
@@ -223,23 +207,14 @@ export default function SignUp() {
             </Grid>
           </Grid>
         </form>
-      </div>
+     
       <Box mt={8}>
         <Copyright />
-      </Box>
-      <Snackbar
-        open={open}
-        autoHideDuration={6000}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-      >
-        <Alert onClose={handleClose} severity='error'>
-          Invalid email/password
-        </Alert>
-      </Snackbar>
-    </Container>
+      </Box> 
+      </div>
+      
+      </Grid>
+    </Grid>
+    
   );
 }
