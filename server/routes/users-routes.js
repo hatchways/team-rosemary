@@ -10,8 +10,6 @@ const router = express.Router();
 
 const usersController = require('../controllers/users-controller');
 
-//router.use(checkAuth);
-
 router.post(
   '/signup',
   userSignupValidationRules(),
