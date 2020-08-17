@@ -1,6 +1,6 @@
 import React from "react";
 
-import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -32,15 +32,17 @@ const data = [
 export function Chart(props) {
   const classes = useStyles();
   const expense = 2000;
+  const lastDay = data[data.length - 1].date;
 
   const formatter = (value, ...pars) => [`$${value.toLocaleString()}`, ...pars];
 
   const renderLineChart = (
     <ResponsiveContainer height={120} debounce={100}>
       <LineChart data={data}>
-        <XAxis dataKey="date" tickLine={false} padding={{ left: 20, right: 20 }} />
+        <XAxis dataKey="date" axisLine={{ stroke: "#f0f2fa", strokeWidth: 2 }} tickLine={false} padding={{ left: 20, right: 20 }} />
         {/* <YAxis /> */}
         <Line type="monotone" dataKey="expense" stroke="#4366a7" strokeWidth={2} dot={false} activeDot={{ stroke: '#fff', strokeWidth: 3, r: 6 }} />
+        <ReferenceLine x={lastDay} stroke="#f0f2fa" />
         <Tooltip separator=": " formatter={formatter} />
       </LineChart>
     </ResponsiveContainer>
