@@ -1,14 +1,15 @@
-import { createMuiTheme } from "@material-ui/core";
+import { createMuiTheme } from '@material-ui/core/styles';
 
 export const theme = createMuiTheme({
-  typography: {
-    fontFamily: '"Roboto"',
-    fontSize: 12,
-    h1: {
-      // could customize the h1 variant as well
+  props: {
+    MuiButtonBase: {
+      disableRipple: true
     }
   },
-  palette: {
-    primary: { main: "#DF1B1B" }
+  typography: {
+    fontFamily: '"Montserrat", sans-serif',
+    fontWeightRegular: 600,
+    fontWeightLight: 400,
+    fontWeightMedium: 400
   }
 });
