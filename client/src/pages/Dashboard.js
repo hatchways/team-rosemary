@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
     right: '1rem',
     margin: theme.spacing(1),
     minWidth: 120,
-  },
+  }
 }));
 
 export function Dashboard(props) {
