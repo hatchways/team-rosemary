@@ -73,6 +73,7 @@ const useStyles = makeStyles(theme => ({
     left: 0,
     width: '100%',
     height: '100%',
+    borderRadius: '0.8rem',
     backgroundColor: '#314f85'
   },
   imgIcon: {
@@ -84,7 +85,8 @@ const useStyles = makeStyles(theme => ({
   },
   img: {
     width: '100%',
-    height: '100%'
+    height: '100%',
+    borderRadius: '0.8rem',
   }
 }));
 
