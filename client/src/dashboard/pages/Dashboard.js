@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import FormControl from '@material-ui/core/FormControl';
 import Grid from "@material-ui/core/Grid";
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from "@material-ui/core/Select";
+import Button from '@material-ui/core/Button';
 
-import { Panel } from '../components/Panel';
-import { Chart } from '../components/Chart';
-import { CatStatTable } from '../components/CatStatTable';
-import { TransactionTable } from '../components/TransactionTable';
+import { Panel } from '../../components/Panel';
+import { Chart } from '../../components/Chart';
+import { CatStatTable } from '../../components/CatStatTable';
+import { TransactionTable } from '../../components/TransactionTable';
 
 import { makeStyles } from "@material-ui/core/styles";
+import { AuthContext } from '../../shared/context/auth-context';
+import AppDialog from '../../shared/components/UIElements/AppDialog.js';
 
 const useStyles = makeStyles(theme => ({
   utilbar: {
@@ -44,6 +47,9 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(1),
     minWidth: 120,
   },
+  dialogbtn: {
+    margin: theme.spacing(3, 0, 2),
+  }
 }));
 
 export function Dashboard(props) {
@@ -51,14 +57,32 @@ export function Dashboard(props) {
   const [month, setMonth] = useState('');
 
   const handleChange = e => setMonth(e.target.value);
+  const auth = useContext(AuthContext);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleDialogOpen = () => {
+    setIsOpen(true);
+  }
+
+  const handleDialogClose = () => {
+      setIsOpen(false);
+  }
+
+  const handleClickOpen = () => {
+    setIsOpen(true);
+  };
 
   return (
     <main className={classes.main}>
       <div className={`${classes.utilbar} ${classes.utilbarMain}`} />
       <Grid container spacing={3} xs={12} lg={10}>
-        <Grid item xs={12}>
+        <Grid item xs={9}>
           <h2>Dashboard</h2>
         </Grid>
+        <Grid  xs={3}> <Button variant="outlined" className={classes.dialogbtn} color="primary" onClick={handleClickOpen}>
+        Upload Receipt
+      </Button></Grid>
+       
       </Grid>
       <Grid container spacing={3} xs={12} lg={10}>
         <Grid item xs={12} md={6}>
@@ -89,6 +113,9 @@ export function Dashboard(props) {
           </Panel>
         </Grid>
       </Grid>
+      <AppDialog size="md" isOpen = {isOpen} handleOpen = {handleDialogOpen} handleClose = {handleDialogClose} title='Upload receipt'>
+            <h1> Upload receipt  </h1>
+          </AppDialog>
     </main>
   );
 }

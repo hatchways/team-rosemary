@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -20,6 +20,7 @@ import { useHttpClient } from '../../shared/hooks/http-hook';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 
+
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100vh',
@@ -31,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
       theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
     backgroundSize: 'cover',
     backgroundPosition: 'center',
+    
   },
   paper: {
     margin: theme.spacing(8, 4),
@@ -62,6 +64,7 @@ const validationSchema = Yup.object().shape({
 
 export default function SignIn() {
   const classes = useStyles();
+  
   const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const {
@@ -106,6 +109,7 @@ export default function SignIn() {
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <div className={classes.paper}>
         {isLoading && <LoadingSpinner asOverlay />}
+       
           <Avatar className={classes.avatar}>
             <LockOutlinedIcon />
           </Avatar>
@@ -156,11 +160,7 @@ export default function SignIn() {
             Sign In
           </Button>
           <Grid container>
-            <Grid item xs>
-              {/* <Link href='#' variant='body2'>
-                    Forgot password?
-                  </Link> */}
-            </Grid>
+           
             <Grid item>
               <Link to='/signup' variant='body2'>
                 {"Don't have an account? Sign Up"}
@@ -171,6 +171,7 @@ export default function SignIn() {
               <Copyright />
             </Box>
           </form>
+       
         </div>
       </Grid>
     </Grid>
