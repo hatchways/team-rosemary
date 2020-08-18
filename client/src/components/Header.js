@@ -172,6 +172,7 @@ export function Header(props) {
             {['Dashboard', 'Reports', 'Receipts'].map(tab => {
               return (
                 <Tab
+                  key={tab}
                   icon={
                     <FiberManualRecordIcon className={
                       `${classes.tabIcon} ${tab === page || classes.invisible}`
