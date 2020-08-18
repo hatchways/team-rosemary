@@ -152,7 +152,7 @@ const getAllReceipt = async (req, res, next) => {
         const receipts = await Receipt.find({ user: userId });
         res.json(receipts);
     } catch {
-        const error = new HttpError('server error', 500);
+        const error = new HttpError('Server Error', 500);
         return next(error);
     }
 };
