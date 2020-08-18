@@ -5,6 +5,8 @@ import ButtonBase from '@material-ui/core/ButtonBase';
 import Receipt from '../assets/receipt.png'
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
 
+import { MonthSelector } from '../components/MonthSelector';
+
 import { makeStyles } from "@material-ui/core/styles";
 
 
@@ -12,6 +14,9 @@ const imgSize = '15rem';
 const imgSizeXs = '18rem';
 
 const useStyles = makeStyles(theme => ({
+  pRel: {
+    position: 'relative'
+  },
   utilbar: {
     [theme.breakpoints.up("sm")]: {
       ...theme.mixins.toolbar,
@@ -36,13 +41,6 @@ const useStyles = makeStyles(theme => ({
       marginTop: '3rem',
       padding: theme.spacing(1)
     }
-  },
-  formControl: {
-    position: 'absolute',
-    top: '1rem',
-    right: '1rem',
-    margin: theme.spacing(1),
-    minWidth: 120,
   },
   imgRoot: {
     display: 'flex',
@@ -113,7 +111,8 @@ export function Receipts(props) {
           <h2>Receipts</h2>
         </Grid>
       </Grid>
-      <Grid container spacing={2} xs={12} lg={10}>
+      <Grid container spacing={2} xs={12} lg={10} className={classes.pRel}>
+        <MonthSelector top="-3rem" right="0" />
         {data.map((receipt, index) => {
           const { date, img } = receipt;
           return (
