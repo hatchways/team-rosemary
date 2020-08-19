@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 
 import AppBar from "@material-ui/core/AppBar";
+import Box from "@material-ui/core/Box";
+import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "@material-ui/core/Drawer";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -25,6 +27,9 @@ import { Receipts } from './Receipts';
 
 import logo from '../assets/logo.png';
 
+import { theme } from '../themes/theme';
+
+import { ThemeProvider } from '@material-ui/core/styles';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from "@material-ui/core/styles";
@@ -153,99 +158,105 @@ export function Home(props) {
 
   return (
     <Router>
-      <header>
-        <AppBar className={classes.appBar}>
-          <Toolbar className={classes.toolbar}>
-            <img
-              src={logo}
-              alt="logo"
-              className={classes.menuButton}
-              onClick={handleDrawerToggle}
-            />
-            <LoginUploadBtn>Upload Receipt</LoginUploadBtn>
-            <ProfileAvator />
-          </Toolbar>
-        </AppBar>
-        <nav className={classes.drawer}>
-          <Drawer
-            classes={{
-              paper: classes.drawerPaper
-            }}
-            {...(isMobile ? {
-              variant: "temporary",
-              open: mobileOpen,
-              ModalProps: {
-                keepMounted: true,
-                BackdropProps: {
-                  invisible: true
-                }
-              },
-              onClose: handleDrawerToggle
-            } : {
-                variant: "permanent",
-                open: true
-              }
-            )}
-          >
-            <div className={classes.utilbar}></div>
-            <Logo title logoStyle={classes} />
-            <Tabs
-              orientation="vertical"
-              value={page}
-              className={classes.tabs}
-              classes={{
-                indicator: classes.hidden
-              }}
-              onChange={handleChange}
-              onClick={isMobile ? handleDrawerToggle : null}
-            >
-              {pages.map(tab => {
-                const { name } = tab;
-                return (
-                  <Tab
-                    key={name}
-                    component={Link}
-                    to={`/${name.toLowerCase()}`}
-                    icon={
-                      <FiberManualRecordIcon className={
-                        `${classes.tabIcon} ${name === page || classes.invisible}`
-                      } />
+      <Box display="flex">
+        <CssBaseline />
+        <ThemeProvider theme={theme}>
+          <header>
+            <AppBar className={classes.appBar}>
+              <Toolbar className={classes.toolbar}>
+                <img
+                  src={logo}
+                  alt="logo"
+                  className={classes.menuButton}
+                  onClick={handleDrawerToggle}
+                />
+                <LoginUploadBtn>Upload Receipt</LoginUploadBtn>
+                <ProfileAvator />
+              </Toolbar>
+            </AppBar>
+            <nav className={classes.drawer}>
+              <Drawer
+                classes={{
+                  paper: classes.drawerPaper
+                }}
+                {...(isMobile ? {
+                  variant: "temporary",
+                  open: mobileOpen,
+                  ModalProps: {
+                    keepMounted: true,
+                    BackdropProps: {
+                      invisible: true
                     }
-                    label={name}
-                    value={name}
-                    classes={{
-                      root: classes.tabRoot,
-                      wrapper: classes.tabWrapper,
-                      selected: classes.btnOnfocus
-                    }}
-                  />
+                  },
+                  onClose: handleDrawerToggle
+                } : {
+                    variant: "permanent",
+                    open: true
+                  }
+                )}
+              >
+                <div className={classes.utilbar}></div>
+                <Logo title logoStyle={classes} />
+                <Tabs
+                  orientation="vertical"
+                  value={page}
+                  className={classes.tabs}
+                  classes={{
+                    indicator: classes.hidden
+                  }}
+                  onChange={handleChange}
+                  onClick={isMobile ? handleDrawerToggle : null}
+                >
+                  {pages.map(tab => {
+                    const { name } = tab;
+                    return (
+                      <Tab
+                        key={name}
+                        component={Link}
+                        to={`/${name.toLowerCase()}`}
+                        icon={
+                          <FiberManualRecordIcon className={
+                            `${classes.tabIcon} ${name === page || classes.invisible}`
+                          } />
+                        }
+                        label={name}
+                        value={name}
+                        classes={{
+                          root: classes.tabRoot,
+                          wrapper: classes.tabWrapper,
+                          selected: classes.btnOnfocus
+                        }}
+                      />
+                    )
+                  })}
+                </Tabs>
+              </Drawer>
+            </nav>
+          </header >
+          <main className={classes.main}>
+            <div className={`${classes.utilbar} ${classes.utilbarMain}`} />
+            <Grid container spacing={3} xs={12} lg={10}>
+              <Grid item xs={12}>
+                <h2>{page}</h2>
+              </Grid>
+            </Grid>
+            <Switch>
+              <Route exact path="/">
+                <Dashboard />
+              </Route>
+              {pages.map(page => {
+                const { name, component } = page;
+                return (
+                  <Route exact path={`/${name.toLowerCase()}`} key={name}>
+                    {component}
+                  </Route>
                 )
               })}
-            </Tabs>
-          </Drawer>
-        </nav>
-      </header >
-      <main className={classes.main}>
-        <div className={`${classes.utilbar} ${classes.utilbarMain}`} />
-        <Grid container spacing={3} xs={12} lg={10}>
-          <Grid item xs={12}>
-            <h2>{page}</h2>
-          </Grid>
-        </Grid>
-        <Switch>
-          <Route exact path="/">
-            <Dashboard />
-          </Route>
-          {pages.map(page => {
-            const { name, component } = page;
-            return (
-              <Route exact path={`/${name.toLowerCase()}`} key={name}>
-                {component}
-              </Route>
-            )
-          })}
-        </Switch>
-      </main>
+            </Switch>
+          </main>
+        </ThemeProvider>
+      </Box>
+
     </Router>
   )
 }

@@ -10,14 +10,7 @@ import SignUpPage from "./user/pages/SignUpPage";
 import { AuthContext } from './shared/context/auth-context';
 import { useAuth } from './shared/hooks/auth-hook';
 
-import Box from "@material-ui/core/Box";
-import CssBaseline from "@material-ui/core/CssBaseline";
-
 import { Home } from './pages/Home';
-
-import { ThemeProvider } from '@material-ui/core/styles';
-import { theme } from './themes/theme';
-
 
 // Varun's work start
 
@@ -36,7 +29,7 @@ import { theme } from './themes/theme';
 //         <SignUpPage />
 //       </Route>
 
-//       <Redirect to="/" />
+//       <Redirect to="/dashboard" />
 //     </Switch>
 //   );
 
@@ -61,23 +54,8 @@ import { theme } from './themes/theme';
 // Varun's work end
 
 // Siyuan's work start
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-
-    }
-  }
-  render() {
-    return (
-      <Box display="flex">
-        <CssBaseline />
-        <ThemeProvider theme={theme}>
-          <Home />
-        </ThemeProvider>
-      </Box>
-    )
-  }
+function App(props) {
+  return <Home />
 }
 
 // Siyuan's work end
