@@ -13,13 +13,13 @@ import { useAuth } from './shared/hooks/auth-hook';
 import Box from "@material-ui/core/Box";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
-import { Header } from './components/Header';
-import { Dashboard } from './pages/Dashboard';
-import { Receipts } from './pages/Receipts';
+import { Home } from './pages/Home';
 
 import { ThemeProvider } from '@material-ui/core/styles';
 import { theme } from './themes/theme';
 
+
+// Varun's work start
 
 // const App = () => {
 //   const { token, login, logout, userId } = useAuth();
@@ -58,7 +58,9 @@ import { theme } from './themes/theme';
 //   );
 // }
 
-// Siyuan's work below
+// Varun's work end
+
+// Siyuan's work start
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -71,13 +73,13 @@ class App extends React.Component {
       <Box display="flex">
         <CssBaseline />
         <ThemeProvider theme={theme}>
-          <Header /> {/*Router should be inside*/}
-          {/* <Dashboard />  */}
-          <Receipts />
+          <Home />
         </ThemeProvider>
       </Box>
     )
   }
 }
+
+// Siyuan's work end
 
 export default App;
