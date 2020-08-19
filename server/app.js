@@ -1,16 +1,17 @@
 const express = require('express');
-const cors = require('cors')
+const cors = require('cors');
 const mongoose = require('mongoose');
 const { join } = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const HttpError = require('./helpers/http-error');
 const { json, urlencoded } = express;
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
 
 // import routes
 const usersRoutes = require('./routes/users-routes');
 const receiptRoutes = require('./routes/receipt-routes');
+const s3routes = require('./routes/s3-routes');
 
 // get environment variables
 require('dotenv').config({
@@ -27,11 +28,12 @@ app.use(cookieParser());
 app.use(express.static(join(__dirname, 'public')));
 
 // set CORS
-app.use(cors())
+app.use(cors());
 
 // routes declaration
 app.use('/api/user', usersRoutes); // => /api/user...
 app.use('/api/receipt', receiptRoutes); // => /api/receipt...
+app.use('/api/sign_s3', s3routes); // => /api/sign_s3
 
 // handle 404 error(route not found)
 app.use((req, res, next) => {
