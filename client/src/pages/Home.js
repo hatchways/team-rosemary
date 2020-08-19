@@ -4,6 +4,7 @@ import Drawer from "@material-ui/core/Drawer";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Toolbar from "@material-ui/core/Toolbar";
+import Grid from "@material-ui/core/Grid";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 
 import {
@@ -118,6 +119,20 @@ const useStyles = makeStyles(theme => ({
   logo: {
     width: '15%',
     marginRight: '2rem'
+  },
+  main: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    flexGrow: 1,
+    minHeight: '100vh',
+    padding: theme.spacing(3),
+    overflowX: 'hidden',
+    backgroundColor: '#fafbff',
+    [theme.breakpoints.down("xs")]: {
+      marginTop: '3rem',
+      padding: theme.spacing(1)
+    }
   }
 }));
 
@@ -212,19 +227,27 @@ export function Home(props) {
           </Drawer>
         </nav>
       </header >
-      <Switch>
-        <Route exact path="/">
-          <Dashboard />
-        </Route>
-        {pages.map(page => {
-          const { name, component } = page;
-          return (
-            <Route exact path={`/${name.toLowerCase()}`} key={name}>
-              {component}
-            </Route>
-          )
-        })}
-      </Switch>
+      <main className={classes.main}>
+        <div className={`${classes.utilbar} ${classes.utilbarMain}`} />
+        <Grid container spacing={3} xs={12} lg={10}>
+          <Grid item xs={12}>
+            <h2>{page}</h2>
+          </Grid>
+        </Grid>
+        <Switch>
+          <Route exact path="/">
+            <Dashboard />
+          </Route>
+          {pages.map(page => {
+            const { name, component } = page;
+            return (
+              <Route exact path={`/${name.toLowerCase()}`} key={name}>
+                {component}
+              </Route>
+            )
+          })}
+        </Switch>
+      </main>
     </Router>
   )
 }
