@@ -197,7 +197,7 @@ export function Home(props) {
                 indicator: classes.hidden
               }}
               onChange={handleChange}
-              onClick={isMobile && handleDrawerToggle}
+              onClick={isMobile ? handleDrawerToggle : null}
             >
               {pages.map(tab => {
                 const { name } = tab;

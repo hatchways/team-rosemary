@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
 export function MonthSelector(props) {
   const { top, right } = props;
   const classes = useStyles({ top, right });
-  const [month, setMonth] = useState();
+  const [month, setMonth] = useState('');
 
   const handleChange = e => setMonth(e.target.value);
 
