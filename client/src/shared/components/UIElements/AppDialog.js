@@ -30,14 +30,16 @@ const AppDialog = ({
     return (
         <div>
             <Dialog
+                id="appDialog"
                 fullWidth
                 maxWidth={size}
                 open={isOpen}
                 onClose={handleClose}
                 aria-labelledby="appDialog"
+               
               
             >
-                <DialogTitle id="appDialog">
+                <DialogTitle>
                     {title}
                     <IconButton
                         aria-label="close"

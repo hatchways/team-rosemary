@@ -10,7 +10,7 @@
   /* select starting stylings ------------------------------*/
   .select {
     font-family:
-      'Roboto','Helvetica','Arial',sans-serif;
+      'Montserrat','Helvetica','Arial',sans-serif;
       position: relative;
       width: 350px;
   }
@@ -21,7 +21,7 @@
       background-color: transparent;
       width: 350px;
       padding: 10px 10px 10px 0;
-      font-size: 18px;
+      font-size: 14px;
       border-radius: 0;
       border: none;
       border-bottom: 1px solid rgba(0,0,0, 0.12);
@@ -58,7 +58,7 @@
   /* LABEL ======================================= */
   .select-label {
       color: rgba(0,0,0, 0.26);
-      font-size: 18px;
+      font-size: 14px;
       font-weight: normal;
       position: absolute;
       pointer-events: none;

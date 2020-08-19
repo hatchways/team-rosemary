@@ -34,6 +34,9 @@ const App = () => {
             <Route path="/" exact>
                 <SigninPage />
             </Route>
+            <Route path="/dashboard">
+                <Dashboard />
+            </Route>
 
             <Redirect to="/" />
         </Switch>
