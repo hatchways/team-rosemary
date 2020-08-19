@@ -13,6 +13,10 @@ import { TransactionTable } from '../../components/TransactionTable';
 import { makeStyles } from "@material-ui/core/styles";
 import { AuthContext } from '../../shared/context/auth-context';
 import AppDialog from '../../shared/components/UIElements/AppDialog.js';
+import ReceiptUploadForm from '../../receipts/components/ReceiptUpload';
+import ErrorModal from '../../shared/components/UIElements/ErrorModal';
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
+import { useHttpClient } from '../../shared/hooks/http-hook';
 
 const useStyles = makeStyles(theme => ({
   utilbar: {
@@ -58,6 +62,7 @@ export function Dashboard(props) {
 
   const handleChange = e => setMonth(e.target.value);
   const auth = useContext(AuthContext);
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleDialogOpen = () => {
@@ -72,8 +77,38 @@ export function Dashboard(props) {
     setIsOpen(true);
   };
 
+  const data = [
+    {
+      id: "0",
+      name: "Select Category"
+    },
+    {
+      id: "Food",
+      name: "Food"
+    },
+    {
+      id: "Housing",
+      name: "Housing"
+    },
+    {
+      id: "Transportation",
+      name: "Transportation"
+    },
+    {
+      id: "Health Care",
+      name: "Health Care"
+    },
+    {
+      id: "Recreation & Entertainment",
+      name: "Recreation & Entertainment"
+    }
+
+  ];
+
   return (
     <main className={classes.main}>
+       <ErrorModal error={error} onClear={clearError} />
+             {isLoading && <LoadingSpinner asOverlay />}
       <div className={`${classes.utilbar} ${classes.utilbarMain}`} />
       <Grid container spacing={3} xs={12} lg={10}>
         <Grid item xs={9}>
@@ -114,7 +149,7 @@ export function Dashboard(props) {
         </Grid>
       </Grid>
       <AppDialog size="md" isOpen = {isOpen} handleOpen = {handleDialogOpen} handleClose = {handleDialogClose} title='Upload receipt'>
-            <h1> Upload receipt  </h1>
+          <ReceiptUploadForm data={data} ></ReceiptUploadForm>
           </AppDialog>
     </main>
   );

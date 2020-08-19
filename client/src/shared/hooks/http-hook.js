@@ -3,6 +3,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 export const useHttpClient = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState();
+  const [success, setSuccess] = useState(false);
 
   const activeHttpRequests = useRef([]);
 
@@ -31,6 +32,7 @@ export const useHttpClient = () => {
         }
 
         setIsLoading(false);
+        setSuccess(true);
         //console.log(responseData);
         return responseData;
       } catch (err) {
@@ -45,6 +47,9 @@ export const useHttpClient = () => {
   const clearError = () => {
     setError(null);
   };
+  const clearSuccess = () => {
+    setSuccess(false);
+  };
 
   useEffect(() => {
     return () => {
@@ -53,5 +58,5 @@ export const useHttpClient = () => {
     };
   }, []);
 
-  return { isLoading, error, sendRequest, clearError };
+  return { isLoading, error, success ,sendRequest, clearError, clearSuccess };
 };

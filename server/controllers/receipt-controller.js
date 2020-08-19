@@ -22,6 +22,7 @@ const createReceipt = async (req, res, next) => {
 
         return res.json(receipt);
     } catch (err) {
+        console.log(err);
         const error = new HttpError('server error', 500);
         return next(error);
     }

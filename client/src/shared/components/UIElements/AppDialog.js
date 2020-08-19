@@ -9,8 +9,6 @@ import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import CloseIcon from '@material-ui/icons/Close';
 
-import PropTypes from 'prop-types';
-
 const useStyles = makeStyles((theme) => ({
     closeButton: {
         position: 'absolute',
@@ -37,6 +35,7 @@ const AppDialog = ({
                 open={isOpen}
                 onClose={handleClose}
                 aria-labelledby="appDialog"
+              
             >
                 <DialogTitle id="appDialog">
                     {title}
