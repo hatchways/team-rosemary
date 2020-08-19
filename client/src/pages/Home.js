@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import AppBar from "@material-ui/core/AppBar";
 import Drawer from "@material-ui/core/Drawer";
 import Tabs from '@material-ui/core/Tabs';
@@ -14,9 +15,6 @@ import {
   Link
 } from "react-router-dom";
 
-import { useTheme } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-
 import { LoginUploadBtn } from '../components/LoginUploadBtn';
 import { ProfileAvator } from '../components/ProfileAvator';
 import { Logo } from '../components/Logo';
@@ -27,6 +25,8 @@ import { Receipts } from './Receipts';
 
 import logo from '../assets/logo.png';
 
+import { useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from "@material-ui/core/styles";
 
 const drawerWidth = "15rem";

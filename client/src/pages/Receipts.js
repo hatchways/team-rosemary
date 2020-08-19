@@ -1,9 +1,10 @@
 import React from "react";
+
 import Grid from "@material-ui/core/Grid";
 import ButtonBase from '@material-ui/core/ButtonBase';
-
-import Receipt from '../assets/receipt.png'
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
+
+import Receipt from '../assets/receipt.png';
 
 import { MonthSelector } from '../components/MonthSelector';
 
