@@ -76,9 +76,7 @@ const useStyles = makeStyles(theme => ({
   },
   toolbar: {
     display: 'flex',
-    // alignItems: 'center',
     justifyContent: 'flex-end',
-    // height: '5rem',
     backgroundColor: '#fafafa',
     color: 'initial'
   },

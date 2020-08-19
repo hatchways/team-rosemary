@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Avatar, Box } from "@material-ui/core";
+import Avatar from "@material-ui/core/Avatar";
 
 import User from '../assets/user.png';
 

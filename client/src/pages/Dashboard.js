@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Grid from "@material-ui/core/Grid";
 
 import { Panel } from '../components/Panel';
@@ -7,39 +7,7 @@ import { CatStatTable } from '../components/CatStatTable';
 import { TransactionTable } from '../components/TransactionTable';
 import { MonthSelector } from '../components/MonthSelector';
 
-// import { makeStyles } from "@material-ui/core/styles";
-
-// const useStyles = makeStyles(theme => ({
-//   utilbar: {
-//     [theme.breakpoints.up("sm")]: {
-//       ...theme.mixins.toolbar,
-//       backgroundColor: '#fafafa',
-//       opacity: 0.4,
-//       color: theme.palette.primary.contrastText
-//     }
-//   },
-//   utilbarMain: {
-//     backgroundColor: "#fafbff"
-//   },
-//   main: {
-//     display: 'flex',
-//     flexDirection: 'column',
-//     alignItems: 'center',
-//     flexGrow: 1,
-//     minHeight: '100vh',
-//     padding: theme.spacing(3),
-//     overflowX: 'hidden',
-//     backgroundColor: '#fafbff',
-//     [theme.breakpoints.down("xs")]: {
-//       marginTop: '3rem',
-//       padding: theme.spacing(1)
-//     }
-//   }
-// }));
-
 export function Dashboard(props) {
-  // const classes = useStyles();
-
   return (
     <>
       <Grid container spacing={3} xs={12} lg={10}>
