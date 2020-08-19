@@ -103,58 +103,86 @@ export default function SignIn() {
     });
 
     // s3 start
-    const [uploadState, setUploadState] = useState({ success: false, url: '' });
+    const [connected, setConnected] = useState(false);
+    const [url, setUrl] = useState('');
     const uploadInput = useRef(null);
 
-    const handleUpload = (e) => {
+    const handleUpload = async (e) => {
         let file = uploadInput.current.files[0];
         let fileParts = file.name.split('.');
         let fileName = fileParts[0];
         let fileType = fileParts[1];
         console.log('Preparing the upload');
-        axios //http hook instead
-            .post('http://localhost:5000/api/sign_s3/', {
-                fileName: fileName,
-                fileType: fileType,
-            })
-            .then((response) => {
-                var returnData = response.data.data.returnData;
-                var signedRequest = returnData.signedRequest;
-                var url = returnData.url;
-                console.log(url);
-                setUploadState({ ...uploadState, url: url });
-                console.log('Recieved a signed request ' + signedRequest);
-                // Put the fileType in the headers for the upload
-                var options = {
-                    headers: {
-                        'Content-Type': fileType,
-                    },
-                };
-                axios
-                    .put(signedRequest, file, options)
-                    .then((result) => {
-                        console.log('Response from s3');
-                        setUploadState({ ...uploadState, success: true });
-                    })
-                    .then(console.log(`state uploaded  + ${uploadState}`))
-                    .catch((error) => {
-                        alert('ERROR ' + JSON.stringify(error));
-                    });
-            })
-            .catch((error) => {
-                alert(JSON.stringify(error));
-            });
-        console.log('hi' + JSON.stringify(uploadState));
+
+        // async/await http-hook version
+        // try {
+        //     const endpoint = 'http://localhost:5000/api/sign_s3/';
+        //     const responseData = await sendRequest(
+        //         endpoint,
+        //         'POST',
+        //         { fileName: fileName, fileType: fileType, userId: auth.userId },
+        //         {
+        //             'Content-Type': 'application/json',
+        //         }
+        //     );
+        //     const returnData = responseData.data.data.returnData;
+        //     const signedRequest = returnData.signedRequest;
+        //     const url = returnData.url;
+        //     setUrl(url);
+        //     console.log('Recieved a signed request ' + signedRequest);
+        //     const options = {
+        //         headers: {
+        //             'Content-Type': fileType,
+        //         },
+        //     };
+
+        //     const response = await sendRequest(
+        //         signedRequest,
+        //         'PUT',
+        //         file,
+        //         options
+        //     );
+        //     console.log('Response from s3');
+        //     setConnected(true);
+        // } catch (error) {
+        //     alert('ERROR ' + JSON.stringify(error));
+        // }
+
+        //async/await axios version
+        try {
+            const response = await axios.post(
+                'http://localhost:5000/api/sign_s3/',
+                {
+                    fileName: fileName,
+                    fileType: fileType,
+                    userId: auth.userId, //send in userid for url
+                }
+            );
+            const returnData = response.data.data.returnData;
+            const signedRequest = returnData.signedRequest;
+            const url = returnData.url;
+            setUrl(url);
+            console.log('Recieved a signed request ' + signedRequest);
+
+            const options = {
+                headers: {
+                    'Content-Type': fileType,
+                },
+            };
+            await axios.put(signedRequest, file, options);
+            console.log('Response from s3');
+            setConnected(true);
+        } catch (error) {
+            alert(JSON.stringify(error));
+        }
     };
 
-    const handleChanges3 = (e) => {
-        setUploadState({ success: false, url: '' });
-    };
+    const handleChanges3 = (e) => {};
 
     const Success_message = () => (
         <div style={{ padding: 50 }}>
             <h3 style={{ color: 'green' }}>SUCCESSFUL UPLOAD</h3>
-            <a href={uploadState.url}>Access the file here</a>
+            <a href={url}>Access the file here</a>
             <br />
         </div>
     );
@@ -234,7 +262,8 @@ export default function SignIn() {
                         {/* S3 upload button */}
                         <Fragment>
                             upload a file
-                            {uploadState.success ? <Success_message /> : null}
+                            {/* {console.log(uploadState)} */}
+                            {connected ? <Success_message /> : null}
                             <input
                                 onChange={handleChanges3}
                                 ref={uploadInput}
