@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import AppBar from "@material-ui/core/AppBar";
 import Box from "@material-ui/core/Box";
@@ -155,6 +155,15 @@ export function Home(props) {
   ];
 
   const isMobile = useMediaQuery(useTheme().breakpoints.down('xs'));
+
+  useEffect(() => {
+    const page = sessionStorage.getItem('page');
+    setPage(page);
+  }, []);
+
+  useEffect(() => {
+    sessionStorage.setItem('page', page);
+  }, [page])
 
   return (
     <Router>

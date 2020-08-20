@@ -29,7 +29,7 @@ import { Home } from './pages/Home';
 //         <SignUpPage />
 //       </Route>
 
-//       <Redirect to="/dashboard" />
+//       <Redirect to="/" />
 //     </Switch>
 //   );
 
@@ -54,6 +54,7 @@ import { Home } from './pages/Home';
 // Varun's work end
 
 // Siyuan's work start
+
 function App(props) {
   return <Home />
 }
