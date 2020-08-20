@@ -46,8 +46,7 @@ const RecentTransactions = (props) => {
          sendRequest,
      } = useHttpClient();
     const userId = auth.userId;
-    console.log(props.reloadTrans);
-    
+       
     //Get category icon based upon the category
     const categoryIcon = (category) => {
         switch (category) {
