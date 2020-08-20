@@ -143,13 +143,18 @@ const login = async (req, res, next) => {
 };
 
 // @route GET user/receipts
-// @desc get ALL receipts for that user.
+// @desc get ALL receipts for that user with given duration.
+// duration can be: daily, weekly, monthly, annual
 // @access Private
 const getAllReceipt = async (req, res, next) => {
     const userId = req.userData.userId;
+    const { duration } = req.body;
 
     try {
-        const receipts = await Receipt.find({ user: userId });
+        const receipts = await Receipt.find({ user: userId }).sort({
+            date: -1,
+        });
+
         res.json(receipts);
     } catch {
         const error = new HttpError('Server Error', 500);
