@@ -171,7 +171,7 @@ const getRecentTransactions = async (req, res, next) => {
             const error = new HttpError('Invalid user details.', 400);
             return next(error);
         } else {
-            const receipts = await Receipt.find({ user: userId }).sort( { date: 1 } ).limit( 4 );
+            const receipts = await Receipt.find({ user: userId }).sort( { date: -1 } ).limit(3);
             res.status(200).json({
                 receipts,
             });

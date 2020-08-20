@@ -5,6 +5,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from "@material-ui/core/Select";
 import Button from '@material-ui/core/Button';
 
+
 import { Panel } from '../../components/Panel';
 import { Chart } from '../../components/Chart';
 import { CatStatTable } from '../../components/CatStatTable';
@@ -62,6 +63,7 @@ export function Dashboard(props) {
   const handleChange = e => setMonth(e.target.value);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [isOpen, setIsOpen] = useState(false);
+  const [reloadTransactions, setReloadTransactions] = useState(false);
 
   const handleDialogOpen = () => {
     setIsOpen(true);
@@ -106,7 +108,7 @@ export function Dashboard(props) {
     }
 
   ];
-
+ 
   return (
     <main className={classes.main}>
        <ErrorModal error={error} onClear={clearError} />
@@ -146,13 +148,13 @@ export function Dashboard(props) {
       <Grid container spacing={3} xs={12} lg={10}>
         <Grid item xs={12}>
           <Panel>
-            <RecentTransactions/>
+            <RecentTransactions reloadTrans={setReloadTransactions}/>
             {/* <TransactionTable /> */}
           </Panel>
         </Grid>
       </Grid>
       <AppDialog size="md" isOpen = {isOpen} handleOpen = {handleDialogOpen} handleClose = {handleDialogClose} title='Upload receipt'>
-          <ReceiptUploadForm data={data} ></ReceiptUploadForm>
+          <ReceiptUploadForm data={data} reloadTrans={setReloadTransactions} ></ReceiptUploadForm>
           </AppDialog>
     </main>
   );

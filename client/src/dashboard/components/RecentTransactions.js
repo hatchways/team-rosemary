@@ -38,7 +38,7 @@ const useStyles = makeStyles({
     },
 });
 
-const RecentTransactions = () => {
+const RecentTransactions = (props) => {
     const classes = useStyles();
     const [loadedReceipts, setloadedReceipts] = useState([]);
     const auth = useContext(AuthContext);
@@ -46,6 +46,7 @@ const RecentTransactions = () => {
          sendRequest,
      } = useHttpClient();
     const userId = auth.userId;
+    console.log(props.reloadTrans);
     
     //Get category icon based upon the category
     const categoryIcon = (category) => {

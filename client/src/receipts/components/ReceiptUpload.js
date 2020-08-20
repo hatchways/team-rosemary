@@ -2,19 +2,16 @@ import React, { useState, useContext } from 'react';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { DropzoneArea } from 'material-ui-dropzone';
 
-import loginBg from '../../assets/login-bg.png';
-
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import SuccessModal from '../../shared/components/UIElements/SuccessModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
-
 import CustomSelect from '../../shared/components/FormElements/Select';
 import { AuthContext } from '../../shared/context/auth-context';
 
@@ -47,6 +44,7 @@ const validationSchema = Yup.object().shape({
 //     return (d <= 9 ? '0' + d : d) + '-' + (m <= 9 ? '0' + m : m) + '-' + y;
 // }
 
+
 const ReceiptUploadForm = (props) => {
     const [data] = useState(props.data);
     const [category, setCategory] = useState('');
@@ -54,6 +52,7 @@ const ReceiptUploadForm = (props) => {
     const classes = useStyles();
     const { isLoading, error, success, sendRequest, clearError, clearSuccess } = useHttpClient();
     const auth = useContext(AuthContext);
+    const history = useHistory();
 
     function onSelectChange(event) {
         setCategory(event.target.value);
@@ -76,8 +75,7 @@ const ReceiptUploadForm = (props) => {
         async onSubmit(values, {resetForm}) {
             if (category !== '0') {
                 values.category = category;
-                console.log( values.category);
-            
+                   
             }
             try {
                 const endpoint =
@@ -99,9 +97,11 @@ const ReceiptUploadForm = (props) => {
                          'Authorization': 'Bearer ' + auth.token
                     }
                 );
+                props.reloadTrans(true);
 
                 setMessage('Receipt uploaded successfully!');
-                resetForm({values: ''});
+                //resetForm({values: ''});
+               // history.push('/dashboard');
             } catch (err) {
                 console.log(err);
             }
