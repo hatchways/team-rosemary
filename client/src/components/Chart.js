@@ -17,16 +17,16 @@ const useStyles = makeStyles({
 
 // Should be sorted by the date, users may not add receipts day after day
 const data = [
-  { date: 'Nov 1', expense: 10 },
-  { date: 'Nov 2', expense: 20 },
-  { date: 'Nov 3', expense: 15 },
-  { date: 'Nov 4', expense: 20 },
-  { date: 'Nov 5', expense: 40 },
-  { date: 'Nov 6', expense: 10 },
-  { date: 'Nov 7', expense: 20 },
-  { date: 'Nov 8', expense: 15 },
-  { date: 'Nov 9', expense: 20 },
-  { date: 'Nov 10', expense: 40 },
+  { date: 'Aug 11', expense: 10 },
+  { date: 'Aug 12', expense: 20 },
+  { date: 'Aug 13', expense: 15 },
+  { date: 'Aug 14', expense: 20 },
+  { date: 'Aug 15', expense: 40 },
+  { date: 'Aug 16', expense: 10 },
+  { date: 'Aug 17', expense: 20 },
+  { date: 'Aug 18', expense: 15 },
+  { date: 'Aug 19', expense: 20 },
+  { date: 'Aug 20', expense: 40 },
 ];
 
 export function Chart(props) {

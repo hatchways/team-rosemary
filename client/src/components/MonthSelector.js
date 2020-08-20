@@ -26,7 +26,7 @@ export function MonthSelector(props) {
   return (
     <FormControl className={classes.formControl}>
       <Select value={month} onChange={handleChange}>
-        <MenuItem value='November'>November</MenuItem>
+        <MenuItem value='August'>Angust</MenuItem>
       </Select>
     </FormControl>
   );

@@ -6,6 +6,7 @@ import { Panel } from '../components/Panel';
 import { Chart } from '../components/Chart';
 import { CatStatTable } from '../components/CatStatTable';
 import { TransactionTable } from '../components/TransactionTable';
+import RecentTransactions from '../components/RecentTransactions';
 import { MonthSelector } from '../components/MonthSelector';
 
 export function Dashboard(props) {
@@ -32,7 +33,9 @@ export function Dashboard(props) {
       <Grid container spacing={3} xs={12} lg={10}>
         <Grid item xs={12}>
           <Panel>
-            <TransactionTable />
+            {/* <TransactionTable /> */}
+            {/* <RecentTransactions reloadTrans={setReloadTransactions}/> */}
+            <RecentTransactions  />
           </Panel>
         </Grid>
       </Grid>

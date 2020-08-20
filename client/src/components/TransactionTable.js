@@ -9,6 +9,8 @@ import TableRow from '@material-ui/core/TableRow';
 
 import { makeStyles } from '@material-ui/core/styles';
 
+// This is replaced by RecentTransactions.js
+
 const useStyles = makeStyles({
   container: {
     whiteSpace: 'nowrap'
@@ -17,7 +19,7 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'center'
   },
-  avator: {
+  avatar: {
     marginRight: '1rem',
     width: '2rem',
     height: '2rem'
@@ -45,7 +47,7 @@ export function TransactionTable(props) {
             <TableRow key={index + ' ' + cat.name}>
               <TableCell component="th" scope="row">
                 <div className={classes.thead}>
-                  <Avatar component="span" className={classes.avator}>{cat.avatar}</Avatar>
+                  <Avatar component="span" className={classes.avatar}>{cat.avatar}</Avatar>
                   {cat.name}
                 </div>
               </TableCell>

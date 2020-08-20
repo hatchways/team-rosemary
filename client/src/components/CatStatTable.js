@@ -17,7 +17,7 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'center'
   },
-  avator: {
+  avatar: {
     marginRight: '1rem',
     width: '1.2rem',
     height: '1.2rem'
@@ -42,7 +42,7 @@ export function CatStatTable(props) {
             <TableRow key={index + ' ' + cat.cat}>
               <TableCell component="th" scope="row">
                 <div className={classes.thead}>
-                  <Avatar className={classes.avator}>{cat.avatar}</Avatar>
+                  <Avatar className={classes.avatar}>{cat.avatar}</Avatar>
                   {cat.cat}
                 </div>
               </TableCell>

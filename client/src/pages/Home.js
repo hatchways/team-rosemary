@@ -21,6 +21,12 @@ import { LoginUploadBtn } from '../components/LoginUploadBtn';
 import { ProfileAvator } from '../components/ProfileAvator';
 import { Logo } from '../components/Logo';
 
+import AppDialog from '../shared/components/UIElements/AppDialog.js';
+import ReceiptUploadForm from '../receipts/components/ReceiptUpload';
+import ErrorModal from '../shared/components/UIElements/ErrorModal';
+import LoadingSpinner from '../shared/components/UIElements/LoadingSpinner';
+import { useHttpClient } from '../shared/hooks/http-hook';
+
 import { Dashboard } from './Dashboard';
 import { Reports } from './Reports';
 import { Receipts } from './Receipts';
@@ -141,12 +147,60 @@ const useStyles = makeStyles(theme => ({
 
 export function Home(props) {
   const classes = useStyles();
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [page, setPage] = useState('Dashboard');
-  const handleDrawerToggle = () => setMobileOpen(!mobileOpen)
+  const [reloadTransactions, setReloadTransactions] = useState(false);
+
+  const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
+
   const handleChange = (e, page) => {
     setPage(page);
   };
+
+  const handleDialogOpen = () => {
+    setIsOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setIsOpen(false);
+  };
+
+  const handleClickOpen = () => {
+    setIsOpen(true);
+  };
+
+  const data = [
+    {
+      id: "0",
+      name: "Select Category"
+    },
+    {
+      id: "Food & Drinks",
+      name: "Food & Drinks"
+    },
+    {
+      id: "Housing",
+      name: "Housing"
+    },
+    {
+      id: "Transportation",
+      name: "Transportation"
+    },
+    {
+      id: "Health Care",
+      name: "Health Care"
+    },
+    {
+      id: "Recreation & Entertainment",
+      name: "Recreation & Entertainment"
+    },
+    {
+      id: "Grocery",
+      name: "Grocery"
+    }
+  ];
 
   const pages = [
     { name: 'Dashboard', component: <Dashboard /> },
@@ -179,7 +233,7 @@ export function Home(props) {
                   className={classes.menuButton}
                   onClick={handleDrawerToggle}
                 />
-                <LoginUploadBtn>Upload Receipt</LoginUploadBtn>
+                <LoginUploadBtn onClick={handleClickOpen}>Upload Receipt</LoginUploadBtn>
                 <ProfileAvator />
               </Toolbar>
             </AppBar>
@@ -241,8 +295,13 @@ export function Home(props) {
                 </Tabs>
               </Drawer>
             </nav>
+            <AppDialog size="md" isOpen={isOpen} handleOpen={handleDialogOpen} handleClose={handleDialogClose} title='Upload receipt'>
+              <ReceiptUploadForm data={data} reloadTrans={setReloadTransactions} ></ReceiptUploadForm>
+            </AppDialog>
           </header >
           <main className={classes.main}>
+            <ErrorModal error={error} onClear={clearError} />
+            {isLoading && <LoadingSpinner asOverlay />}
             <div className={`${classes.utilbar} ${classes.utilbarMain}`} />
             <Grid container spacing={3} xs={12} lg={10}>
               <Grid item xs={12}>
@@ -250,9 +309,6 @@ export function Home(props) {
               </Grid>
             </Grid>
             <Switch>
-              <Route exact path="/">
-                <Dashboard />
-              </Route>
               {pages.map(page => {
                 const { name, component } = page;
                 return (
@@ -265,7 +321,6 @@ export function Home(props) {
           </main>
         </ThemeProvider>
       </Box>
-
     </Router>
   )
 }
