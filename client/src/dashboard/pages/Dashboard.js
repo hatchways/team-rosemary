@@ -8,10 +8,9 @@ import Button from '@material-ui/core/Button';
 import { Panel } from '../../components/Panel';
 import { Chart } from '../../components/Chart';
 import { CatStatTable } from '../../components/CatStatTable';
-import { TransactionTable } from '../../components/TransactionTable';
-
 import { makeStyles } from "@material-ui/core/styles";
-import { AuthContext } from '../../shared/context/auth-context';
+
+import RecentTransactions from '../components/RecentTransactions';
 import AppDialog from '../../shared/components/UIElements/AppDialog.js';
 import ReceiptUploadForm from '../../receipts/components/ReceiptUpload';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
@@ -61,7 +60,6 @@ export function Dashboard(props) {
   const [month, setMonth] = useState('');
 
   const handleChange = e => setMonth(e.target.value);
-  const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -83,8 +81,8 @@ export function Dashboard(props) {
       name: "Select Category"
     },
     {
-      id: "Food",
-      name: "Food"
+      id: "Food & Drinks",
+      name: "Food & Drinks"
     },
     {
       id: "Housing",
@@ -101,6 +99,10 @@ export function Dashboard(props) {
     {
       id: "Recreation & Entertainment",
       name: "Recreation & Entertainment"
+    },
+    {
+      id: "Grocery",
+      name: "Grocery"
     }
 
   ];
@@ -144,7 +146,8 @@ export function Dashboard(props) {
       <Grid container spacing={3} xs={12} lg={10}>
         <Grid item xs={12}>
           <Panel>
-            <TransactionTable />
+            <RecentTransactions/>
+            {/* <TransactionTable /> */}
           </Panel>
         </Grid>
       </Grid>

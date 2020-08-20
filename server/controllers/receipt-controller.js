@@ -13,7 +13,7 @@ const createReceipt = async (req, res, next) => {
             title: title,
             user: req.userData.userId,
             amount: amount,
-            catagory: category,
+            category: category,
             date: date,
             picture: picture,
         });

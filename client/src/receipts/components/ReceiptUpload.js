@@ -22,26 +22,6 @@ const useStyles = makeStyles((theme) => ({
     root: {
         height: '100vh',
     },
-    image: {
-        backgroundImage: `url(${loginBg})`,
-        backgroundRepeat: 'no-repeat',
-        backgroundColor:
-            theme.palette.type === 'light'
-                ? theme.palette.grey[50]
-                : theme.palette.grey[900],
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-    },
-    paper: {
-        margin: theme.spacing(8, 4),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
-    avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main,
-    },
     form: {
         width: '100%', // Fix IE 11 issue.
         marginTop: theme.spacing(1),
@@ -56,16 +36,16 @@ const validationSchema = Yup.object().shape({
     amount: Yup.number().required('Amount is required'),
 });
 
-const currentDate = () => {
+// const currentDate = () => {
 
-    const date = new Date(); // M-D-YYYY
+//     const date = new Date(); // M-D-YYYY
 
-    const d = date.getDate();
-    const m = date.getMonth() + 1;
-    const y = date.getFullYear();
+//     const d = date.getDate();
+//     const m = date.getMonth() + 1;
+//     const y = date.getFullYear();
 
-    return (d <= 9 ? '0' + d : d) + '-' + (m <= 9 ? '0' + m : m) + '-' + y;
-}
+//     return (d <= 9 ? '0' + d : d) + '-' + (m <= 9 ? '0' + m : m) + '-' + y;
+// }
 
 const ReceiptUploadForm = (props) => {
     const [data] = useState(props.data);
@@ -96,19 +76,20 @@ const ReceiptUploadForm = (props) => {
         async onSubmit(values, {resetForm}) {
             if (category !== '0') {
                 values.category = category;
+                console.log( values.category);
             
             }
             try {
                 const endpoint =
                     process.env.REACT_APP_API_BASE_URL + 'receipt';
-                const responseData = await sendRequest(
+                    await sendRequest(
                     endpoint,
                     'POST',
                     JSON.stringify({
                         title: values.name,
                         user: auth.userId,
                         amount: values.amount,
-                        catagory: values.category,
+                        category: values.category,
                         date: new Date(),
                         picture: "http://amazon.ca/sdasdlkasjdljasldjaslkdjlaskds.jpg",
                     }),
