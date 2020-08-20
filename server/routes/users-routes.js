@@ -28,5 +28,7 @@ router.use(checkAuth);
 
 router.get('/receipts', usersController.getAllReceipt);
 
+router.get('/recenttransactions/:userid',
+usersController.getRecentTransactions)
 
 module.exports = router;

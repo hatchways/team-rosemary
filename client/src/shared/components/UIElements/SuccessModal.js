@@ -2,7 +2,7 @@ import React from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 
-const ErrorModal = (props) => {
+const SuccessModal = (props) => {
 
   function Alert(props) {
     return <MuiAlert elevation={6} variant='filled' {...props} />;
@@ -11,7 +11,7 @@ const ErrorModal = (props) => {
     <div>
   
     <Snackbar
-      open={!!props.error} 
+      open={!!props.success} 
       autoHideDuration={4000}
       onClose={props.onClear}
       anchorOrigin={{
@@ -20,12 +20,12 @@ const ErrorModal = (props) => {
       }}
      
     >
-      <Alert onClose={props.onClear} severity='error'>
-       {props.error}
+      <Alert onClose={props.onClear} severity='success'>
+       {props.successMessage}
       </Alert>
     </Snackbar>
     </div>
   );
 };
 
-export default ErrorModal;
+export default SuccessModal;
