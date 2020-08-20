@@ -33,7 +33,7 @@ const useStyles = makeStyles({
 })
 
 // May merge all Tables into one Template
-export function TopCategories(props) {
+export default function TopCategories(props) {
 
   const classes = useStyles();
   const auth = useContext(AuthContext);
@@ -70,7 +70,7 @@ export function TopCategories(props) {
             // API call
             const endpoint =
                 process.env.REACT_APP_API_BASE_URL +
-                `user/recenttransactions/${userId}`;
+                `user/topcategories/${userId}`;
             const responseData = await sendRequest(endpoint, 'GET', null, {
                 Authorization: 'Bearer ' + auth.token,
             });
@@ -83,15 +83,17 @@ export function TopCategories(props) {
     <TableContainer>
       <Table className={classes.container}>
         <TableBody>
-          {data.map((cat, index) => (
-            <TableRow key={index + ' ' + cat.cat}>
+          {loadedReceipts.map((receipt, index) => (
+            <TableRow key={index + ' ' +  receipt._id}>
               <TableCell component="th" scope="row">
-                <div className={classes.thead}>
-                  <Avatar className={classes.avator}>{cat.avatar}</Avatar>
-                  {cat.cat}
-                </div>
+              <div className={classes.thead}>
+                 <Avatar className={classes.green}>
+                     {categoryIcon(receipt._id) }
+                 </Avatar>
+                  {receipt._id}
+              </div>
               </TableCell>
-              <TableCell>{`-$${cat.expense.toLocaleString()}`}</TableCell>
+              <TableCell>{`-$${receipt.total.toLocaleString()}`}</TableCell>
             </TableRow>
           ))}
         </TableBody>

@@ -167,11 +167,10 @@ const getAllReceipt = async (req, res, next) => {
 // @access Private
 const getRecentTransactions = async (req, res, next) => {
     const userId = req.params.userid;
-    console.log(userId);
-
+  
     try {
         const user = await User.findById(userId);
-        console.log(user);
+      
         if (!user) {
             const error = new HttpError('Invalid user details.', 400);
             return next(error);
@@ -187,9 +186,45 @@ const getRecentTransactions = async (req, res, next) => {
     }
 };
 
+const getTopCategories = async (req, res, next) => {
+    const userId = req.params.userid;
+     try {
+        const user = await User.findById(userId);
+      
+        if (!user) {
+            const error = new HttpError('Invalid user details.', 400);
+            return next(error);
+        } else {
+            const receipts = await Receipt.aggregate(
+                [
+                    // Grouping pipeline
+                    { "$group": { 
+                        "_id": '$category', 
+                        "total": { "$sum": "$amount" }
+                    }},
+                    // Sorting pipeline
+                    { "$sort": { "total": -1 } },
+                    // Optionally limit results
+                    { "$limit": 3 }
+                ],
+                function(err,result) {
+                  console.log(err);
+                }
+            );
+            res.status(200).json({
+                receipts,
+            });
+        }
+    } catch {
+        const error = new HttpError('Internal server error', 500);
+        return next(error);
+    }
+};
+
 module.exports = {
     signup,
     login,
     getAllReceipt,
     getRecentTransactions,
+    getTopCategories
 };
