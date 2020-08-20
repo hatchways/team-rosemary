@@ -1,4 +1,5 @@
-import React, { useContext, useRef, Fragment, useState } from 'react';
+import React, { useContext, useState, Fragment, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -18,6 +19,7 @@ import Copyright from '../../shared/components/FooterElements/Copyright';
 import { AuthContext } from '../../shared/context/auth-context';
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
+import SuccessModal from '../../shared/components/UIElements/SuccessModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 
 //for s3
@@ -65,8 +67,18 @@ const validationSchema = Yup.object().shape({
 
 export default function SignIn() {
     const classes = useStyles();
+    const history = useHistory();
+    const [message, setMessage] = useState('');
+
     const auth = useContext(AuthContext);
-    const { isLoading, error, sendRequest, clearError } = useHttpClient();
+    const {
+        isLoading,
+        error,
+        success,
+        sendRequest,
+        clearError,
+        clearSuccess,
+    } = useHttpClient();
     const {
         handleSubmit,
         handleChange,
@@ -96,6 +108,8 @@ export default function SignIn() {
                     }
                 );
                 auth.login(responseData.userId, responseData.token);
+                setMessage('Signed in successfully!');
+                history.push('/dashboard');
             } catch (err) {
                 console.log(err);
             }
@@ -212,6 +226,11 @@ export default function SignIn() {
         <Grid container component="main" className={classes.root}>
             <CssBaseline />
             <ErrorModal error={error} onClear={clearError} />
+            <SuccessModal
+                success={success}
+                successMessage={message}
+                onClear={clearSuccess}
+            />
             <Grid item xs={false} sm={4} md={7} className={classes.image} />
             <Grid
                 item
@@ -224,6 +243,7 @@ export default function SignIn() {
             >
                 <div className={classes.paper}>
                     {isLoading && <LoadingSpinner asOverlay />}
+
                     <Avatar className={classes.avatar}>
                         <LockOutlinedIcon />
                     </Avatar>
@@ -292,13 +312,7 @@ export default function SignIn() {
                             <button onClick={handleUpload}> UPLOAD</button>
                         </Fragment>
                         {/* S3 upload button end */}
-
                         <Grid container>
-                            <Grid item xs>
-                                {/* <Link href='#' variant='body2'>
-                    Forgot password?
-                  </Link> */}
-                            </Grid>
                             <Grid item>
                                 <Link to="/signup" variant="body2">
                                     {"Don't have an account? Sign Up"}
