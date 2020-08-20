@@ -17,9 +17,9 @@ import {
   Link
 } from "react-router-dom";
 
-import { LoginUploadBtn } from '../components/LoginUploadBtn';
-import { ProfileAvator } from '../components/ProfileAvator';
-import { Logo } from '../components/Logo';
+import { LoginUploadBtn } from '../shared/components/general/LoginUploadBtn';
+import { ProfileAvator } from '../shared/components/general/ProfileAvator';
+import { Logo } from '../shared/components/general/Logo';
 
 import AppDialog from '../shared/components/UIElements/AppDialog.js';
 import ReceiptUploadForm from '../receipts/components/ReceiptUpload';
@@ -211,7 +211,7 @@ export function Home(props) {
   const isMobile = useMediaQuery(useTheme().breakpoints.down('xs'));
 
   useEffect(() => {
-    const page = sessionStorage.getItem('page');
+    const page = sessionStorage.getItem('page') || 'Dashboard';
     setPage(page);
   }, []);
 

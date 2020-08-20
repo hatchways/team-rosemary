@@ -17,8 +17,8 @@ import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
 
 import { green } from '@material-ui/core/colors';
 
-import { AuthContext } from '../shared/context/auth-context';
-import { useHttpClient } from '../shared/hooks/http-hook';
+import { AuthContext } from '../../context/auth-context';
+import { useHttpClient } from '../../hooks/http-hook';
 
 const useStyles = makeStyles({
     container: {

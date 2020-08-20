@@ -6,7 +6,7 @@ import ZoomInIcon from '@material-ui/icons/ZoomIn';
 
 import Receipt from '../assets/receipt.png';
 
-import { MonthSelector } from '../components/MonthSelector';
+import { MonthSelector } from '../shared/components/general/MonthSelector';
 
 import { makeStyles } from "@material-ui/core/styles";
 

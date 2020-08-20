@@ -2,7 +2,7 @@ import React from 'react';
 
 import Avatar from "@material-ui/core/Avatar";
 
-import User from '../assets/user.png';
+import User from '../../../assets/user.png';
 
 import { makeStyles } from '@material-ui/core/styles';
 

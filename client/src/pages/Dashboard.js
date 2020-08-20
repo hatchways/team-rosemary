@@ -2,12 +2,13 @@ import React from "react";
 
 import Grid from "@material-ui/core/Grid";
 
-import { Panel } from '../components/Panel';
-import { Chart } from '../components/Chart';
-import { CatStatTable } from '../components/CatStatTable';
-import { TransactionTable } from '../components/TransactionTable';
-import RecentTransactions from '../components/RecentTransactions';
-import { MonthSelector } from '../components/MonthSelector';
+import { Panel } from '../shared/components/general/Panel';
+import { Chart } from '../shared/components/general/Chart';
+import { CatStatTable } from '../shared/components/general/CatStatTable';
+import TopCategories from '../shared/components/general/TopCategories';
+import { TransactionTable } from '../shared/components/general/TransactionTable';
+import RecentTransactions from '../shared/components/general/RecentTransactions';
+import { MonthSelector } from '../shared/components/general/MonthSelector';
 
 export function Dashboard(props) {
   return (
@@ -21,7 +22,8 @@ export function Dashboard(props) {
         </Grid>
         <Grid item xs={12} md={6}>
           <Panel title="TOP CATEGORIES">
-            <CatStatTable />
+            {/* <CatStatTable /> */}
+            <TopCategories />
           </Panel>
         </Grid>
       </Grid>
@@ -35,7 +37,7 @@ export function Dashboard(props) {
           <Panel>
             {/* <TransactionTable /> */}
             {/* <RecentTransactions reloadTrans={setReloadTransactions}/> */}
-            <RecentTransactions  />
+            <RecentTransactions />
           </Panel>
         </Grid>
       </Grid>

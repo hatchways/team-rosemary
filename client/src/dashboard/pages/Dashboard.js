@@ -4,9 +4,9 @@ import Grid from "@material-ui/core/Grid";
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from "@material-ui/core/Select";
 import Button from '@material-ui/core/Button';
-import { Panel } from '../../components/Panel';
-import { Chart } from '../../components/Chart';
-import { CatStatTable } from '../../components/CatStatTable';
+import { Panel } from '../../shared/components/general/Panel';
+import { Chart } from '../../shared/components/general/Chart';
+import { CatStatTable } from '../../shared/components/general/CatStatTable';
 import { makeStyles } from "@material-ui/core/styles";
 
 import RecentTransactions from '../components/RecentTransactions';
