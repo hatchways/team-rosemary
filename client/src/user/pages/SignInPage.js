@@ -111,7 +111,7 @@ export default function SignIn() {
         let file = uploadInput.current.files[0];
         let fileParts = file.name.split('.');
         let fileName = fileParts[0];
-        let fileType = fileParts[1];
+        let fileType = fileParts[1]; //png
         console.log('Preparing the upload');
 
         // async/await http-hook version
@@ -120,28 +120,45 @@ export default function SignIn() {
         //     const responseData = await sendRequest(
         //         endpoint,
         //         'POST',
-        //         { fileName: fileName, fileType: fileType, userId: auth.userId },
+        //         JSON.stringify({
+        //             fileName: fileName,
+        //             fileType: fileType,
+        //             userId: auth.userId,
+        //         }),
         //         {
         //             'Content-Type': 'application/json',
         //         }
         //     );
-        //     const returnData = responseData.data.data.returnData;
+
+        //     const returnData = responseData.data.returnData;
         //     const signedRequest = returnData.signedRequest;
         //     const url = returnData.url;
+
         //     setUrl(url);
         //     console.log('Recieved a signed request ' + signedRequest);
-        //     const options = {
-        //         headers: {
-        //             'Content-Type': fileType,
-        //         },
-        //     };
 
-        //     const response = await sendRequest(
-        //         signedRequest,
-        //         'PUT',
-        //         file,
-        //         options
-        //     );
+        //     const options = {
+        //         headers: { 'Content-Type': fileType },
+        //     };
+        //     // reCreate new Object and set File Data into it
+        //     // const newObject = {
+        //     //     lastModified: file.lastModified,
+        //     //     lastModifiedDate: file.lastModifiedDate,
+        //     //     name: fileName,
+        //     //     file: fileType,
+        //     //     size: file.size,
+        //     // };
+
+        //     // const formData = new FormData();
+        //     // formData.append('file', file);
+        //     // console.log(formData);
+
+        //     console.log(file);
+        //     // console.log(fileType);
+        //     // console.log(options);
+        //     await sendRequest(signedRequest, 'PUT', file, {
+        //         'Content-Type': fileType,
+        //     });
         //     console.log('Response from s3');
         //     setConnected(true);
         // } catch (error) {
@@ -169,6 +186,8 @@ export default function SignIn() {
                     'Content-Type': fileType,
                 },
             };
+            //     console.log(options);
+            //     console.log(file);
             await axios.put(signedRequest, file, options);
             console.log('Response from s3');
             setConnected(true);
