@@ -17,6 +17,7 @@ const Receipt = mongoose.model(
         },
         date: {
             type: Date,
+            default: Date.now,
         },
         category: {
             type: String,

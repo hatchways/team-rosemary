@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, Fragment, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -22,165 +22,309 @@ import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import SuccessModal from '../../shared/components/UIElements/SuccessModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 
+//for s3
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    height: '100vh',
-  },
-  image: {
-    backgroundImage: `url(${loginBg})`,
-    backgroundRepeat: 'no-repeat',
-    backgroundColor:
-      theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    
-  },
-  paper: {
-    margin: theme.spacing(8, 4),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
+    root: {
+        height: '100vh',
+    },
+    image: {
+        backgroundImage: `url(${loginBg})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundColor:
+            theme.palette.type === 'light'
+                ? theme.palette.grey[50]
+                : theme.palette.grey[900],
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+    },
+    paper: {
+        margin: theme.spacing(8, 4),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+    avatar: {
+        margin: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.main,
+    },
+    form: {
+        width: '100%', // Fix IE 11 issue.
+        marginTop: theme.spacing(1),
+    },
+    submit: {
+        margin: theme.spacing(3, 0, 2),
+    },
 }));
 
-
 const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .email('Enter a valid email')
-    .required('Email is required'),
-  password: Yup.string().required('Password is required'),
+    email: Yup.string()
+        .email('Enter a valid email')
+        .required('Email is required'),
+    password: Yup.string().required('Password is required'),
 });
 
-
 export default function SignIn() {
-  const classes = useStyles();
-  const history = useHistory();
-  const [message, setMessage] = useState('');
-  
-  const auth = useContext(AuthContext);
-  const { isLoading, error, success, sendRequest, clearError, clearSuccess } = useHttpClient();
-  const {
-    handleSubmit,
-    handleChange,
-    handleBlur,
-    errors,
-    touched,
-    isValid,
-  } = useFormik({
-    initialValues: {
-      email: '',
-      password: '',
-    },
-    validationSchema,
-    async onSubmit(values) {
-      try {
-        const endpoint = process.env.REACT_APP_API_BASE_URL + 'user/login';
-        const responseData = await sendRequest(
-          endpoint,
-          'POST',
-          JSON.stringify({
-            email: values.email,
-            password: values.password,
-          }),
-          {
-            'Content-Type': 'application/json',
-          }
-        );
-        auth.login(responseData.userId, responseData.token);
-        setMessage('Signed in successfully!');
-        history.push('/dashboard');
-      } catch (err) {
-        console.log(err);
-      }
-    },
-  });
+    const classes = useStyles();
+    const history = useHistory();
+    const [message, setMessage] = useState('');
 
-  return (
-    <Grid container component="main" className={classes.root}>
-      <CssBaseline />
-      <ErrorModal error={error} onClear={clearError} />
-      <SuccessModal success = {success} successMessage= {message} onClear={clearSuccess}/>
-     <Grid item xs={false} sm={4} md={7} className={classes.image} />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <div className={classes.paper}>
-        {isLoading && <LoadingSpinner asOverlay />}
-       
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <form className={classes.form} onSubmit={handleSubmit} noValidate>
-          <TextField
-            variant='outlined'
-            margin='normal'
-            required
-            fullWidth
-            id='email'
-            label='Email Address'
-            name='email'
-            type='email'
-            autoComplete='email'
-            onChange={handleChange}
-            onBlur={handleBlur}
-            helperText={touched.email ? errors.email : ''}
-            error={touched.email && Boolean(errors.email)}
-            autoFocus
-          />
-          <TextField
-            variant='outlined'
-            margin='normal'
-            required
-            fullWidth
-            name='password'
-            label='Password'
-            type='password'
-            id='password'
-            onChange={handleChange}
-            onBlur={handleBlur}
-            helperText={touched.password ? errors.password : ''}
-            error={touched.password && Boolean(errors.password)}
-            autoComplete='current-password'
-          />
+    const auth = useContext(AuthContext);
+    const {
+        isLoading,
+        error,
+        success,
+        sendRequest,
+        clearError,
+        clearSuccess,
+    } = useHttpClient();
+    const {
+        handleSubmit,
+        handleChange,
+        handleBlur,
+        errors,
+        touched,
+        isValid,
+    } = useFormik({
+        initialValues: {
+            email: '',
+            password: '',
+        },
+        validationSchema,
+        async onSubmit(values) {
+            try {
+                const endpoint =
+                    process.env.REACT_APP_API_BASE_URL + 'user/login';
+                const responseData = await sendRequest(
+                    endpoint,
+                    'POST',
+                    JSON.stringify({
+                        email: values.email,
+                        password: values.password,
+                    }),
+                    {
+                        'Content-Type': 'application/json',
+                    }
+                );
+                auth.login(responseData.userId, responseData.token);
+                setMessage('Signed in successfully!');
+                history.push('/dashboard');
+            } catch (err) {
+                console.log(err);
+            }
+        },
+    });
 
-          <Button
-            type='submit'
-            fullWidth
-            variant='contained'
-            color='primary'
-            className={classes.submit}
-            disabled={!isValid}
-          >
-            Sign In
-          </Button>
-          <Grid container>
-           
-            <Grid item>
-              <Link to='/signup' variant='body2'>
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
-            <Box mt={5}>
-              <Copyright />
-            </Box>
-          </form>
-       
+    // s3 start
+    const [connected, setConnected] = useState(false);
+    const [url, setUrl] = useState('');
+    const uploadInput = useRef(null);
+
+    const handleUpload = async (e) => {
+        let file = uploadInput.current.files[0];
+        let fileParts = file.name.split('.');
+        let fileName = fileParts[0];
+        let fileType = fileParts[1]; //png
+        console.log('Preparing the upload');
+
+        // async/await http-hook version
+        // try {
+        //     const endpoint = 'http://localhost:5000/api/sign_s3/';
+        //     const responseData = await sendRequest(
+        //         endpoint,
+        //         'POST',
+        //         JSON.stringify({
+        //             fileName: fileName,
+        //             fileType: fileType,
+        //             userId: auth.userId,
+        //         }),
+        //         {
+        //             'Content-Type': 'application/json',
+        //         }
+        //     );
+
+        //     const returnData = responseData.data.returnData;
+        //     const signedRequest = returnData.signedRequest;
+        //     const url = returnData.url;
+
+        //     setUrl(url);
+        //     console.log('Recieved a signed request ' + signedRequest);
+
+        //     const options = {
+        //         headers: { 'Content-Type': fileType },
+        //     };
+        //     // reCreate new Object and set File Data into it
+        //     // const newObject = {
+        //     //     lastModified: file.lastModified,
+        //     //     lastModifiedDate: file.lastModifiedDate,
+        //     //     name: fileName,
+        //     //     file: fileType,
+        //     //     size: file.size,
+        //     // };
+
+        //     // const formData = new FormData();
+        //     // formData.append('file', file);
+        //     // console.log(formData);
+
+        //     console.log(file);
+        //     // console.log(fileType);
+        //     // console.log(options);
+        //     await sendRequest(signedRequest, 'PUT', file, {
+        //         'Content-Type': fileType,
+        //     });
+        //     console.log('Response from s3');
+        //     setConnected(true);
+        // } catch (error) {
+        //     alert('ERROR ' + JSON.stringify(error));
+        // }
+
+        //async/await axios version
+        try {
+            const response = await axios.post(
+                'http://localhost:5000/api/sign_s3/',
+                {
+                    fileName: fileName,
+                    fileType: fileType,
+                    userId: auth.userId, //send in userid for url
+                }
+            );
+            const returnData = response.data.data.returnData;
+            const signedRequest = returnData.signedRequest;
+            const url = returnData.url;
+            setUrl(url);
+            console.log('Recieved a signed request ' + signedRequest);
+
+            const options = {
+                headers: {
+                    'Content-Type': fileType,
+                },
+            };
+            //     console.log(options);
+            //     console.log(file);
+            await axios.put(signedRequest, file, options);
+            console.log('Response from s3');
+            setConnected(true);
+        } catch (error) {
+            alert(JSON.stringify(error));
+        }
+    };
+
+    const handleChanges3 = (e) => {};
+
+    const Success_message = () => (
+        <div style={{ padding: 50 }}>
+            <h3 style={{ color: 'green' }}>SUCCESSFUL UPLOAD</h3>
+            <a href={url}>Access the file here</a>
+            <br />
         </div>
-      </Grid>
-    </Grid>
-  );
+    );
+
+    //s3 end
+
+    return (
+        <Grid container component="main" className={classes.root}>
+            <CssBaseline />
+            <ErrorModal error={error} onClear={clearError} />
+            <SuccessModal
+                success={success}
+                successMessage={message}
+                onClear={clearSuccess}
+            />
+            <Grid item xs={false} sm={4} md={7} className={classes.image} />
+            <Grid
+                item
+                xs={12}
+                sm={8}
+                md={5}
+                component={Paper}
+                elevation={6}
+                square
+            >
+                <div className={classes.paper}>
+                    {isLoading && <LoadingSpinner asOverlay />}
+
+                    <Avatar className={classes.avatar}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Sign in
+                    </Typography>
+                    <form
+                        className={classes.form}
+                        onSubmit={handleSubmit}
+                        noValidate
+                    >
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="email"
+                            label="Email Address"
+                            name="email"
+                            type="email"
+                            autoComplete="email"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            helperText={touched.email ? errors.email : ''}
+                            error={touched.email && Boolean(errors.email)}
+                            autoFocus
+                        />
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Password"
+                            type="password"
+                            id="password"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            helperText={touched.password ? errors.password : ''}
+                            error={touched.password && Boolean(errors.password)}
+                            autoComplete="current-password"
+                        />
+
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            className={classes.submit}
+                            disabled={!isValid}
+                        >
+                            Sign In
+                        </Button>
+
+                        {/* S3 upload button */}
+                        <Fragment>
+                            upload a file
+                            {/* {console.log(uploadState)} */}
+                            {connected ? <Success_message /> : null}
+                            <input
+                                onChange={handleChanges3}
+                                ref={uploadInput}
+                                type="file"
+                            />
+                            <br />
+                            <button onClick={handleUpload}> UPLOAD</button>
+                        </Fragment>
+                        {/* S3 upload button end */}
+                        <Grid container>
+                            <Grid item>
+                                <Link to="/signup" variant="body2">
+                                    {"Don't have an account? Sign Up"}
+                                </Link>
+                            </Grid>
+                        </Grid>
+                        <Box mt={5}>
+                            <Copyright />
+                        </Box>
+                    </form>
+                </div>
+            </Grid>
+        </Grid>
+    );
 }
