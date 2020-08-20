@@ -9,6 +9,7 @@
         "stage": "set NODE_ENV=staging&&nodemon app.js"
     },
     "dependencies": {
+        "aws-sdk": "^2.735.0",
         "bcryptjs": "^2.4.3",
         "body-parser": "^1.19.0",
         "cookie-parser": "^1.4.5",

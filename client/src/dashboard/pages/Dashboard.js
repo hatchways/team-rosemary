@@ -4,14 +4,13 @@ import Grid from "@material-ui/core/Grid";
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from "@material-ui/core/Select";
 import Button from '@material-ui/core/Button';
-
-
 import { Panel } from '../../components/Panel';
 import { Chart } from '../../components/Chart';
 import { CatStatTable } from '../../components/CatStatTable';
 import { makeStyles } from "@material-ui/core/styles";
 
 import RecentTransactions from '../components/RecentTransactions';
+import TopCategories from '../components/TopCategories';
 import AppDialog from '../../shared/components/UIElements/AppDialog.js';
 import ReceiptUploadForm from '../../receipts/components/ReceiptUpload';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
@@ -136,7 +135,8 @@ export function Dashboard(props) {
         </Grid>
         <Grid item xs={12} md={6}>
           <Panel title="TOP CATEGORIES">
-            <CatStatTable />
+            {/* <CatStatTable /> */}
+            <TopCategories/>
           </Panel>
         </Grid>
       </Grid>

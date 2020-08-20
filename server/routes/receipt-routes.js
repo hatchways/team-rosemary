@@ -12,6 +12,4 @@ router.put('/:id', receiptController.updateReceipt);
 
 router.get('/:id', receiptController.getReceipt);
 
-// router.get('/', receiptController.getAllReceipt);
-
 module.exports = router;
