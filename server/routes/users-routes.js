@@ -31,4 +31,7 @@ router.get('/receipts', usersController.getAllReceipt);
 router.get('/recenttransactions/:userid',
 usersController.getRecentTransactions)
 
+router.get('/topcategories/:userid',
+usersController.getTopCategories)
+
 module.exports = router;
