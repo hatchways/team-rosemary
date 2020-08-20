@@ -1,25 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import Paper from '@material-ui/core/paper';
 
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   container: {
     position: 'relative',
     padding: '1rem',
-    // minWidth: '20rem',
     height: '16rem',
-    borderRadius: '1rem',
-    [theme.breakpoints.down("xs")]: {
-      // minWidth: '19rem'
-    }
+    borderRadius: '1rem'
   },
   title: {
     fontSize: '0.8rem',
     color: '#38cc89'
   }
-}));
+});
 
 export function Panel(props) {
   const classes = useStyles();
