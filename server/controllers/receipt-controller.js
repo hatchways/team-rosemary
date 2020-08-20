@@ -13,7 +13,7 @@ const createReceipt = async (req, res, next) => {
             title: title,
             user: req.userData.userId,
             amount: amount,
-            catagory: category,
+            category: category,
             date: date,
             picture: picture,
         });
@@ -22,8 +22,8 @@ const createReceipt = async (req, res, next) => {
 
         return res.json(receipt);
     } catch (err) {
-        const error = new HttpError('Internal Server Error', 500);
-        return next(error);
+       const error = new HttpError('Internal Server Error', 500);
+       return next(error);
     }
 };
 

@@ -157,8 +157,34 @@ const getAllReceipt = async (req, res, next) => {
     }
 };
 
+// @route GET user/recent transactions
+// @desc get user recent transactions.
+// @access Private
+const getRecentTransactions = async (req, res, next) => {
+    const userId = req.params.userid;
+    console.log(userId);
+
+    try {
+        const user = await User.findById(userId);
+        console.log(user);
+        if (!user) {
+            const error = new HttpError('Invalid user details.', 400);
+            return next(error);
+        } else {
+            const receipts = await Receipt.find({ user: userId }).sort( { date: -1 } ).limit(3);
+            res.status(200).json({
+                receipts,
+            });
+        }
+    } catch {
+        const error = new HttpError('Internal server error', 500);
+        return next(error);
+    }
+};
+
 module.exports = {
     signup,
     login,
     getAllReceipt,
+    getRecentTransactions,
 };
