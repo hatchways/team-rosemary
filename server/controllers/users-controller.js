@@ -149,13 +149,42 @@ const login = async (req, res, next) => {
 const getAllReceipt = async (req, res, next) => {
     const userId = req.userData.userId;
     const { duration } = req.body;
-
+    let days = 0;
+    if (duration) {
+        switch (duration) {
+            case 'daily':
+                days = 1;
+                break;
+            case 'weekly':
+                days = 7;
+                break;
+            case 'monthly':
+                days = 30;
+                break;
+            case 'annualy':
+                days = 365;
+                break;
+        }
+    }
     try {
-        const receipts = await Receipt.find({ user: userId }).sort({
-            date: -1,
-        });
-
-        res.json(receipts);
+        if (duration) {
+            const receipts = await Receipt.find({
+                user: userId,
+                date: {
+                    $gte: new Date(new Date() - days * 60 * 60 * 24 * 1000),
+                },
+            }).sort({
+                date: -1,
+            });
+            res.json(receipts);
+        } else {
+            const receipts = await Receipt.find({
+                user: userId,
+            }).sort({
+                date: -1,
+            });
+            res.json(receipts);
+        }
     } catch {
         const error = new HttpError('Server Error', 500);
         return next(error);
@@ -167,15 +196,17 @@ const getAllReceipt = async (req, res, next) => {
 // @access Private
 const getRecentTransactions = async (req, res, next) => {
     const userId = req.params.userid;
-  
+
     try {
         const user = await User.findById(userId);
-      
+
         if (!user) {
             const error = new HttpError('Invalid user details.', 400);
             return next(error);
         } else {
-            const receipts = await Receipt.find({ user: userId }).sort( { date: -1 } ).limit(3);
+            const receipts = await Receipt.find({ user: userId })
+                .sort({ date: -1 })
+                .limit(3);
             res.status(200).json({
                 receipts,
             });
@@ -188,9 +219,9 @@ const getRecentTransactions = async (req, res, next) => {
 
 const getTopCategories = async (req, res, next) => {
     const userId = req.params.userid;
-     try {
+    try {
         const user = await User.findById(userId);
-      
+
         if (!user) {
             const error = new HttpError('Invalid user details.', 400);
             return next(error);
@@ -198,17 +229,19 @@ const getTopCategories = async (req, res, next) => {
             const receipts = await Receipt.aggregate(
                 [
                     // Grouping pipeline
-                    { "$group": { 
-                        "_id": '$category', 
-                        "total": { "$sum": "$amount" }
-                    }},
+                    {
+                        $group: {
+                            _id: '$category',
+                            total: { $sum: '$amount' },
+                        },
+                    },
                     // Sorting pipeline
-                    { "$sort": { "total": -1 } },
+                    { $sort: { total: -1 } },
                     // Optionally limit results
-                    { "$limit": 3 }
+                    { $limit: 3 },
                 ],
-                function(err,result) {
-                  console.log(err);
+                function (err, result) {
+                    console.log(err);
                 }
             );
             res.status(200).json({
@@ -226,5 +259,5 @@ module.exports = {
     login,
     getAllReceipt,
     getRecentTransactions,
-    getTopCategories
+    getTopCategories,
 };
