@@ -8,7 +8,7 @@ export const useHttpClient = () => {
     const activeHttpRequests = useRef([]);
 
     const sendRequest = useCallback(
-        async (url, method = 'GET', body = null, headers = {}) => {
+        async (url, method = 'GET', body = null, headers = {}, jsonReturnData = true) => {
             setIsLoading(true);
             const httpAbortCtrl = new AbortController();
             activeHttpRequests.current.push(httpAbortCtrl);
@@ -21,7 +21,15 @@ export const useHttpClient = () => {
                     signal: httpAbortCtrl.signal,
                 });
 
-                const responseData = await response.json();
+                let responseData;
+            
+                 if(!jsonReturnData) {
+                      responseData = await response;
+                 } else {
+                    responseData = await response.json();
+                 }
+                
+                 
 
                 activeHttpRequests.current = activeHttpRequests.current.filter(
                     (reqCtrl) => reqCtrl !== httpAbortCtrl
