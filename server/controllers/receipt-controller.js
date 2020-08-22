@@ -5,13 +5,13 @@ const HttpError = require('../helpers/http-error');
 // @desc  given params passed in, create a post
 // @access Private
 const createReceipt = async (req, res, next) => {
-    const { title, amount, category, date, picture } = req.body;
+    const { title, amount, category, date, picture, user } = req.body;
 
     try {
         //create new receipt
         const newReceipt = new Receipt({
             title: title,
-            user: req.userData.userId,
+            user: user,
             amount: amount,
             category: category,
             date: date,

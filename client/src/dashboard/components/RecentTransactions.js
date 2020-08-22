@@ -70,7 +70,7 @@ const RecentTransactions = (props) => {
 
     // Fetch recent transations
     useEffect(() => {
-        const fetchTransactions = async () => {
+         const fetchTransactions = async () => {
             try {
                 // API call
                 const endpoint =
@@ -79,6 +79,7 @@ const RecentTransactions = (props) => {
                 const responseData = await sendRequest(endpoint, 'GET', null, {
                     Authorization: 'Bearer ' + auth.token,
                 });
+                console.log('call');
                 setloadedReceipts(responseData.receipts); // set the transactions data
             } catch (err) {}
         };

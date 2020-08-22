@@ -31,16 +31,11 @@ const App = () => {
     );
     } else {
       routes = (
-        <Switch>
-            <Route path="/" exact>
-                <SigninPage />
+      <Switch>
+            <Route path="/dashboard">
+                <Dashboard />
             </Route>
-            <Route path="/dashboard" exact>
-                {/* <Dashboard /> */}
-                <Home />
-            </Route>
-
-            <Redirect to="/" />
+            <Redirect to="/dashboard" />
         </Switch>
     );
     

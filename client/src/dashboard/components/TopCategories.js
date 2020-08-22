@@ -41,7 +41,7 @@ export default function TopCategories(props) {
        sendRequest,
    } = useHttpClient();
   const userId = auth.userId;
-  const [loadedReceipts, setloadedReceipts] = useState([]);
+  const [loadedCategories, setloadedCategories] = useState([]);
   //Get category icon based upon the category
   const categoryIcon = (category) => {
     switch (category) {
@@ -65,7 +65,7 @@ export default function TopCategories(props) {
 
  // Fetch recent transations
  useEffect(() => {
-    const fetchTransactions = async () => {
+    const fetchTopCategories = async () => {
         try {
             // API call
             const endpoint =
@@ -74,16 +74,16 @@ export default function TopCategories(props) {
             const responseData = await sendRequest(endpoint, 'GET', null, {
                 Authorization: 'Bearer ' + auth.token,
             });
-            setloadedReceipts(responseData.receipts); // set the transactions data
+            setloadedCategories(responseData.receipts); // set the transactions data
         } catch (err) {}
     };
-    fetchTransactions();
+    fetchTopCategories();
 }, [sendRequest, userId]);
   return (
     <TableContainer>
       <Table className={classes.container}>
         <TableBody>
-          {loadedReceipts.map((receipt, index) => (
+          {loadedCategories.map((receipt, index) => (
             <TableRow key={index + ' ' +  receipt._id}>
               <TableCell component="th" scope="row">
               <div className={classes.thead}>
