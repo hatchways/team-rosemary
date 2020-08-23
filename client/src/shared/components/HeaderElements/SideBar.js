@@ -6,12 +6,10 @@ import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from "@material-ui/core/styles";
 
-const drawerWidth = "15rem";
-
 const useStyles = makeStyles(theme => ({
   drawer: {
     [theme.breakpoints.up("sm")]: {
-      width: drawerWidth,
+      width: ({ drawerWidth }) => drawerWidth,
       flexShrink: 0
     }
   },
@@ -21,14 +19,15 @@ const useStyles = makeStyles(theme => ({
     opacity: 0.4,
   },
   drawerPaper: {
-    width: drawerWidth,
+    width: ({ drawerWidth }) => drawerWidth,
     backgroundColor: '#1b3460',
     color: '#fafafa'
   }
 }));
 
 export function SideBar(props) {
-  const classes = useStyles();
+  const { drawerWidth, open, onClose, children } = props;
+  const classes = useStyles({ drawerWidth });
 
   const isMobile = useMediaQuery(useTheme().breakpoints.down('xs'));
 
@@ -46,7 +45,8 @@ export function SideBar(props) {
               invisible: true
             }
           },
-          ...props
+          open,
+          onClose
         } : {
             variant: "permanent",
             open: true
@@ -54,7 +54,7 @@ export function SideBar(props) {
         )}
       >
         <div className={classes.utilbar}></div>
-        {props.children}
+        {children}
       </Drawer>
     </nav>
   )

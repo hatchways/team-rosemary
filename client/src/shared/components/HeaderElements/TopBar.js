@@ -5,13 +5,11 @@ import Toolbar from "@material-ui/core/Toolbar";
 
 import { makeStyles } from "@material-ui/core/styles";
 
-const drawerWidth = "15rem";
-
 const useStyles = makeStyles(theme => ({
   appBar: {
     [theme.breakpoints.up("sm")]: {
-      width: `calc(100% - ${drawerWidth})`,
-      marginLeft: drawerWidth
+      width: ({ drawerWidth }) => `calc(100% - ${drawerWidth})`,
+      marginLeft: ({ drawerWidth }) => drawerWidth
     }
   },
   toolbar: {
@@ -23,11 +21,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export function TopBar(props) {
-  const classes = useStyles();
+  const { drawerWidth, children } = props;
+  const classes = useStyles({ drawerWidth });
   return (
     <AppBar className={classes.appBar}>
       <Toolbar className={classes.toolbar}>
-        {props.children}
+        {children}
       </Toolbar>
     </AppBar>
   )

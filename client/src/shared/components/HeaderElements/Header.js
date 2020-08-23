@@ -15,6 +15,8 @@ import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from "@material-ui/core/styles";
 
+const drawerWidth = "15rem";
+
 const useStyles = makeStyles(theme => ({
   logoContainer: {
     ...theme.mixins.toolbar,
@@ -85,12 +87,16 @@ export function Header(props) {
 
   return (
     <header>
-      <TopBar>
+      <TopBar drawerWidth={drawerWidth}>
         <MenuBtn onClick={handleDrawerToggle} />
         <LoginUploadBtn onClick={handleDialogOpen}>Upload Receipt</LoginUploadBtn>
         <ProfileAvatar />
       </TopBar>
-      <SideBar open={mobileOpen} onClose={handleDrawerToggle}>
+      <SideBar
+        drawerWidth={drawerWidth}
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+      >
         <Logo title logoStyle={classes} />
         <NavTabs
           value={props.page}
