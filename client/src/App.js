@@ -33,7 +33,8 @@ const App = () => {
       routes = (
       <Switch>
             <Route path="/dashboard">
-                <Dashboard />
+                {/* <Dashboard /> */}
+                <Home />
             </Route>
             <Redirect to="/dashboard" />
         </Switch>

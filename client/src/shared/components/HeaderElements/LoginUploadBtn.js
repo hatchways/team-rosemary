@@ -25,19 +25,14 @@ export function LoginUploadBtn(props) {
   const classes = useStyles();
   const isMobile = useMediaQuery(useTheme().breakpoints.down('xs'));
 
-  const buttonProps = {
-    className: classes.btnLoginUpload,
-    onClick: props.onClick
-  };
-
   return (
     isMobile ?
       (
         <IconButton>
-          <ReceiptIcon {...buttonProps} />
+          <ReceiptIcon className={classes.btnLoginUpload} {...props} />
         </IconButton>
       ) : (
-        <Button variant="outlined" {...buttonProps}>{props.children}</Button>
+        <Button variant="outlined" className={classes.btnLoginUpload} {...props}>{props.children}</Button>
       )
   )
 }
