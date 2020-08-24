@@ -79,6 +79,7 @@ export function Dashboard(props) {
 
   const handleReceiptUpload = () => {
     setReceiptCount(receiptCount + 1);
+    setIsOpen(false);
   // const currState =  reloadTransactions === false ? true: reloadTransactions;
     //setReloadTransactions(currState);
   }
