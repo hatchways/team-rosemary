@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import Box from "@material-ui/core/Box";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -53,26 +53,11 @@ const useStyles = makeStyles(theme => ({
 export function Home(props) {
   const classes = useStyles();
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
-  const [page, setPage] = useState('');
+  const [page, setPage] = useState('Dashboard');
 
   const handleChange = (e, page) => {
     setPage(page);
   };
-
-  // Stay in the previous page after refreshing, or go to Dashboard at the first entry
-  useEffect(() => {
-    const prevPage = sessionStorage.getItem('page');
-    if (prevPage) {
-      setPage(prevPage);
-    } else {
-      sessionStorage.setItem('page', 'Dashboard');
-      setPage('Dashboard');
-    }
-  }, []);
-
-  useEffect(() => {
-    sessionStorage.setItem('page', page);
-  }, [page])
 
   const pages = [
     { name: 'Dashboard', component: <Dashboard /> },
