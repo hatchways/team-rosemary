@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
       margin: 0
     }
   },
-  avator: {
+  avatar: {
     marginRight: '1rem'
   },
   text: {
@@ -26,11 +26,11 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export function ProfileAvator(props) {
+export function ProfileAvatar(props) {
   const classes = useStyles();
   return (
     <div className={classes.container}>
-      <Avatar alt="User Avator" src={User} className={classes.avator} />
+      <Avatar alt="User Avatar" src={User} className={classes.avatar} />
       <div className={classes.text}>Profile</div>
     </div>
   )
