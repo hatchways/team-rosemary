@@ -53,6 +53,9 @@ export function Header(props) {
   const handleDialogClose = () => {
     setIsOpen(false);
   };
+  const handleReceiptUpload = () => {
+    props.onReceiptUpload();
+  };
 
   const data = [
     {
@@ -111,7 +114,11 @@ export function Header(props) {
         handleClose={handleDialogClose}
         title='Upload receipt'
       >
-        <ReceiptUploadForm data={data} reloadTrans={setReloadTransactions} />
+        <ReceiptUploadForm
+          data={data}
+          reloadTrans={reloadTransactions}
+          onReceiptUpload={handleReceiptUpload}
+        />
       </AppDialog>
     </header >
   )

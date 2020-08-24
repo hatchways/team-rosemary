@@ -54,13 +54,19 @@ export function Home(props) {
   const classes = useStyles();
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [page, setPage] = useState('Dashboard');
+  const [receiptCount, setReceiptCount] = useState(0);
 
+  const handleReceiptUpload = () => {
+    setReceiptCount(receiptCount + 1);
+    // const currState =  reloadTransactions === false ? true: reloadTransactions;
+    //setReloadTransactions(currState);
+  };
   const handleChange = (e, page) => {
     setPage(page);
   };
 
   const pages = [
-    { name: 'Dashboard', component: <Dashboard /> },
+    { name: 'Dashboard', component: <Dashboard receiptCount={receiptCount} /> },
     { name: 'Reports', component: <Reports /> },
     { name: 'Receipts', component: <Receipts /> },
   ];
@@ -71,7 +77,11 @@ export function Home(props) {
       <Box display="flex">
         <CssBaseline />
         <ThemeProvider theme={theme}>
-          <Header page={page} onChange={handleChange} />
+          <Header
+            page={page}
+            onChange={handleChange}
+            onReceiptUpload={handleReceiptUpload}
+          />
           <main className={classes.main}>
             <ErrorModal error={error} onClear={clearError} />
             {isLoading && <LoadingSpinner asOverlay />}

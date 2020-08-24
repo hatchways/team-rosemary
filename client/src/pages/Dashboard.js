@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import Grid from "@material-ui/core/Grid";
 
@@ -11,6 +11,7 @@ import RecentTransactions from '../shared/components/general/RecentTransactions'
 import { MonthSelector } from '../shared/components/general/MonthSelector';
 
 export function Dashboard(props) {
+  const { receiptCount } = props;
   return (
     <>
       <Grid container spacing={3} xs={12} lg={10}>
@@ -23,7 +24,7 @@ export function Dashboard(props) {
         <Grid item xs={12} md={6}>
           <Panel title="TOP CATEGORIES">
             {/* <CatStatTable /> */}
-            <TopCategories />
+            <TopCategories receiptCount={receiptCount} />
           </Panel>
         </Grid>
       </Grid>
@@ -37,7 +38,7 @@ export function Dashboard(props) {
           <Panel>
             {/* <TransactionTable /> */}
             {/* <RecentTransactions reloadTrans={setReloadTransactions}/> */}
-            <RecentTransactions />
+            <RecentTransactions receiptCount={receiptCount} />
           </Panel>
         </Grid>
       </Grid>
