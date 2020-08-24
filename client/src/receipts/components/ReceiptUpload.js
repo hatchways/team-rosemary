@@ -50,7 +50,7 @@ const ReceiptUploadForm = (props) => {
     const [category, setCategory] = useState('');
     const [message, setMessage] = useState('');
     const [images, setImages] = useState([]);
-    
+
     const {
         isLoading,
         error,
@@ -89,18 +89,12 @@ const ReceiptUploadForm = (props) => {
                 //upload the images to S3
                 if (images.length > 0) {
                     images.forEach(async (image) => {
-                        // console.log(image);
-
+                
                         let fileName = image.name.split('.')[0];
                         let fileType = image.name.split('.')[1];
                         try {
-                            imagesUrl.push("https://s3.amazon/987asdsad8/picture/receipt_100");
-                            imagesUrl.push("https://s3.amazon/987asdsad8/picture/receipt_101");
-
-                            if (100 === 101) {
-
-                                const endpoint =
-                                'http://localhost:5000/api/sign_s3/';
+                   
+                            const endpoint = process.env.REACT_APP_API_BASE_URL + 'sign_s3/';
                             const responseData = await sendRequest(
                                 endpoint,
                                 'POST',
@@ -112,67 +106,57 @@ const ReceiptUploadForm = (props) => {
                                 {
                                     'Content-Type': 'application/json',
                                 }
-                            );
+                            ).then(resp => {
+                               
+                                const returnData = resp.data.returnData;
+                                const signedRequest =returnData.signedRequest;
+                                const url = returnData.url;
 
-                            const returnData = responseData.data.returnData;
-                            const signedRequest = returnData.signedRequest;
-                            const url = returnData.url;
-                            // console.log(url);
-                            // setUrl(url);
-                            // console.log('Recieved a signed request ' + signedRequest);
-                            // console.log(JSON.stringify(image.name));
-                            await sendRequest(
-                                signedRequest,
-                                'PUT',
-                                image,
-                                {
-                                    'Content-Type': fileType,
-                                },
-                                false
-                            );
-                            imagesUrl.push(url);
-                            // console.log('Response from s3');
-                            // setConnected(true);
-                            }
-                        
+                                sendRequest(
+                                    signedRequest,
+                                    'PUT',
+                                    image,
+                                    {
+                                        'Content-Type': fileType,
+                                    },
+                                    false
+                                );
+                                imagesUrl.push(url);
+                               
+                                if(imagesUrl.length === images.length) {
+                                       
+                                    const endpoint =
+                                    process.env.REACT_APP_API_BASE_URL + 'receipt';
+                                 sendRequest(
+                                    endpoint,
+                                    'POST',
+                                    JSON.stringify({
+                                        title: values.name,
+                                        user: auth.userId,
+                                        amount: values.amount,
+                                        category: values.category,
+                                        date: new Date(),
+                                        picture: imagesUrl,
+                                    }),
+                                    {
+                                        'Content-Type': 'application/json',
+                                        Authorization: 'Bearer ' + auth.token,
+                                    }
+                                );
+                                  props.onReceiptUpload();
+                                  setMessage('Receipt uploaded successfully!');
+                                }
+
+                           });
+
                         } catch (error) {
                             alert('ERROR ' + JSON.stringify(error));
                         }
                     });
-
-                    //console.log(imagesUrl.length);
-                   // console.log(images.length);
-
-                    //Save receipt details
-                    if(0 === 0) {
-                     
-                        const endpoint =
-                            process.env.REACT_APP_API_BASE_URL + 'receipt';
-                        await sendRequest(
-                            endpoint,
-                            'POST',
-                            JSON.stringify({
-                                title: values.name,
-                                user: auth.userId,
-                                amount: values.amount,
-                                category: values.category,
-                                date: new Date(),
-                                picture: imagesUrl,
-                            }),
-                            {
-                                'Content-Type': 'application/json',
-                                Authorization: 'Bearer ' + auth.token,
-                            }
-                        );
-                        props.reloadTrans(true);
-    
-                        setMessage('Receipt uploaded successfully!');
-                    }
-               
+                   
                 }
-
                 //resetForm({values: ''});
-                // history.push('/dashboard');
+               
             } catch (err) {
                 console.log(err);
             }

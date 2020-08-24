@@ -63,6 +63,7 @@ export function Dashboard(props) {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [isOpen, setIsOpen] = useState(false);
   const [reloadTransactions, setReloadTransactions] = useState(false);
+  const [receiptCount, setReceiptCount] = useState(0);
 
   const handleDialogOpen = () => {
     setIsOpen(true);
@@ -75,6 +76,12 @@ export function Dashboard(props) {
   const handleClickOpen = () => {
     setIsOpen(true);
   };
+
+  const handleReceiptUpload = () => {
+    setReceiptCount(receiptCount + 1);
+  // const currState =  reloadTransactions === false ? true: reloadTransactions;
+    //setReloadTransactions(currState);
+  }
 
   const data = [
     {
@@ -136,7 +143,7 @@ export function Dashboard(props) {
         <Grid item xs={12} md={6}>
           <Panel title="TOP CATEGORIES">
             {/* <CatStatTable /> */}
-            <TopCategories/>
+            <TopCategories receiptCount = {receiptCount}/>
           </Panel>
         </Grid>
       </Grid>
@@ -148,14 +155,14 @@ export function Dashboard(props) {
       <Grid container spacing={3} xs={12} lg={10}>
         <Grid item xs={12}>
           <Panel>
-            <RecentTransactions reloadTrans={setReloadTransactions}/>
+            <RecentTransactions receiptCount = {receiptCount} />
             {/* <TransactionTable /> */}
           </Panel>
         </Grid>
       </Grid>
       <AppDialog size="md" isOpen = {isOpen} handleOpen = {handleDialogOpen} handleClose = {handleDialogClose} title='Upload receipt'>
-          <ReceiptUploadForm data={data} reloadTrans={setReloadTransactions} ></ReceiptUploadForm>
-          </AppDialog>
+          <ReceiptUploadForm data={data} reloadTrans={reloadTransactions} onReceiptUpload = {handleReceiptUpload} ></ReceiptUploadForm>
+      </AppDialog>
     </main>
   );
 }

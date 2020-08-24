@@ -75,10 +75,11 @@ export default function TopCategories(props) {
                 Authorization: 'Bearer ' + auth.token,
             });
             setloadedCategories(responseData.receipts); // set the transactions data
+          
         } catch (err) {}
     };
     fetchTopCategories();
-}, [sendRequest, userId]);
+}, [sendRequest, userId,  props.receiptCount]);
   return (
     <TableContainer>
       <Table className={classes.container}>
