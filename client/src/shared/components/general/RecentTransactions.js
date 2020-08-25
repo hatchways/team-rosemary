@@ -49,7 +49,6 @@ const RecentTransactions = (props) => {
         sendRequest,
     } = useHttpClient();
     const userId = auth.userId;
-    console.log(props.reloadTrans);
 
     //Get category icon based upon the category
     const categoryIcon = (category) => {
@@ -84,10 +83,11 @@ const RecentTransactions = (props) => {
                     Authorization: 'Bearer ' + auth.token,
                 });
                 setloadedReceipts(responseData.receipts); // set the transactions data
+                // props.onReceiptUpload();
             } catch (err) { }
         };
         fetchTransactions();
-    }, [sendRequest, userId]);
+    }, [sendRequest, userId, props.receiptCount]);
 
     return (
         <TableContainer>

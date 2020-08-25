@@ -23,7 +23,7 @@ const Receipt = mongoose.model(
             type: String,
         },
         picture: {
-            type: String,
+            type: [String],
         },
     })
 );

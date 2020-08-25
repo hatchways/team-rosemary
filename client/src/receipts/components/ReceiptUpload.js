@@ -44,13 +44,21 @@ const validationSchema = Yup.object().shape({
 //     return (d <= 9 ? '0' + d : d) + '-' + (m <= 9 ? '0' + m : m) + '-' + y;
 // }
 
-
 const ReceiptUploadForm = (props) => {
+    const classes = useStyles();
     const [data] = useState(props.data);
     const [category, setCategory] = useState('');
     const [message, setMessage] = useState('');
-    const classes = useStyles();
-    const { isLoading, error, success, sendRequest, clearError, clearSuccess } = useHttpClient();
+    const [images, setImages] = useState([]);
+
+    const {
+        isLoading,
+        error,
+        success,
+        sendRequest,
+        clearError,
+        clearSuccess,
+    } = useHttpClient();
     const auth = useContext(AuthContext);
     const history = useHistory();
 
@@ -72,36 +80,83 @@ const ReceiptUploadForm = (props) => {
             category: '',
         },
         validationSchema,
-        async onSubmit(values, {resetForm}) {
+        async onSubmit(values, { resetForm }) {
+            const imagesUrl = [];
             if (category !== '0') {
                 values.category = category;
-                   
             }
             try {
-                const endpoint =
-                    process.env.REACT_APP_API_BASE_URL + 'receipt';
-                    await sendRequest(
-                    endpoint,
-                    'POST',
-                    JSON.stringify({
-                        title: values.name,
-                        user: auth.userId,
-                        amount: values.amount,
-                        category: values.category,
-                        date: new Date(),
-                        picture: "http://amazon.ca/sdasdlkasjdljasldjaslkdjlaskds.jpg",
-                    }),
-                    
-                    {
-                        'Content-Type': 'application/json',
-                         'Authorization': 'Bearer ' + auth.token
-                    }
-                );
-                props.reloadTrans(true);
+                //upload the images to S3
+                if (images.length > 0) {
+                    images.forEach(async (image) => {
+                
+                        let fileName = image.name.split('.')[0];
+                        let fileType = image.name.split('.')[1];
+                        try {
+                   
+                            const endpoint = process.env.REACT_APP_API_BASE_URL + 'sign_s3/';
+                            const responseData = await sendRequest(
+                                endpoint,
+                                'POST',
+                                JSON.stringify({
+                                    fileName: fileName,
+                                    fileType: fileType,
+                                    userId: auth.userId,
+                                }),
+                                {
+                                    'Content-Type': 'application/json',
+                                }
+                            ).then(resp => {
+                               
+                                const returnData = resp.data.returnData;
+                                const signedRequest =returnData.signedRequest;
+                                const url = returnData.url;
 
-                setMessage('Receipt uploaded successfully!');
+                                sendRequest(
+                                    signedRequest,
+                                    'PUT',
+                                    image,
+                                    {
+                                        'Content-Type': fileType,
+                                    },
+                                    false
+                                );
+                                imagesUrl.push(url);
+                               
+                                if(imagesUrl.length === images.length) {
+                                       
+                                    const endpoint =
+                                    process.env.REACT_APP_API_BASE_URL + 'receipt';
+                                 sendRequest(
+                                    endpoint,
+                                    'POST',
+                                    JSON.stringify({
+                                        title: values.name,
+                                        user: auth.userId,
+                                        amount: values.amount,
+                                        category: values.category,
+                                        date: new Date(),
+                                        picture: imagesUrl,
+                                    }),
+                                    {
+                                        'Content-Type': 'application/json',
+                                        Authorization: 'Bearer ' + auth.token,
+                                    }
+                                );
+                                  props.onReceiptUpload();
+                                  setMessage('Receipt uploaded successfully!');
+                                }
+
+                           });
+
+                        } catch (error) {
+                            alert('ERROR ' + JSON.stringify(error));
+                        }
+                    });
+                   
+                }
                 //resetForm({values: ''});
-               // history.push('/dashboard');
+               
             } catch (err) {
                 console.log(err);
             }
@@ -110,9 +165,13 @@ const ReceiptUploadForm = (props) => {
 
     return (
         <React.Fragment>
-             <ErrorModal error={error} onClear={clearError} />
-             <SuccessModal success = {success} successMessage= {message} onClear={clearSuccess}/>
-             {isLoading && <LoadingSpinner asOverlay />}
+            <ErrorModal error={error} onClear={clearError} />
+            <SuccessModal
+                success={success}
+                successMessage={message}
+                onClear={clearSuccess}
+            />
+            {isLoading && <LoadingSpinner asOverlay />}
             <Grid
                 container
                 spacing={5}
@@ -169,7 +228,7 @@ const ReceiptUploadForm = (props) => {
                             dropzoneText={
                                 'Drag and drop an image here or click'
                             }
-                            onChange={(files) => console.log('Files:', files)}
+                            onChange={(files) => setImages(files)}
                         />
                     </Grid>
                     <Button

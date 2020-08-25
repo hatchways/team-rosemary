@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 
 const { User } = require('../models/user');
 const { Receipt } = require('../models/receipt');
@@ -226,8 +227,10 @@ const getTopCategories = async (req, res, next) => {
             const error = new HttpError('Invalid user details.', 400);
             return next(error);
         } else {
+            const userIdd = mongoose.Types.ObjectId(userId);
             const receipts = await Receipt.aggregate(
                 [
+                    { "$match": { "user": userIdd } },
                     // Grouping pipeline
                     {
                         $group: {

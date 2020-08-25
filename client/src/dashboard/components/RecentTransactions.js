@@ -70,7 +70,7 @@ const RecentTransactions = (props) => {
 
     // Fetch recent transations
     useEffect(() => {
-        const fetchTransactions = async () => {
+         const fetchTransactions = async () => {
             try {
                 // API call
                 const endpoint =
@@ -79,11 +79,12 @@ const RecentTransactions = (props) => {
                 const responseData = await sendRequest(endpoint, 'GET', null, {
                     Authorization: 'Bearer ' + auth.token,
                 });
-                setloadedReceipts(responseData.receipts); // set the transactions data
+               setloadedReceipts(responseData.receipts); // set the transactions data
+              // props.onReceiptUpload();
             } catch (err) {}
         };
         fetchTransactions();
-    }, [sendRequest, userId]);
+    }, [sendRequest, userId, props.receiptCount]);
 
     return (
         <TableContainer>
