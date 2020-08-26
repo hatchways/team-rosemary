@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import FormControl from '@material-ui/core/FormControl';
 import Grid from "@material-ui/core/Grid";
 import MenuItem from '@material-ui/core/MenuItem';
@@ -65,6 +65,9 @@ export function Dashboard(props) {
   const [reloadTransactions, setReloadTransactions] = useState(false);
   const [receiptCount, setReceiptCount] = useState(0);
 
+  const [response, setResponse] = useState("");
+
+
   const handleDialogOpen = () => {
     setIsOpen(true);
   }
@@ -124,6 +127,9 @@ export function Dashboard(props) {
       <Grid container spacing={3} xs={12} lg={10}>
         <Grid item xs={9}>
           <h2>Dashboard</h2>
+          <p>
+      It's <time dateTime={response}>{response}</time>
+    </p>
         </Grid>
         <Grid  xs={3}> <Button variant="outlined" className={classes.dialogbtn} color="primary" onClick={handleClickOpen}>
         Upload Receipt

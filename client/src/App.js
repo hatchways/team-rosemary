@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect } from 'react';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 
 import SigninPage from './user/pages/SignInPage';
@@ -13,7 +13,7 @@ import { Home } from './pages/Home';
 
 const App = () => {
     const { token, login, logout, userId } = useAuth();
-
+   
     let routes;
     if (!token) {
       routes = (
@@ -41,6 +41,7 @@ const App = () => {
     
     }
     return (
+        
         <AuthContext.Provider
             value={{
                 isLoggedIn: !!token,

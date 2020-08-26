@@ -1,17 +1,26 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const { join } = require('path');
+const {
+    join
+} = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const HttpError = require('./helpers/http-error');
-const { json, urlencoded } = express;
+const {
+    json,
+    urlencoded,
+    Request,
+    Response
+} = express;
 var bodyParser = require('body-parser');
+const kue = require("kue");
 
 // import routes
 const usersRoutes = require('./routes/users-routes');
 const receiptRoutes = require('./routes/receipt-routes');
 const s3routes = require('./routes/s3-routes');
+
 
 // get environment variables
 require('dotenv').config({
@@ -23,7 +32,9 @@ app.use(bodyParser.json());
 
 app.use(logger('dev'));
 app.use(json());
-app.use(urlencoded({ extended: false }));
+app.use(urlencoded({
+    extended: false
+}));
 app.use(cookieParser());
 app.use(express.static(join(__dirname, 'public')));
 
@@ -34,6 +45,8 @@ app.use(cors());
 app.use('/api/user', usersRoutes); // => /api/user...
 app.use('/api/receipt', receiptRoutes); // => /api/receipt...
 app.use('/api/sign_s3', s3routes); // => /api/sign_s3
+app.use("/kue-api/", kue.app);
+
 
 // handle 404 error(route not found)
 app.use((req, res, next) => {
@@ -46,7 +59,9 @@ app.use((error, req, res, next) => {
         return next(error);
     }
     res.status(error.code || 500);
-    res.json({ message: error.message || 'An unknown error occurred!' });
+    res.json({
+        message: error.message || 'An unknown error occurred!'
+    });
 });
 
 // Connect to database and start server
