@@ -60,11 +60,9 @@ const ReceiptUploadForm = (props) => {
         clearSuccess,
     } = useHttpClient();
     const auth = useContext(AuthContext);
-    const history = useHistory();
-
+   
     function onSelectChange(event) {
         setCategory(event.target.value);
-        // console.log(event.target.value);
     }
     const {
         handleSubmit,
