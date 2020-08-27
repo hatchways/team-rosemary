@@ -55,6 +55,7 @@ export function Header(props) {
   };
   const handleReceiptUpload = () => {
     props.onReceiptUpload();
+    setIsOpen(false);
   };
 
   const data = [
