@@ -289,6 +289,7 @@ const exportReceipts = async (req, res, next) => {
             title: 'Receipt-Export-Request-' + userId,
             userId: userIdd,
             month: month,
+            email: user.email
         });
         
         // check response from createJob method
