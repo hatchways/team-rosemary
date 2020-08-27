@@ -21,6 +21,7 @@ Problems so far:
   2. The total number is not changing along with the month switch
   3. The XAxis values are not consecutive. If no expense in certain days there's no values on the XAxis
   4. Not hot-updating
+  5. If no receipts in selected month, the chart will not render
 */
 
 export function Chart(props) {
@@ -29,18 +30,18 @@ export function Chart(props) {
   const [total, setTotal] = useState('--');
   const [lastDay, setLastDay] = useState('');
 
-  const { dataa } = props;
+  const { data } = props;
 
   useEffect(() => {
-    const total = dataa.reduce((a, b) => a + b.total, 0);
-    const lastDay = dataa[0] && dataa[0]._id;
+    const total = data.reduce((a, b) => a + b.total, 0);
+    const lastDay = data[0] && data[0]._id;
 
     setTotal(total || '--');
     setLastDay(lastDay);
-    setMonthlyReceipts(dataa);
-  }, [dataa])
+    setMonthlyReceipts(data);
+  }, [data])
 
-  const formatter = (value, ...pars) => [`$${value.toLocaleString()}`, ...pars];
+  const formatter = (value, ...params) => [`$${value.toLocaleString()}`, ...params];
 
   const renderLineChart = (
     <ResponsiveContainer height={120} debounce={100}>

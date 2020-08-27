@@ -63,7 +63,7 @@ export function Dashboard(props) {
               value={month}
               onChange={handleMonthChange}
             />
-            <Chart dataa={monthlyReceipts} />
+            <Chart data={monthlyReceipts} />
           </Panel>
         </Grid>
         <Grid item xs={12} md={6}>
