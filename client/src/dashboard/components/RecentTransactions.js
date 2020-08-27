@@ -84,7 +84,7 @@ const RecentTransactions = (props) => {
             } catch (err) {}
         };
         fetchTransactions();
-    }, [sendRequest, userId, props.receiptCount]);
+    }, [sendRequest, userId, auth.token, props.receiptCount]);
 
     return (
         <TableContainer>

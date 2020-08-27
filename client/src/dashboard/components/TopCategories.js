@@ -79,7 +79,7 @@ export default function TopCategories(props) {
         } catch (err) {}
     };
     fetchTopCategories();
-}, [sendRequest, userId,  props.receiptCount]);
+}, [sendRequest, userId, auth.token, props.receiptCount]);
   return (
     <TableContainer>
       <Table className={classes.container}>

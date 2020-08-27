@@ -26,6 +26,7 @@ router.post(
     usersController.login
 );
 
+
 router.use(checkAuth);
 
 router.get('/receipts', usersController.getAllReceipt);
@@ -38,5 +39,6 @@ usersController.getTopCategories)
 
 router.get('/monthlytransactions/:userid&:month', 
 chartController.getMonthlyTransactions);
+router.get('/receipts/export/:month', usersController.exportReceipts);
 
 module.exports = router;
