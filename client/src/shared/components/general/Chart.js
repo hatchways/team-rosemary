@@ -17,11 +17,11 @@ const useStyles = makeStyles({
 
 /*
 Problems so far:
-  1. Timezone is not unified. If someone upload receipt late night in his/her timezone, other's   may get the date of tomorrow
-  2. The total number is not changing along with the month switch
+  1. Timezone is not unified. If someone upload receipt late night in his/her timezone, other's   may get the date of tomorrow, vice versa
+  2. The total number is not changing along with the month switching
   3. The XAxis values are not consecutive. If no expense in certain days there's no values on the XAxis
-  4. Not hot-updating
-  5. If no receipts in selected month, the chart will not render
+  4. Not hot-reloading
+  5. If no receipts in selected month, the entire chart will not render
 */
 
 export function Chart(props) {

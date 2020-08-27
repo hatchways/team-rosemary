@@ -66,7 +66,6 @@ export function Dashboard(props) {
         </Grid>
         <Grid item xs={12} md={6}>
           <Panel title="TOP CATEGORIES">
-            {/* <CatStatTable /> */}
             <TopCategories receiptCount={receiptCount} />
           </Panel>
         </Grid>
@@ -79,7 +78,6 @@ export function Dashboard(props) {
       <Grid container spacing={3} xs={12} lg={10}>
         <Grid item xs={12}>
           <Panel>
-            {/* <TransactionTable /> */}
             {/* <RecentTransactions reloadTrans={setReloadTransactions}/> */}
             <RecentTransactions receiptCount={receiptCount} />
           </Panel>
