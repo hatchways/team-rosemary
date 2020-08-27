@@ -52,12 +52,13 @@ const useStyles = makeStyles(theme => ({
 
 export function Home(props) {
   const classes = useStyles();
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const { isLoading, error, clearError } = useHttpClient();
   const [page, setPage] = useState('Dashboard');
   const [receiptCount, setReceiptCount] = useState(0);
 
   const handleReceiptUpload = () => {
     setReceiptCount(receiptCount + 1);
+    
     // const currState =  reloadTransactions === false ? true: reloadTransactions;
     //setReloadTransactions(currState);
   };
