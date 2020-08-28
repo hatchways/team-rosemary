@@ -18,6 +18,7 @@ export function Dashboard(props) {
   const auth = useContext(AuthContext);
   const { sendRequest } = useHttpClient();
   const userId = auth.userId;
+  const { receiptCount } = props;
 
   const handleMonthChange = e => {
     setMonth(e.target.value);
@@ -32,14 +33,12 @@ export function Dashboard(props) {
           endpoint,
           'GET',
           null,
-          {
-            Authorization: 'Bearer ' + auth.token
-          }
+          { Authorization: 'Bearer ' + auth.token }
         );
         const dataToDateString = responseData.receipts.map(data => {
           const date = new Date(data._id);
           const validDate = date.toDateString();
-          return {...data, _id: validDate.slice(4,10)};
+          return { ...data, _id: validDate.slice(4, 10) };
         });
         setMonthlyReceipts(dataToDateString);
       } catch {
@@ -47,9 +46,8 @@ export function Dashboard(props) {
       }
     };
     fetchMonthlyTransactions();
-  }, [sendRequest, userId, month])
+  }, [sendRequest, userId, auth.token, month, receiptCount])
 
-  const { receiptCount } = props;
   return (
     <>
       <Grid container spacing={3} xs={12} lg={10}>
