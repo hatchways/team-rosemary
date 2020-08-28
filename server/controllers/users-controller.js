@@ -149,9 +149,10 @@ const login = async (req, res, next) => {
 // @access Private
 const getAllReceipt = async (req, res, next) => {
     const userId = req.userData.userId;
-    const { duration } = req.body;
+    const duration = req.params.duration;
+    // console.log(duration);
     let days = 0;
-    if (duration) {
+    if (duration !== 'all') {
         switch (duration) {
             case 'daily':
                 days = 1;
@@ -162,13 +163,13 @@ const getAllReceipt = async (req, res, next) => {
             case 'monthly':
                 days = 30;
                 break;
-            case 'annualy':
+            case 'annually':
                 days = 365;
                 break;
         }
     }
     try {
-        if (duration) {
+        if (duration !== 'all') {
             const receipts = await Receipt.find({
                 user: userId,
                 date: {
@@ -230,7 +231,7 @@ const getTopCategories = async (req, res, next) => {
             const userIdd = mongoose.Types.ObjectId(userId);
             const receipts = await Receipt.aggregate(
                 [
-                    { "$match": { "user": userIdd } },
+                    { $match: { user: userIdd } },
                     // Grouping pipeline
                     {
                         $group: {

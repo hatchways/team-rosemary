@@ -5,7 +5,8 @@ const HttpError = require('../helpers/http-error');
 // @desc  given params passed in, create a post
 // @access Private
 const createReceipt = async (req, res, next) => {
-    const { title, amount, category, date, picture, user } = req.body;
+    const { title, amount, category, date, picture } = req.body;
+    const user = req.userData.userId;
 
     try {
         //create new receipt
@@ -22,8 +23,8 @@ const createReceipt = async (req, res, next) => {
 
         return res.json(receipt);
     } catch (err) {
-       const error = new HttpError('Internal Server Error', 500);
-       return next(error);
+        const error = new HttpError('Internal Server Error', 500);
+        return next(error);
     }
 };
 
@@ -71,7 +72,7 @@ const getReceipt = async (req, res, next) => {
             const error = new HttpError('Not Authorized', 401);
             return next(error);
         }
-        res.json(receipt);
+        return res.json(receipt);
     } catch (err) {
         const error = new HttpError('Server Error', 500);
         return next(error);
