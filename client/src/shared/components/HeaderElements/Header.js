@@ -10,7 +10,6 @@ import { Logo } from '../general/Logo';
 
 import AppDialog from '../UIElements/AppDialog.js';
 import ReceiptUploadForm from '../../../receipts/components/ReceiptUpload';
-
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from "@material-ui/core/styles";
@@ -37,9 +36,8 @@ const useStyles = makeStyles(theme => ({
 
 export function Header(props) {
   const classes = useStyles();
-
+ 
   const isMobile = useMediaQuery(useTheme().breakpoints.down('xs'));
-
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [reloadTransactions, setReloadTransactions] = useState(false);
@@ -94,7 +92,7 @@ export function Header(props) {
       <TopBar drawerWidth={drawerWidth}>
         <MenuBtn onClick={handleDrawerToggle} />
         <LoginUploadBtn onClick={handleDialogOpen}>Upload Receipt</LoginUploadBtn>
-        <ProfileAvatar />
+        <ProfileAvatar/>
       </TopBar>
       <SideBar
         drawerWidth={drawerWidth}

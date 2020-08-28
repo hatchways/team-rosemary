@@ -37,7 +37,10 @@ export function ProfileAvatar(props) {
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
   const auth = useContext(AuthContext);
+<<<<<<< HEAD
+=======
 
+>>>>>>> dev
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -78,7 +81,11 @@ export function ProfileAvatar(props) {
           aria-haspopup="true"
           onClick={handleToggle}
         >
+<<<<<<< HEAD
+        {auth.userName}
+=======
           Toggle Menu Grow
+>>>>>>> dev
         </Button>
         <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
           {({ TransitionProps, placement }) => (
