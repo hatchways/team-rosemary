@@ -112,73 +112,7 @@ export default function SignIn() {
             }
         },
     });
-
-    // s3 start
-    // const [connected, setConnected] = useState(false);
-    // const [url, setUrl] = useState('');
-    // const uploadInput = useRef(null);
-
-    // const handleUpload = async (e) => {
-    //     let file = uploadInput.current.files[0];
-    //     let fileParts = file.name.split('.');
-    //     let fileName = fileParts[0];
-    //     let fileType = fileParts[1]; //png
-    //     console.log('Preparing the upload');
-    //     console.log('file object');
-
-    //     console.log(file);
-
-    //     // async/await http-hook version
-    //     try {
-    //         const endpoint = 'http://localhost:5000/api/sign_s3/';
-    //         const responseData = await sendRequest(
-    //             endpoint,
-    //             'POST',
-    //             JSON.stringify({
-    //                 fileName: fileName,
-    //                 fileType: fileType,
-    //                 userId: auth.userId,
-    //             }),
-    //             {
-    //                 'Content-Type': 'application/json',
-    //             }
-    //         )
-
-    //         const returnData = responseData.data.returnData;
-    //         const signedRequest = returnData.signedRequest;
-    //         const url = returnData.url;
-    //         setUrl(url);
-        
-    //         await sendRequest(signedRequest,
-    //             'PUT', 
-    //              file, 
-    //             {
-    //              'Content-Type': fileType,
-    //             },
-    //             false
-    //         );
-    //         // console.log('Response from s3');
-    //         setConnected(true);
-    //     } catch (error) {
-    //         alert('ERROR ' + JSON.stringify(error));
-    //     }
-
-        
-    // };
-
-    // const handleChanges3 = (e) => {};
-
-    // const Success_message = () => (
-    //     <div style={{ padding: 50 }}>
-    //         <h3 style={{ color: 'green' }}>SUCCESSFUL UPLOAD</h3>
-    //         <a href={url}>Access the file here</a>
-    //         <br />
-    //     </div>
-    // );
-
-    //s3 end
-
-    return (
+   return (
         <Grid container component="main" className={classes.root}>
             <CssBaseline />
             <ErrorModal error={error} onClear={clearError} />
