@@ -1,4 +1,4 @@
-import React, {useState, useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 
 import SigninPage from './user/pages/SignInPage';
@@ -6,13 +6,13 @@ import SignUpPage from './user/pages/SignUpPage';
 import { AuthContext } from './shared/context/auth-context';
 import { useAuth } from './shared/hooks/auth-hook';
 
-import { Dashboard } from './dashboard/pages/Dashboard';
+// import { Dashboard } from './dashboard/pages/Dashboard';
 
 import { Home } from './pages/Home';
 
 
 const App = () => {
-    const { token, login, logout, userId } = useAuth();
+    const { token, login, logout, userId, userName } = useAuth();
    
     let routes;
     if (!token) {
@@ -48,6 +48,7 @@ const App = () => {
                 isLoggedIn: !!token,
                 token: token,
                 userId: userId,
+                userName: userName,
                 login: login,
                 logout: logout,
             }}

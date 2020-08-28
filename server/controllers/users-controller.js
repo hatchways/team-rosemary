@@ -73,6 +73,7 @@ const signup = async (req, res, next) => {
         // send status 201(created)
         res.status(201).json({
             userId: createdUser.id,
+            userName: createdUser.name,
             email: createdUser.email,
             token: token,
         });
@@ -154,6 +155,7 @@ const login = async (req, res, next) => {
 
     res.status(200).json({
         userId: existingUser.id,
+        userName: existingUser.name,
         email: existingUser.email,
         token: token,
     });
@@ -165,16 +167,44 @@ const login = async (req, res, next) => {
 // @access Private
 const getAllReceipt = async (req, res, next) => {
     const userId = req.userData.userId;
-    const { duration } = req.body;
-
+    const duration = req.params.duration;
+    // console.log(duration);
+    let days = 0;
+    if (duration !== 'all') {
+        switch (duration) {
+            case 'daily':
+                days = 1;
+                break;
+            case 'weekly':
+                days = 7;
+                break;
+            case 'monthly':
+                days = 30;
+                break;
+            case 'annually':
+                days = 365;
+                break;
+        }
+    }
     try {
-        const receipts = await Receipt.find({
-            user: userId,
-        }).sort({
-            date: -1,
-        });
-
-        res.json(receipts);
+        if (duration !== 'all') {
+            const receipts = await Receipt.find({
+                user: userId,
+                date: {
+                    $gte: new Date(new Date() - days * 60 * 60 * 24 * 1000),
+                },
+            }).sort({
+                date: -1,
+            });
+            res.json(receipts);
+        } else {
+            const receipts = await Receipt.find({
+                user: userId,
+            }).sort({
+                date: -1,
+            });
+            res.json(receipts);
+        }
     } catch {
         const error = new HttpError('Server Error', 500);
         return next(error);
@@ -278,7 +308,7 @@ const exportReceipts = async (req, res, next) => {
 
         //check if user exists with userid
         const user = await User.findById(userIdd);
-          
+
         if (!user) {
             const error = new HttpError('Invalid user details.', 400);
             return next(error);
@@ -289,18 +319,17 @@ const exportReceipts = async (req, res, next) => {
             title: 'Receipt-Export-Request-' + userId,
             userId: userIdd,
             month: month,
-            email: user.email
+            email: user.email,
         });
-        
+
         // check response from createJob method
         const response = await result;
 
         if (response == appEnums.RECEIPT.OK) {
             // send success response to the user
             res.status(201).json({
-                message: 'file created'
+                message: 'file created',
             });
-            
         } else if (response == appEnums.RECEIPT.NODATA) {
             //send error response to the user
             const error = new HttpError('No receipts found.', 404);
@@ -312,7 +341,6 @@ const exportReceipts = async (req, res, next) => {
         return next(error);
     }
 };
-
 
 module.exports = {
     signup,
