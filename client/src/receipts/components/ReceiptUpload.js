@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import { useHistory } from 'react-router-dom';
+
 import { makeStyles } from '@material-ui/core/styles';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -93,7 +93,7 @@ const ReceiptUploadForm = (props) => {
                         try {
                    
                             const endpoint = process.env.REACT_APP_API_BASE_URL + 'sign_s3/';
-                            const responseData = await sendRequest(
+                             await sendRequest(
                                 endpoint,
                                 'POST',
                                 JSON.stringify({

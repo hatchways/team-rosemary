@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 
 import Grid from "@material-ui/core/Grid";
 
 import { Panel } from '../shared/components/general/Panel';
 import { Chart } from '../shared/components/general/Chart';
-import { CatStatTable } from '../shared/components/general/CatStatTable';
+
 import TopCategories from '../shared/components/general/TopCategories';
-import { TransactionTable } from '../shared/components/general/TransactionTable';
+
 import RecentTransactions from '../shared/components/general/RecentTransactions';
 import { MonthSelector } from '../shared/components/general/MonthSelector';
 
