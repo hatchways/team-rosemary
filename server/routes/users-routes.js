@@ -27,13 +27,14 @@ router.post(
 
 router.use(checkAuth);
 
-router.get('/receipts', usersController.getAllReceipt);
+router.get('/receipts/:duration', usersController.getAllReceipt);
 
-router.get('/recenttransactions/:userid',
-usersController.getRecentTransactions)
+router.get(
+    '/recenttransactions/:userid',
+    usersController.getRecentTransactions
+);
 
-router.get('/topcategories/:userid',
-usersController.getTopCategories)
+router.get('/topcategories/:userid', usersController.getTopCategories);
 
 router.get('/receipts/export/:month', usersController.exportReceipts);
 
