@@ -1,15 +1,14 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom';
 
 import SigninPage from './user/pages/SignInPage';
-import SignUpPage from './user/pages/SignUpPage';
 import { AuthContext } from './shared/context/auth-context';
 import { useAuth } from './shared/hooks/auth-hook';
+import LoadingSpinner from './shared/components/UIElements/LoadingSpinner';
 
-// import { Dashboard } from './dashboard/pages/Dashboard';
-
-import { Home } from './pages/Home';
-
+//Lazy loading or code splitting
+const SignUpPage = React.lazy(() => import('./user/pages/SignUpPage'));
+const Home = React.lazy(() => import('./pages/Home'));
 
 const App = () => {
     const { token, login, logout, userId, userName } = useAuth();
@@ -53,7 +52,7 @@ const App = () => {
                 logout: logout,
             }}
         >
-            <BrowserRouter>{routes}</BrowserRouter>
+            <BrowserRouter><Suspense fallback={<div className="center"><LoadingSpinner asOverlay></LoadingSpinner></div>}>{routes}</Suspense></BrowserRouter>
         </AuthContext.Provider>
     );
 };

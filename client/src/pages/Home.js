@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-
 import Box from "@material-ui/core/Box";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Grid from "@material-ui/core/Grid";
-
+import { ThemeProvider } from '@material-ui/core/styles';
+import { makeStyles } from "@material-ui/core/styles";
 import {
   BrowserRouter as Router,
   Switch,
@@ -11,19 +11,15 @@ import {
 } from "react-router-dom";
 
 import { Header } from '../shared/components/HeaderElements/Header';
-
 import ErrorModal from '../shared/components/UIElements/ErrorModal';
 import LoadingSpinner from '../shared/components/UIElements/LoadingSpinner';
 import { useHttpClient } from '../shared/hooks/http-hook';
-
-import { Dashboard } from './Dashboard';
-import { Reports } from './Reports';
-import { Receipts } from './Receipts';
-
 import { theme } from '../themes/theme';
 
-import { ThemeProvider } from '@material-ui/core/styles';
-import { makeStyles } from "@material-ui/core/styles";
+//Lazy loading or code splitting
+const Dashboard = React.lazy(() => import('./Dashboard'));
+const Receipts = React.lazy(() => import('./Receipts'));
+const Reports = React.lazy(() => import('./Receipts'));
 
 const useStyles = makeStyles(theme => ({
   utilbar: {
@@ -50,7 +46,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export function Home(props) {
+export default function Home(props) {
   const classes = useStyles();
   const { isLoading, error, clearError } = useHttpClient();
   const [page, setPage] = useState('Dashboard');
@@ -93,7 +89,8 @@ export function Home(props) {
               </Grid>
             </Grid>
             <Switch>
-              {pages.map(page => {
+            <React.Suspense fallback={<div className="center"><LoadingSpinner asOverlay></LoadingSpinner></div>}>
+              {pages.map((page, index) => {
                 const { name, component } = page;
                 return (
                   <Route exact path={`/${name.toLowerCase()}`} key={name}>
@@ -101,6 +98,7 @@ export function Home(props) {
                   </Route>
                 )
               })}
+              </React.Suspense>
             </Switch>
           </main>
         </ThemeProvider>
