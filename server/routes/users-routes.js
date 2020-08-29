@@ -9,6 +9,8 @@ const router = express.Router();
 const checkAuth = require('../middleware/check-auth');
 
 const usersController = require('../controllers/users-controller');
+const chartController = require('../controllers/chart-controller');
+const { route } = require('./receipt-routes');
 
 router.post(
     '/signup',
@@ -36,6 +38,8 @@ router.get(
 
 router.get('/topcategories/:userid', usersController.getTopCategories);
 
+router.get('/monthlytransactions/:userid&:month&:timezone', 
+chartController.getMonthlyTransactions);
 router.get('/receipts/export/:month', usersController.exportReceipts);
 
 module.exports = router;
