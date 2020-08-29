@@ -4,9 +4,9 @@
     "private": true,
     "scripts": {
         "test": "NODE_ENV=test ./node_modules/.bin/mocha --exit --timeout 30000",
-        "dev": "export NODE_ENV=development&&nodemon app.js",
-        "prod": "export NODE_ENV=production&&nodemon app.js",
-        "stage": "export NODE_ENV=staging&&nodemon app.js"
+        "dev": "set NODE_ENV=development&&nodemon app.js",
+        "prod": "set NODE_ENV=production&&nodemon app.js",
+        "stage": "set NODE_ENV=staging&&nodemon app.js"
     },
     "dependencies": {
         "@sendgrid/mail": "^7.2.4",

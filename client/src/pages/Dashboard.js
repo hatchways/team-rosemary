@@ -24,22 +24,35 @@ export function Dashboard(props) {
     setMonth(e.target.value);
   };
 
+  // Get timezone offset of the user's current location, format: +HHmm or -HHmm
+  const getTimezoneOffset = () => {
+    const offset = new Date().getTimezoneOffset();
+    const hourOffset = Math.abs(Math.floor(offset / 60));
+    const minuteOffset = Math.abs(offset % 60);
+    const timezoneOffset = `${offset > 0 ? '-' : '+'}${hourOffset > 9 ? hourOffset : '0' + hourOffset}${minuteOffset > 9 ? minuteOffset : '0' + minuteOffset}`;
+    return timezoneOffset;
+  };
+
   useEffect(() => {
     const fetchMonthlyTransactions = async () => {
       try {
         // So far only year 2020 in the controller
-        const endpoint = `${process.env.REACT_APP_API_BASE_URL}user/monthlytransactions/${userId}&${month}`;
+        const timezone = getTimezoneOffset();
+        const endpoint = `${process.env.REACT_APP_API_BASE_URL}user/monthlytransactions/${userId}&${month}&${timezone}`;
         const responseData = await sendRequest(
           endpoint,
           'GET',
           null,
           { Authorization: 'Bearer ' + auth.token }
         );
+
+        // 'Mon Jan 01 2020' => 'Jan 01'
         const dataToDateString = responseData.receipts.map(data => {
           const date = new Date(data._id);
           const validDate = date.toDateString();
           return { ...data, _id: validDate.slice(4, 10) };
         });
+
         setMonthlyReceipts(dataToDateString);
       } catch {
 

@@ -6,6 +6,7 @@ const HttpError = require('../helpers/http-error');
 
 const getMonthlyTransactions = async (req, res, next) => {
   const userId = req.params.userid;
+  const timezone = req.params.timezone;
 
   // So far only 2020, month starts from 0
   const from = new Date(2020, req.params.month);
@@ -31,7 +32,8 @@ const getMonthlyTransactions = async (req, res, next) => {
             _id: {
               $dateToString: {
                 date: "$date",
-                format: "%m, %d, %Y"
+                format: "%m, %d, %Y",
+                timezone: timezone
               }
             },
             total: { $sum: "$amount" }
