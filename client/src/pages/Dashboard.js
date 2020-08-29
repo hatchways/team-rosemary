@@ -25,6 +25,7 @@ export function Dashboard(props) {
   };
 
   // Get timezone offset of the user's current location, format: +HHmm or -HHmm
+  // Aware that in mongoDB the +/- is reversed from JavaScript
   const getTimezoneOffset = () => {
     const offset = new Date().getTimezoneOffset();
     const hourOffset = Math.abs(Math.floor(offset / 60));
