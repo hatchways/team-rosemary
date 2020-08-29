@@ -1,16 +1,13 @@
 import React from "react";
-
 import Grid from "@material-ui/core/Grid";
-
 import { Panel } from '../shared/components/general/Panel';
 import { Chart } from '../shared/components/general/Chart';
 
 import TopCategories from '../shared/components/general/TopCategories';
-
 import RecentTransactions from '../shared/components/general/RecentTransactions';
 import { MonthSelector } from '../shared/components/general/MonthSelector';
 
-export function Dashboard(props) {
+export default function Dashboard(props) {
   const { receiptCount } = props;
   return (
     <>

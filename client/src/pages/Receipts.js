@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export function Receipts(props) {
+export default function Receipts(props) {
     const classes = useStyles();
     const auth = useContext(AuthContext);
     const { sendRequest } = useHttpClient();
