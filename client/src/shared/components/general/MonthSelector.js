@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -13,20 +13,34 @@ const useStyles = makeStyles(theme => ({
     right: props => `${props.right}`,
     margin: theme.spacing(1),
     minWidth: 120,
+    textAlign: 'center'
   }
 }));
 
 export function MonthSelector(props) {
-  const { top, right } = props;
+  const { top, right, value, onChange } = props;
   const classes = useStyles({ top, right });
-  const [month, setMonth] = useState('');
+  // const [month, setMonth] = useState(new Date().getMonth() + 1);
 
-  const handleChange = e => setMonth(e.target.value);
+  // const handleChange = e => {
+  //   setMonth(e.target.value);
+  // }
 
+  // useEffect(() => {
+  //   props.onChange(month);
+  // }, [month])
+
+  // states lifted. May use context.
+  /* 
+  As for the <options/> which scheme below we choose?
+  1. From Jan to Dec
+  2. Only months with receipts in the dbase
+  */
   return (
     <FormControl className={classes.formControl}>
-      <Select value={month} onChange={handleChange}>
-        <MenuItem value='August'>Angust</MenuItem>
+      <Select value={value} onChange={onChange}>
+        <MenuItem value={7}>Angust</MenuItem>
+        <MenuItem value={8}>Sep</MenuItem>
       </Select>
     </FormControl>
   );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
 
@@ -15,33 +15,31 @@ const useStyles = makeStyles({
   }
 });
 
-// Should be sorted by the date, users may not add receipts day after day
-const data = [
-  { date: 'Aug 11', expense: 10 },
-  { date: 'Aug 12', expense: 20 },
-  { date: 'Aug 13', expense: 15 },
-  { date: 'Aug 14', expense: 20 },
-  { date: 'Aug 15', expense: 40 },
-  { date: 'Aug 16', expense: 10 },
-  { date: 'Aug 17', expense: 20 },
-  { date: 'Aug 18', expense: 15 },
-  { date: 'Aug 19', expense: 20 },
-  { date: 'Aug 20', expense: 40 },
-];
-
 export function Chart(props) {
   const classes = useStyles();
-  const expense = 2000;
-  const lastDay = data[data.length - 1].date;
+  const [monthlyReceipts, setMonthlyReceipts] = useState([]);
+  const [total, setTotal] = useState('--');
+  const [lastDay, setLastDay] = useState('');
 
-  const formatter = (value, ...pars) => [`$${value.toLocaleString()}`, ...pars];
+  const { data } = props;
+
+  useEffect(() => {
+    const total = data.reduce((a, b) => a + b.total, 0);
+    const lastDay = data[0] && data[0]._id;
+
+    setTotal(total || '--');
+    setLastDay(lastDay);
+    setMonthlyReceipts(data);
+  }, [data])
+
+  const formatter = (value, ...params) => [`$${value.toLocaleString()}`, ...params];
 
   const renderLineChart = (
     <ResponsiveContainer height={120} debounce={100}>
-      <LineChart data={data}>
-        <XAxis dataKey="date" axisLine={{ stroke: "#f0f2fa", strokeWidth: 2 }} tickLine={false} padding={{ left: 20, right: 20 }} />
+      <LineChart data={monthlyReceipts}>
+        <XAxis dataKey="_id" reversed axisLine={{ stroke: "#f0f2fa", strokeWidth: 2 }} tickLine={false} padding={{ left: 20, right: 20 }} />
         {/* <YAxis /> */}
-        <Line type="monotone" dataKey="expense" stroke="#4366a7" strokeWidth={2} dot={false} activeDot={{ stroke: '#fff', strokeWidth: 3, r: 6 }} />
+        <Line type="monotone" dataKey="total" stroke="#4366a7" strokeWidth={2} dot={false} activeDot={{ stroke: '#fff', strokeWidth: 3, r: 6 }} />
         <ReferenceLine x={lastDay} stroke="#f0f2fa" />
         <Tooltip separator=": " formatter={formatter} />
       </LineChart>
@@ -50,7 +48,7 @@ export function Chart(props) {
 
   return (
     <div>
-      <p className={classes.txtExpensesTotal}><sup>$</sup>{expense.toLocaleString()}</p>
+      <p className={classes.txtExpensesTotal}><sup>$</sup>{total.toLocaleString()}</p>
       {renderLineChart}
     </div>
   )
