@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const kue = require('kue');
 const queue = kue.createQueue();
+const winston = require('winston');
 
 const { User } = require('../models/user');
 const { Receipt } = require('../models/receipt');
@@ -14,9 +15,11 @@ const { appEnums } = require('../helpers/app-enums');
 // @desc to register user, returns userid, email and token
 // @access Public
 const signup = async (req, res, next) => {
+    
     const { name, email, password } = req.body;
 
     try {
+        throw new Error('Could not sign up the user');
         const hasUser = await User.findOne({
             email: email,
         });
@@ -36,6 +39,7 @@ const signup = async (req, res, next) => {
                 'Could not create user, please try again later',
                 500
             );
+            winston.error(err.message, err);
             return next(error);
         }
 
@@ -67,6 +71,7 @@ const signup = async (req, res, next) => {
                 'Signing up failed, please try again later.',
                 500
             );
+            winston.error(err.message, err);
             return next(error);
         }
 
@@ -79,6 +84,7 @@ const signup = async (req, res, next) => {
         });
     } catch (err) {
         const error = new HttpError('Internal server error.', 500);
+        winston.error(err.message, err);
         return next(error);
     }
 };
