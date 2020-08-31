@@ -104,7 +104,8 @@ export default function SignIn() {
                         'Content-Type': 'application/json',
                     }
                 );
-                auth.login(responseData.userId, responseData.userName, responseData.token);
+              
+                auth.login(responseData.results.userId, responseData.results.userName, responseData.results.token);
                 setMessage('Signed in successfully!');
                 history.push('/dashboard');
             } catch (err) {

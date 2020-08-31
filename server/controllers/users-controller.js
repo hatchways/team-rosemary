@@ -3,7 +3,9 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const kue = require('kue');
 const queue = kue.createQueue();
+const winston = require('winston');
 
+const { success, error, validation } = require('../helpers/api-response');
 const { User } = require('../models/user');
 const { Receipt } = require('../models/receipt');
 const HttpError = require('../helpers/http-error');
@@ -15,72 +17,54 @@ const { appEnums } = require('../helpers/app-enums');
 // @access Public
 const signup = async (req, res, next) => {
     const { name, email, password } = req.body;
+    //throw new Error('Could not sign up the user');
+    const hasUser = await User.findOne({
+        email: email,
+    });
 
-    try {
-        const hasUser = await User.findOne({
-            email: email,
-        });
-
-        // if user with the provided email already exists
-        if (hasUser) {
-            const error = new HttpError('User already exists.', 422);
-            return next(error);
-        }
-
-        // hash the password
-        let hashedPassword;
-        try {
-            hashedPassword = await bcrypt.hash(password, 12);
-        } catch (err) {
-            const error = new HttpError(
-                'Could not create user, please try again later',
-                500
-            );
-            return next(error);
-        }
-
-        // user object to save in the db
-        let createdUser = new User({
-            name,
-            email,
-            password: hashedPassword,
-        });
-
-        // save user in the db
-        await createdUser.save();
-
-        // generate token
-        let token;
-        try {
-            token = jwt.sign(
-                {
-                    usrId: createdUser.id,
-                    email: createdUser.email,
-                },
-                process.env.JWT_KEY,
-                {
-                    expiresIn: '1h',
-                }
-            );
-        } catch (err) {
-            const error = new HttpError(
-                'Signing up failed, please try again later.',
-                500
-            );
-            return next(error);
-        }
-
-        // send status 201(created)
-        res.status(201).json({
-            userId: createdUser.id,
-            userName: createdUser.name,
-            email: createdUser.email,
-            token: token,
-        });
-    } catch (err) {
-        const error = new HttpError('Internal server error.', 500);
-        return next(error);
+    // if user with the provided email already exists
+    if (hasUser) {
+       return  res.status(422).json(error("User already exists.", res.statusCode));
     }
+
+    // hash the password
+    let hashedPassword;
+    hashedPassword = await bcrypt.hash(password, 12);
+
+    // user object to save in the db
+    let createdUser = new User({
+        name,
+        email,
+        password: hashedPassword,
+    });
+
+    // save user in the db
+    await createdUser.save();
+
+    // generate token
+    let token;
+    token = jwt.sign(
+        {
+            usrId: createdUser.id,
+            email: createdUser.email,
+        },
+        process.env.JWT_KEY,
+        {
+            expiresIn: '1h',
+        }
+    );
+    return res.status(201).json(
+        success(
+            'You are signed up successfully.',
+            {
+                userId: createdUser.id,
+                userName: createdUser.name,
+                email: createdUser.email,
+                token: token,
+            },
+            res.statusCode
+        )
+    );
 };
 
 // @route POST /user/login
@@ -92,73 +76,52 @@ const login = async (req, res, next) => {
     // check if user with the provided email-id exists
     let existingUser;
 
-    try {
-        existingUser = await User.findOne({
-            email: email,
-        });
-    } catch (err) {
-        const error = new HttpError(
-            'Internal server error, please try again later.',
-            500
-        );
-        return next(error);
-    }
+    existingUser = await User.findOne({
+        email: email,
+    });
 
     //user not exists with the provide email-id
     if (!existingUser) {
-        const error = new HttpError(
-            'Invalid credentials, could not log you in.',
-            401
-        );
-        return next(error);
+         return  res.status(401).json(error("Invalid credentials.", res.statusCode));
     }
+    
 
     // check if provided password is correct( compare the password with the password saved in the database)
     let isValidPassword = false;
 
-    try {
-        isValidPassword = await bcrypt.compare(password, existingUser.password);
-    } catch (err) {
-        const error = new HttpError(
-            'Could not log you in, please check your credentials and try again later',
-            500
-        );
-        return next(error);
-    }
+    isValidPassword = await bcrypt.compare(password, existingUser.password);
 
     // Password is not valid
     if (!isValidPassword) {
-        const error = new HttpError('Invalid credentials', 401);
-        return next(error);
+        return  res.status(401).json(error("Invalid credentials.", res.statusCode));
     }
 
     // generate token
     let token;
-    try {
-        token = jwt.sign(
+
+    token = jwt.sign(
+        {
+            userId: existingUser.id,
+            email: existingUser.email,
+        },
+        process.env.JWT_KEY,
+        {
+            expiresIn: '1h',
+        }
+    );
+
+    return res.status(200).json(
+        success(
+            'You are logged in successfully.',
             {
                 userId: existingUser.id,
+                userName: existingUser.name,
                 email: existingUser.email,
+                token: token,
             },
-            process.env.JWT_KEY,
-            {
-                expiresIn: '1h',
-            }
-        );
-    } catch (err) {
-        const error = new HttpError(
-            'Logging in failed, please try again later.',
-            500
-        );
-        return next(error);
-    }
-
-    res.status(200).json({
-        userId: existingUser.id,
-        userName: existingUser.name,
-        email: existingUser.email,
-        token: token,
-    });
+            res.statusCode
+        )
+    );
 };
 
 // @route GET user/receipts
@@ -217,27 +180,28 @@ const getAllReceipt = async (req, res, next) => {
 const getRecentTransactions = async (req, res, next) => {
     const userId = req.params.userid;
 
-    try {
-        const user = await User.findById(userId);
+    const user = await User.findById(userId);
 
-        if (!user) {
-            const error = new HttpError('Invalid user details.', 400);
-            return next(error);
-        } else {
-            const receipts = await Receipt.find({
-                user: userId,
+    if (!user) {
+        return  res.status(400).json(error("Invalid user details.", res.statusCode));
+    } else {
+        const receipts = await Receipt.find({
+            user: userId,
+        })
+            .sort({
+                date: -1,
             })
-                .sort({
-                    date: -1,
-                })
-                .limit(3);
-            res.status(200).json({
-                receipts,
-            });
-        }
-    } catch {
-        const error = new HttpError('Internal server error', 500);
-        return next(error);
+            .limit(3);
+
+        return res.status(200).json(
+            success(
+                'Recent transactions',
+                {
+                    transactions: receipts,
+                },
+                res.statusCode
+            )
+        );
     }
 };
 
@@ -247,52 +211,53 @@ const getRecentTransactions = async (req, res, next) => {
 
 const getTopCategories = async (req, res, next) => {
     const userId = req.params.userid;
-    try {
-        const user = await User.findById(userId);
 
-        if (!user) {
-            const error = new HttpError('Invalid user details.', 400);
-            return next(error);
-        } else {
-            const userIdd = mongoose.Types.ObjectId(userId);
-            const receipts = await Receipt.aggregate(
-                [
-                    {
-                        $match: {
-                            user: userIdd,
+    const user = await User.findById(userId);
+
+    if (!user) {
+        return  res.status(400).json(error("Invalid user details.", res.statusCode));
+    } else {
+        const userIdd = mongoose.Types.ObjectId(userId);
+        const receipts = await Receipt.aggregate(
+            [
+                {
+                    $match: {
+                        user: userIdd,
+                    },
+                },
+                // Grouping pipeline
+                {
+                    $group: {
+                        _id: '$category',
+                        total: {
+                            $sum: '$amount',
                         },
                     },
-                    // Grouping pipeline
-                    {
-                        $group: {
-                            _id: '$category',
-                            total: {
-                                $sum: '$amount',
-                            },
-                        },
+                },
+                // Sorting pipeline
+                {
+                    $sort: {
+                        total: -1,
                     },
-                    // Sorting pipeline
-                    {
-                        $sort: {
-                            total: -1,
-                        },
-                    },
-                    // Optionally limit results
-                    {
-                        $limit: 3,
-                    },
-                ],
-                function (err, result) {
-                    console.log(err);
-                }
-            );
-            res.status(200).json({
-                receipts,
-            });
-        }
-    } catch {
-        const error = new HttpError('Internal server error', 500);
-        return next(error);
+                },
+                // Optionally limit results
+                {
+                    $limit: 3,
+                },
+            ],
+            function (err, result) {
+                console.log(err);
+            }
+        );
+        return res.status(200).json(
+            success(
+                'Top categories.',
+                {
+                    receipts,
+                },
+                res.statusCode
+            )
+        );
     }
 };
 
@@ -301,7 +266,7 @@ const getTopCategories = async (req, res, next) => {
 // @access Private
 
 const exportReceipts = async (req, res, next) => {
-    try {
+    
         const userId = req.headers['userid'];
         const month = parseInt(req.params.month);
         const userIdd = mongoose.Types.ObjectId(userId);
@@ -310,8 +275,8 @@ const exportReceipts = async (req, res, next) => {
         const user = await User.findById(userIdd);
 
         if (!user) {
-            const error = new HttpError('Invalid user details.', 400);
-            return next(error);
+           
+           return  res.status(400).json(error("Invalid user details.", res.statusCode));
         }
 
         //create job by calling createJob method
@@ -327,19 +292,19 @@ const exportReceipts = async (req, res, next) => {
 
         if (response == appEnums.RECEIPT.OK) {
             // send success response to the user
-            res.status(201).json({
-                message: 'file created',
-            });
+             return res.status(201).json(
+                success(
+                    'File created successfully',
+                    {},
+                    res.statusCode
+                )
+            );
+
         } else if (response == appEnums.RECEIPT.NODATA) {
             //send error response to the user
-            const error = new HttpError('No receipts found.', 404);
-            return next(error);
+            return  res.status(404).json(error("No receipts found.", res.statusCode));
         }
-    } catch (ex) {
-        console.log(ex);
-        const error = new HttpError('Internal server error', 500);
-        return next(error);
-    }
+    
 };
 
 module.exports = {

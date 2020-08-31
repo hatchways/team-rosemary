@@ -82,7 +82,8 @@ const RecentTransactions = (props) => {
                 const responseData = await sendRequest(endpoint, 'GET', null, {
                     Authorization: 'Bearer ' + auth.token,
                 });
-                setloadedReceipts(responseData.receipts); // set the transactions data
+             
+                setloadedReceipts(responseData.results.transactions); // set the transactions data
                 // props.onReceiptUpload();
             } catch (err) { }
         };

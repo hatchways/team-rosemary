@@ -49,7 +49,7 @@ export const useHttpClient = () => {
             } catch (err) {
                 setError(err.message);
                 setIsLoading(false);
-                // console.log(err);
+                 console.log(err);
                 throw err;
             }
         },
