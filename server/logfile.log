@@ -1,0 +1,18 @@
+{"code":500,"level":"error","message":"Internal server error Internal server error","stack":"Error: Internal server error\n    at getRecentTransactions (D:\\Projects\\Hatchaways\\team-rosemary\\server\\controllers\\users-controller.js:236:23)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (internal/process/task_queues.js:93:5)"}
+{"message":"Listening on port 5000...","level":"info"}
+{"message":"Connected to MongoDB...","level":"info"}
+{"level":"error","message":"transactions is not defined transactions is not defined","stack":"ReferenceError: transactions is not defined\n    at getRecentTransactions (D:\\Projects\\Hatchaways\\team-rosemary\\server\\controllers\\users-controller.js:215:21)\n    at processTicksAndRejections (internal/process/task_queues.js:93:5)"}
+{"message":"Listening on port 5000...","level":"info"}
+{"message":"Connected to MongoDB...","level":"info"}
+{"message":"Listening on port 5000...","level":"info"}
+{"message":"Connected to MongoDB...","level":"info"}
+{"message":"Listening on port 5000...","level":"info"}
+{"message":"Connected to MongoDB...","level":"info"}
+{"message":"Listening on port 5000...","level":"info"}
+{"message":"Connected to MongoDB...","level":"info"}
+{"message":"Listening on port 5000...","level":"info"}
+{"message":"Connected to MongoDB...","level":"info"}
+{"message":"Listening on port 5000...","level":"info"}
+{"message":"Connected to MongoDB...","level":"info"}
+{"message":"Listening on port 5000...","level":"info"}
+{"message":"Connected to MongoDB...","level":"info"}
