@@ -77,7 +77,7 @@ export default function TopCategories(props) {
         const responseData = await sendRequest(endpoint, 'GET', null, {
           Authorization: 'Bearer ' + auth.token,
         });
-        setloadedCategories(responseData.receipts); // set the transactions data
+        setloadedCategories(responseData.results.receipts); // set the transactions data
       } catch (err) { }
     };
     fetchTopCategories();

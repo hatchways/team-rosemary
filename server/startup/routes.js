@@ -1,9 +1,11 @@
 const express = require('express');
-var bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const { json, urlencoded, Request, Response } = express;
 const kue = require('kue');
+
+const error = require('../middleware/error');
 
 // import routes
 const usersRoutes = require('../routes/users-routes');
@@ -33,14 +35,6 @@ module.exports = function (app) {
         const error = new HttpError('Could not find this route.', 404);
         throw error;
     });
+    app.use(error);
 
-    app.use((error, req, res, next) => {
-        if (res.headerSent) {
-            return next(error);
-        }
-        res.status(error.code || 500);
-        res.json({
-            message: error.message || 'An unknown error occurred!',
-        });
-    });
 };

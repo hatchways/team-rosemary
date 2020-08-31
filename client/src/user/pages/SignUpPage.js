@@ -107,7 +107,7 @@ export default function SignUp() {
             'Content-Type': 'application/json',
           }
         );
-        auth.login(responseData.userId, responseData.token);
+        auth.login(responseData.results.userId, responseData.results.userName, responseData.results.token);
         setMessage('You have signed up successfully!');
         setTimeout(() => {
           history.push('/dashboard');
