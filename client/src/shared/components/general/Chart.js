@@ -31,19 +31,19 @@ const initChart = (month, year) => {
   // Past: data end at the last day, reference at the last day
   const chartConfig = [
     {
-      date: 'current',
+      id: 'current_month',
       condition: month === thisMonth && year === thisYear,
       total: d => d <= today ? 0 : null,
       reference: dateToday
     },
     {
-      date: 'past',
+      id: 'past_months',
       condition: year < thisYear || (year === thisYear && month < thisMonth),
       total: 0,
       reference: `${months[month]} ${numOfDays}`
     },
     {
-      date: 'future',
+      id: 'future_months',
       condition: year > thisYear || (year === thisYear && month > thisMonth),
       total: null,
       reference: `${months[month]} 01`
@@ -60,7 +60,7 @@ const initChart = (month, year) => {
       total: total instanceof Function ? total(d) : total
     });
   }
-  
+
   return { receipts, reference };
 }
 
