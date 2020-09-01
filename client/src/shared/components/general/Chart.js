@@ -50,20 +50,18 @@ const initChart = (month, year) => {
     }
   ];
 
-  for (let config of chartConfig) {
-    const { condition } = config;
-    if (condition) {
-      const { total, reference } = config;
-      const receipts = [{ _id: `${months[month]} 01`, total: 0 }];
-      for (let d = 2; d <= numOfDays; d++) {
-        receipts.push({
-          _id: `${months[month]} ${d > 9 ? '' : '0'}${d}`,
-          total: total instanceof Function ? total(d) : total
-        });
-      }
-      return { receipts, reference };
-    }
+  const currentConfig = chartConfig.find(config => config.condition);
+  const { total, reference } = currentConfig;
+  const receipts = [{ _id: `${months[month]} 01`, total: 0 }];
+
+  for (let d = 2; d <= numOfDays; d++) {
+    receipts.push({
+      _id: `${months[month]} ${d > 9 ? '' : '0'}${d}`,
+      total: total instanceof Function ? total(d) : total
+    });
   }
+  
+  return { receipts, reference };
 }
 
 export function Chart(props) {
