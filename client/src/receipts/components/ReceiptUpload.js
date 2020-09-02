@@ -91,7 +91,7 @@ const ReceiptUploadForm = (props) => {
                         let fileName = image.name.split('.')[0];
                         let fileType = image.name.split('.')[1];
                         try {
-                   
+                           
                             const endpoint = process.env.REACT_APP_API_BASE_URL + 'sign_s3/';
                              await sendRequest(
                                 endpoint,
@@ -105,11 +105,10 @@ const ReceiptUploadForm = (props) => {
                                     'Content-Type': 'application/json',
                                 }
                             ).then(resp => {
-                               
-                                const returnData = resp.data.returnData;
-                                const signedRequest =returnData.signedRequest;
-                                const url = returnData.url;
-
+                                                      
+                                // const returnData = resp.data.returnData;
+                                const signedRequest =resp.signedRequest;
+                                const url = resp.url;
                                 sendRequest(
                                     signedRequest,
                                     'PUT',
@@ -118,37 +117,39 @@ const ReceiptUploadForm = (props) => {
                                         'Content-Type': fileType,
                                     },
                                     false
-                                );
-                                imagesUrl.push(url);
+                                ).then(() => {
+                                    imagesUrl.push(url);
                                
-                                if(imagesUrl.length === images.length) {
-                                       
-                                    const endpoint =
-                                    process.env.REACT_APP_API_BASE_URL + 'receipt';
-                                 sendRequest(
-                                    endpoint,
-                                    'POST',
-                                    JSON.stringify({
-                                        title: values.name,
-                                        user: auth.userId,
-                                        amount: values.amount,
-                                        category: values.category,
-                                        date: new Date(),
-                                        picture: imagesUrl,
-                                    }),
-                                    {
-                                        'Content-Type': 'application/json',
-                                        Authorization: 'Bearer ' + auth.token,
+                                    if(imagesUrl.length === images.length) {
+                                       const endpoint =
+                                        process.env.REACT_APP_API_BASE_URL + 'receipt';
+                                     sendRequest(
+                                        endpoint,
+                                        'POST',
+                                        JSON.stringify({
+                                            title: values.name,
+                                            user: auth.userId,
+                                            amount: values.amount,
+                                            category: values.category,
+                                            date: new Date(),
+                                            picture: imagesUrl,
+                                        }),
+                                        {
+                                            'Content-Type': 'application/json',
+                                            Authorization: 'Bearer ' + auth.token,
+                                        }
+                                    );
+                                      props.onReceiptUpload();
+                                      setMessage('Receipt uploaded successfully!');
                                     }
-                                );
-                                  props.onReceiptUpload();
-                                  setMessage('Receipt uploaded successfully!');
-                                }
+                                  
+                                });
+                     
 
                            });
 
                         } catch (error) {
-                            alert('ERROR ' + JSON.stringify(error));
+                            console.log('ERROR ' + JSON.stringify(error));
                         }
                     });
                    
