@@ -38,7 +38,7 @@ router.get(
 
 router.get('/topcategories/:userid', usersController.getTopCategories);
 
-router.get('/monthlytransactions/:userid&:year&:month&:timezone', 
+router.get('/monthlyTransaction/:userid&:year&:month&:timezone', 
 chartController.getMonthlyTransactions);
 router.get('/receipts/export/:month', usersController.exportReceipts);
 
