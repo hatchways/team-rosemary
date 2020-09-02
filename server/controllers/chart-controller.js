@@ -6,11 +6,10 @@ const HttpError = require('../helpers/http-error');
 
 const getMonthlyTransactions = async (req, res, next) => {
   const userId = req.params.userid;
-  const timezone = req.params.timezone;
+  const { year, month, timezone } = req.params;
 
-  // So far only 2020, month starts from 0
-  const from = new Date(2020, req.params.month);
-  const to = new Date(2020, req.params.month + 1);
+  const from = new Date(year, +month);
+  const to = new Date(year, +month + 1);
 
   try {
     const user = await User.findById(userId);

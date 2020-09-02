@@ -19,7 +19,7 @@ import { theme } from '../themes/theme';
 //Lazy loading or code splitting
 const Dashboard = React.lazy(() => import('./Dashboard'));
 const Receipts = React.lazy(() => import('./Receipts'));
-const Reports = React.lazy(() => import('./Receipts'));
+const Reports = React.lazy(() => import('./Reports'));
 
 const useStyles = makeStyles(theme => ({
   utilbar: {
