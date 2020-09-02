@@ -28,7 +28,7 @@ export const useHttpClient = () => {
                 });
 
                 let responseData;
-
+              
                 if (!jsonReturnData) {
                     responseData = await response;
                 } else {
@@ -44,12 +44,11 @@ export const useHttpClient = () => {
 
                 setIsLoading(false);
                 setSuccess(true);
-                // console.log(responseData);
                 return responseData;
             } catch (err) {
+                console.log(err);
                 setError(err.message);
                 setIsLoading(false);
-                 console.log(err);
                 throw err;
             }
         },
