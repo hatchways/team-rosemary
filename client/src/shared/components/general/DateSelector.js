@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -31,7 +31,7 @@ export function DateSelector(props) {
     <FormControl className={classes.formControl}>
       <Select value={value} onChange={onChange}>
         <ListSubheader>2020</ListSubheader>
-        <MenuItem value="2020-7">Angust</MenuItem>
+        <MenuItem value="2020-7">August</MenuItem>
         <MenuItem value="2020-8">September</MenuItem>
         <ListSubheader>2019</ListSubheader>
         <MenuItem value="2019-7">August</MenuItem>
