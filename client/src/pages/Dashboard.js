@@ -10,6 +10,9 @@ import { useHttpClient } from '../shared/hooks/http-hook';
 
 import TotalExpense from '../shared/components/MainElements/TotalExpense';
 
+import { useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+
 export default function Dashboard(props) {
   const [month, setMonth] = useState(new Date().getMonth()); // month starts from 0
   const [year, setYear] = useState(new Date().getFullYear());
@@ -20,6 +23,8 @@ export default function Dashboard(props) {
   const { sendRequest } = useHttpClient();
   const userId = auth.userId;
   const { receiptCount } = props;
+
+  const isMobile = useMediaQuery(useTheme().breakpoints.down('xs'));
 
   const handleMonthYearChange = e => {
     const [year, month] = e.target.value.split('-');
@@ -72,7 +77,7 @@ export default function Dashboard(props) {
     <>
       <Grid container spacing={3} xs={12} lg={10}>
         <Grid item xs={12} md={6}>
-          <Panel title="TOTAL EXPENSES">
+          <Panel title={`TOTAL${isMobile ? '' : ' EXPENSES'}`}>
             <DateSelector
               top="1rem"
               right="0.5rem"
