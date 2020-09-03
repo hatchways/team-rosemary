@@ -8,7 +8,7 @@ const useStyles = makeStyles({
   container: {
     position: 'relative',
     padding: '1rem',
-    height: '16rem',
+    height: ({ height }) => height,
     borderRadius: '1rem'
   },
   title: {
@@ -18,7 +18,8 @@ const useStyles = makeStyles({
 });
 
 export function Panel(props) {
-  const classes = useStyles();
+  const { height } = props;
+  const classes = useStyles({ height: height || '16rem' });
   return (
     <Paper className={classes.container}>
       {props.title && <h4 className={classes.title}>{props.title}</h4>}

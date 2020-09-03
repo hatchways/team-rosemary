@@ -4,8 +4,8 @@ import Grid from "@material-ui/core/Grid";
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from "@material-ui/core/Select";
 import Button from '@material-ui/core/Button';
-import { Panel } from '../../shared/components/general/Panel';
-import { Chart } from '../../shared/components/general/Chart';
+import { Panel } from '../../shared/components/MainElements/Panel';
+import { Chart } from '../../shared/components/MainElements/Chart';
 import { makeStyles } from "@material-ui/core/styles";
 
 import RecentTransactions from '../components/RecentTransactions';

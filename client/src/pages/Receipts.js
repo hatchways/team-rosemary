@@ -7,7 +7,7 @@ import AppDialog from '../shared/components/UIElements/AppDialog';
 
 import Receipt from '../assets/receipt.png';
 
-import { DurationSelector } from '../shared/components/general/DurationSelector';
+import { DurationSelector } from '../shared/components/MainElements/DurationSelector';
 
 import { makeStyles } from '@material-ui/core/styles';
 

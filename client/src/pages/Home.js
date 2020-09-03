@@ -15,7 +15,7 @@ import { theme } from '../themes/theme';
 //Lazy loading or code splitting
 const Dashboard = React.lazy(() => import('./Dashboard'));
 const Receipts = React.lazy(() => import('./Receipts'));
-const Reports = React.lazy(() => import('./Receipts'));
+const Reports = React.lazy(() => import('./Reports'));
 
 const useStyles = makeStyles((theme) => ({
     utilbar: {
@@ -39,6 +39,9 @@ const useStyles = makeStyles((theme) => ({
             marginTop: '3rem',
             padding: theme.spacing(1),
         },
+    },
+    title: {
+        maxHeight: '5.5rem',
     },
 }));
 
@@ -91,7 +94,13 @@ export default function Home(props) {
                         <div
                             className={`${classes.utilbar} ${classes.utilbarMain}`}
                         />
-                        <Grid container spacing={3} xs={12} lg={10}>
+                        <Grid
+                            container
+                            spacing={3}
+                            xs={12}
+                            lg={10}
+                            classes={{ container: classes.title }}
+                        >
                             <Grid item xs={12}>
                                 <h2>{page}</h2>
                             </Grid>
