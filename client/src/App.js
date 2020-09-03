@@ -57,7 +57,11 @@ const App = () => {
                 logout: logout,
             }}
         >
-            <BrowserRouter><Suspense fallback={<div className="center"><LoadingSpinner asOverlay></LoadingSpinner></div>}>{routes}</Suspense></BrowserRouter>
+            <BrowserRouter>
+                <Suspense fallback={<div className="center"><LoadingSpinner asOverlay /></div>}>
+                    {routes}
+                </Suspense>
+            </BrowserRouter>
         </AuthContext.Provider>
     );
 };

@@ -43,6 +43,9 @@ const useStyles = makeStyles(theme => ({
       marginTop: '3rem',
       padding: theme.spacing(1)
     }
+  },
+  title: {
+    maxHeight: '5.5rem'
   }
 }));
 
@@ -54,7 +57,7 @@ export default function Home(props) {
 
   const handleReceiptUpload = () => {
     setReceiptCount(receiptCount + 1);
-    
+
     // const currState =  reloadTransactions === false ? true: reloadTransactions;
     //setReloadTransactions(currState);
   };
@@ -64,7 +67,7 @@ export default function Home(props) {
 
   const pages = [
     { name: 'Dashboard', component: <Dashboard receiptCount={receiptCount} /> },
-    { name: 'Reports', component: <Reports /> },
+    { name: 'Reports', component: <Reports receiptCount={receiptCount} /> },
     { name: 'Receipts', component: <Receipts /> },
   ];
 
@@ -83,21 +86,21 @@ export default function Home(props) {
             <ErrorModal error={error} onClear={clearError} />
             {isLoading && <LoadingSpinner asOverlay />}
             <div className={`${classes.utilbar} ${classes.utilbarMain}`} />
-            <Grid container spacing={3} xs={12} lg={10}>
+            <Grid container spacing={3} xs={12} lg={10} classes={{ container: classes.title }}>
               <Grid item xs={12}>
                 <h2>{page}</h2>
               </Grid>
             </Grid>
             <Switch>
-            <React.Suspense fallback={<div className="center"><LoadingSpinner asOverlay></LoadingSpinner></div>}>
-              {pages.map((page, index) => {
-                const { name, component } = page;
-                return (
-                  <Route exact path={`/${name.toLowerCase()}`} key={name}>
-                    {component}
-                  </Route>
-                )
-              })}
+              <React.Suspense fallback={<div className="center"><LoadingSpinner asOverlay></LoadingSpinner></div>}>
+                {pages.map((page, index) => {
+                  const { name, component } = page;
+                  return (
+                    <Route exact path={`/${name.toLowerCase()}`} key={name}>
+                      {component}
+                    </Route>
+                  )
+                })}
               </React.Suspense>
             </Switch>
           </main>

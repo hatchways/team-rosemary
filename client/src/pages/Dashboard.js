@@ -8,10 +8,13 @@ import { DateSelector } from '../shared/components/MainElements/DateSelector';
 import { AuthContext } from '../shared/context/auth-context';
 import { useHttpClient } from '../shared/hooks/http-hook';
 
+import TotalExpense from '../shared/components/general/TotalExpense';
+
 export default function Dashboard(props) {
   const [month, setMonth] = useState(new Date().getMonth()); // month starts from 0
   const [year, setYear] = useState(new Date().getFullYear());
   const [monthlyReceipts, setMonthlyReceipts] = useState([]);
+  const [total, setTotal] = useState(0);
 
   const auth = useContext(AuthContext);
   const { sendRequest } = useHttpClient();
@@ -37,7 +40,6 @@ export default function Dashboard(props) {
   useEffect(() => {
     const fetchMonthlyTransactions = async () => {
       try {
-        // So far only year 2020 in the controller
         const timezone = getTimezoneOffset();
         const endpoint = `${process.env.REACT_APP_API_BASE_URL}user/monthlytransactions/${userId}&${year}&${month}&${timezone}`;
         const responseData = await sendRequest(
@@ -47,13 +49,17 @@ export default function Dashboard(props) {
           { Authorization: 'Bearer ' + auth.token }
         );
 
-        // 'Mon Jan 01 2020' => 'Jan 01'
-        const dataToDateString = responseData.receipts.map(data => {
-          const date = new Date(data._id);
-          const validDate = date.toDateString();
-          return { ...data, _id: validDate.slice(4, 10) };
-        });
+        const { receipts } = responseData;
 
+        // 'Mon Jan 01 2020' => 'Jan 01'
+        const dataToDateString = receipts.map(receipt => {
+          const date = new Date(receipt._id);
+          const validDate = date.toDateString();
+          return { ...receipt, _id: validDate.slice(4, 10) };
+        });
+        const total = receipts.reduce((a, b) => a + b.total, 0);
+
+        setTotal(total);
         setMonthlyReceipts(dataToDateString);
       } catch {
 
@@ -69,10 +75,11 @@ export default function Dashboard(props) {
           <Panel title="TOTAL EXPENSES">
             <DateSelector
               top="1rem"
-              right="1rem"
+              right="0.5rem"
               value={`${year}-${month}`}
               onChange={handleMonthYearChange}
             />
+            <TotalExpense total={total} />
             <Chart year={year} month={month} data={monthlyReceipts} />
           </Panel>
         </Grid>
