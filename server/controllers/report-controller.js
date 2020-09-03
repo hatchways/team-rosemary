@@ -4,7 +4,7 @@ const { User } = require('../models/user');
 const { Receipt } = require('../models/receipt');
 const HttpError = require('../helpers/http-error');
 
-const getMonthlyTransactions = async (req, res, next) => {
+const getMonthlyReport = async (req, res, next) => {
   const userId = req.params.userid;
   const { year, month, timezone } = req.params;
 
@@ -27,36 +27,33 @@ const getMonthlyTransactions = async (req, res, next) => {
           }
         },
         {
-          $group: {
-            _id: {
+          $project: {
+            user: "$user",
+            title: "$title",
+            amount: "$amount",
+            category: "$category",
+            picture: "$picture",
+            date: {
               $dateToString: {
                 date: "$date",
-                format: "%m, %d, %Y",
                 timezone: timezone
               }
-            },
-            total: { $sum: "$amount" }
+            }
           }
         },
         {
-          $sort: { _id: -1 }
+          $sort: { date: -1 }
         }
       ], function (err, result) {
         console.log(err);
       })
 
-      if (!receipts) {
-        const error = new HttpError('No receipts for selected month', 404);
-        return next(error);
-      } else {
-        res.status(200).json({ receipts });
-      }
+      res.status(200).json({ receipts });
     }
-
   } catch {
     const error = new HttpError('Internal server error', 500);
     return next(error);
   }
 };
 
-module.exports = { getMonthlyTransactions };
+module.exports = { getMonthlyReport };

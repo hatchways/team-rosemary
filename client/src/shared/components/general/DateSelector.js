@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from "@material-ui/core/Select";
+import ListSubheader from '@material-ui/core/ListSubheader';
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -17,20 +18,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export function MonthSelector(props) {
+export function DateSelector(props) {
   const { top, right, value, onChange } = props;
   const classes = useStyles({ top, right });
-  // const [month, setMonth] = useState(new Date().getMonth() + 1);
 
-  // const handleChange = e => {
-  //   setMonth(e.target.value);
-  // }
-
-  // useEffect(() => {
-  //   props.onChange(month);
-  // }, [month])
-
-  // states lifted. May use context.
   /* 
   As for the <options/> which scheme below we choose?
   1. From Jan to Dec
@@ -39,8 +30,11 @@ export function MonthSelector(props) {
   return (
     <FormControl className={classes.formControl}>
       <Select value={value} onChange={onChange}>
-        <MenuItem value={7}>Angust</MenuItem>
-        <MenuItem value={8}>Sep</MenuItem>
+        <ListSubheader>2020</ListSubheader>
+        <MenuItem value="2020-7">August</MenuItem>
+        <MenuItem value="2020-8">September</MenuItem>
+        <ListSubheader>2019</ListSubheader>
+        <MenuItem value="2019-7">August</MenuItem>
       </Select>
     </FormControl>
   );

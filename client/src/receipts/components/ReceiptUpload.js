@@ -93,9 +93,9 @@ const ReceiptUploadForm = (props) => {
                         let fileType = image.name.split('.')[1];
 
                         try {
-                            const endpoint =
-                                process.env.REACT_APP_API_BASE_URL + 'sign_s3/';
-                            await sendRequest(
+                          
+                            const endpoint = process.env.REACT_APP_API_BASE_URL + 'sign_s3/';
+                             await sendRequest(
                                 endpoint,
                                 'POST',
                                 JSON.stringify({
@@ -139,7 +139,7 @@ const ReceiptUploadForm = (props) => {
                                         }),
                                         {
                                             'Content-Type': 'application/json',
-                                            Authorization:
+                                             Authorization:
                                                 'Bearer ' + auth.token,
                                         }
                                     );
@@ -149,6 +149,7 @@ const ReceiptUploadForm = (props) => {
                                     );
                                 }
                             });
+
                         } catch (error) {
                             console.log('ERROR ' + JSON.stringify(error));
                         }
