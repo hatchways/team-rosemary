@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useContext } from "react";
 import Grid from "@material-ui/core/Grid";
-import { Panel } from '../shared/components/general/Panel';
-import { Chart } from '../shared/components/general/Chart';
-import TopCategories from '../shared/components/general/TopCategories';
-import RecentTransactions from '../shared/components/general/RecentTransactions';
-import { DateSelector } from '../shared/components/general/DateSelector';
+import { Panel } from '../shared/components/MainElements/Panel';
+import { Chart } from '../shared/components/MainElements/Chart';
+import TopCategories from '../shared/components/MainElements/TopCategories';
+import RecentTransactions from '../shared/components/MainElements/RecentTransactions';
+import { DateSelector } from '../shared/components/MainElements/DateSelector';
 import { AuthContext } from '../shared/context/auth-context';
 import { useHttpClient } from '../shared/hooks/http-hook';
 
-import TotalExpense from '../shared/components/general/TotalExpense';
+import TotalExpense from '../shared/components/MainElements/TotalExpense';
+
+import { useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 export default function Dashboard(props) {
   const [month, setMonth] = useState(new Date().getMonth()); // month starts from 0
@@ -20,6 +23,8 @@ export default function Dashboard(props) {
   const { sendRequest } = useHttpClient();
   const userId = auth.userId;
   const { receiptCount } = props;
+
+  const isMobile = useMediaQuery(useTheme().breakpoints.down('xs'));
 
   const handleMonthYearChange = e => {
     const [year, month] = e.target.value.split('-');
@@ -72,7 +77,7 @@ export default function Dashboard(props) {
     <>
       <Grid container spacing={3} xs={12} lg={10}>
         <Grid item xs={12} md={6}>
-          <Panel title="TOTAL EXPENSES">
+          <Panel title={`TOTAL${isMobile ? '' : ' EXPENSES'}`}>
             <DateSelector
               top="1rem"
               right="0.5rem"

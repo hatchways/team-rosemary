@@ -17,15 +17,18 @@ import DriveEtaRoundedIcon from '@material-ui/icons/DriveEtaRounded';
 import SportsHandballRoundedIcon from '@material-ui/icons/SportsHandballRounded';
 import LocalHospitalRoundedIcon from '@material-ui/icons/LocalHospitalRounded';
 import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
+import DescriptionIcon from '@material-ui/icons/Description';
 import { green } from '@material-ui/core/colors';
 
 import { AuthContext } from '../shared/context/auth-context';
 import { useHttpClient } from '../shared/hooks/http-hook';
 
-import { Panel } from '../shared/components/general/Panel';
-import { DateSelector } from '../shared/components/general/DateSelector';
-import TotalExpense from '../shared/components/general/TotalExpense';
+import { Panel } from '../shared/components/MainElements/Panel';
+import { DateSelector } from '../shared/components/MainElements/DateSelector';
+import TotalExpense from '../shared/components/MainElements/TotalExpense';
 
+import { useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
@@ -71,6 +74,7 @@ const getTimezoneOffset = () => {
 
 export default function Reports(props) {
   const classes = useStyles();
+  const isMobile = useMediaQuery(useTheme().breakpoints.down('xs'));
 
   const [month, setMonth] = useState(new Date().getMonth()); // month starts from 0
   const [year, setYear] = useState(new Date().getFullYear());
@@ -141,9 +145,11 @@ export default function Reports(props) {
         onChange={handleMonthYearChange}
       />
       <Grid item xs>
-        <Panel title="TOTAL EXPENSES" height="auto">
+        <Panel title={`TOTAL${isMobile ? '' : ' EXPENSES'}`} height="auto">
           <TotalExpense total={total} float />
-          <Button className={classes.button}>Export CSV</Button>
+          <Button className={classes.button}>
+            {isMobile ? <DescriptionIcon /> : 'Export CSV'}
+          </Button>
           <TableContainer>
             <Table className={classes.container}>
               <TableBody>

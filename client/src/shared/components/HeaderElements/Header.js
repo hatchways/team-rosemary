@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import { TopBar } from './TopBar';
 import { SideBar } from './SideBar';
 import { NavTabs } from './NavTabs';
-import { LoginUploadBtn } from './LoginUploadBtn';
+import { UploadReceiptBtn } from './UploadReceiptBtn';
 import { ProfileAvatar } from './ProfileAvatar';
 import { MenuBtn } from './MenuBtn';
-import { Logo } from '../general/Logo';
+import { Logo } from '../UIElements/Logo';
 
 import AppDialog from '../UIElements/AppDialog.js';
 import ReceiptUploadForm from '../../../receipts/components/ReceiptUpload';
@@ -91,7 +91,7 @@ export function Header(props) {
     <header>
       <TopBar drawerWidth={drawerWidth}>
         <MenuBtn onClick={handleDrawerToggle} />
-        <LoginUploadBtn onClick={handleDialogOpen}>Upload Receipt</LoginUploadBtn>
+        <UploadReceiptBtn onClick={handleDialogOpen}>Upload Receipt</UploadReceiptBtn>
         <ProfileAvatar/>
       </TopBar>
       <SideBar
