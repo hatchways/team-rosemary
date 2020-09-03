@@ -19,7 +19,7 @@ const useStyles = makeStyles({
   mask: {
     width: '100%',
     height: '100%',
-    backgroundColor: 'rgba(99, 123, 254, 0.6)'
+    backgroundColor: 'rgba(27, 52, 96, 0.6)'
   },
   logoContainer: {
     position: 'absolute',
