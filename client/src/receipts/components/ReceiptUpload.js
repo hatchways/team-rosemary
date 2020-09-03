@@ -29,20 +29,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
+  //  name: Yup.string().required('Name is required'),
     amount: Yup.number().required('Amount is required'),
 });
 
-// const currentDate = () => {
-
-//     const date = new Date(); // M-D-YYYY
-
-//     const d = date.getDate();
-//     const m = date.getMonth() + 1;
-//     const y = date.getFullYear();
-
-//     return (d <= 9 ? '0' + d : d) + '-' + (m <= 9 ? '0' + m : m) + '-' + y;
-// }
 
 const ReceiptUploadForm = (props) => {
     const classes = useStyles();
@@ -50,6 +40,9 @@ const ReceiptUploadForm = (props) => {
     const [category, setCategory] = useState('');
     const [message, setMessage] = useState('');
     const [images, setImages] = useState([]);
+    const [googleResponse, setGoogleResponse] = useState('');
+    const [googleResponseText, setGoogleResponseText] = useState([]);
+    const [title, setTitle] = useState('');
 
     const {
         isLoading,
@@ -60,10 +53,15 @@ const ReceiptUploadForm = (props) => {
         clearSuccess,
     } = useHttpClient();
     const auth = useContext(AuthContext);
-   
+
     function onSelectChange(event) {
         setCategory(event.target.value);
     }
+
+   function  _handleTitleTextFieldChange(e) {
+      setTitle(e.target.value);
+    }
+
     const {
         handleSubmit,
         handleChange,
@@ -79,21 +77,25 @@ const ReceiptUploadForm = (props) => {
         },
         validationSchema,
         async onSubmit(values, { resetForm }) {
+           
+                values.name = title;
+                   
             const imagesUrl = [];
             if (category !== '0') {
                 values.category = category;
             }
+         
             try {
                 //upload the images to S3
                 if (images.length > 0) {
                     images.forEach(async (image) => {
-                
                         let fileName = image.name.split('.')[0];
                         let fileType = image.name.split('.')[1];
+
                         try {
-                   
-                            const endpoint = process.env.REACT_APP_API_BASE_URL + 'sign_s3/';
-                             await sendRequest(
+                            const endpoint =
+                                process.env.REACT_APP_API_BASE_URL + 'sign_s3/';
+                            await sendRequest(
                                 endpoint,
                                 'POST',
                                 JSON.stringify({
@@ -104,10 +106,9 @@ const ReceiptUploadForm = (props) => {
                                 {
                                     'Content-Type': 'application/json',
                                 }
-                            ).then(resp => {
-                               
+                            ).then((resp) => {
                                 const returnData = resp.data.returnData;
-                                const signedRequest =returnData.signedRequest;
+                                const signedRequest = returnData.signedRequest;
                                 const url = returnData.url;
 
                                 sendRequest(
@@ -120,41 +121,40 @@ const ReceiptUploadForm = (props) => {
                                     false
                                 );
                                 imagesUrl.push(url);
-                               
-                                if(imagesUrl.length === images.length) {
-                                       
+
+                                if (imagesUrl.length === images.length) {
                                     const endpoint =
-                                    process.env.REACT_APP_API_BASE_URL + 'receipt';
-                                 sendRequest(
-                                    endpoint,
-                                    'POST',
-                                    JSON.stringify({
-                                        title: values.name,
-                                        user: auth.userId,
-                                        amount: values.amount,
-                                        category: values.category,
-                                        date: new Date(),
-                                        picture: imagesUrl,
-                                    }),
-                                    {
-                                        'Content-Type': 'application/json',
-                                        Authorization: 'Bearer ' + auth.token,
-                                    }
-                                );
-                                  props.onReceiptUpload();
-                                  setMessage('Receipt uploaded successfully!');
+                                        process.env.REACT_APP_API_BASE_URL +
+                                        'receipt';
+                                    sendRequest(
+                                        endpoint,
+                                        'POST',
+                                        JSON.stringify({
+                                            title: values.name,
+                                            user: auth.userId,
+                                            amount: values.amount,
+                                            category: values.category,
+                                            date: new Date(),
+                                            picture: imagesUrl,
+                                        }),
+                                        {
+                                            'Content-Type': 'application/json',
+                                            Authorization:
+                                                'Bearer ' + auth.token,
+                                        }
+                                    );
+                                    props.onReceiptUpload();
+                                    setMessage(
+                                        'Receipt uploaded successfully!'
+                                    );
                                 }
-
-                           });
-
+                            });
                         } catch (error) {
-                            alert('ERROR ' + JSON.stringify(error));
+                            console.log('ERROR ' + JSON.stringify(error));
                         }
                     });
-                   
                 }
                 //resetForm({values: ''});
-               
             } catch (err) {
                 console.log(err);
             }
@@ -168,7 +168,7 @@ const ReceiptUploadForm = (props) => {
                 success={success}
                 successMessage={message}
                 onClear={clearSuccess}
-            />
+            />{' '}
             {isLoading && <LoadingSpinner asOverlay />}
             <Grid
                 container
@@ -180,16 +180,16 @@ const ReceiptUploadForm = (props) => {
             >
                 <form onSubmit={handleSubmit} noValidate>
                     <Grid item xs={12}>
-                        <TextField
+                    <TextField
                             required
                             fullWidth
                             id="name"
                             label="Name"
                             name="name"
                             type="text"
+                            value={title}
                             autoComplete="name"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
+                            onChange={_handleTitleTextFieldChange}
                             helperText={touched.name ? errors.name : ''}
                             error={touched.name && Boolean(errors.name)}
                             autoFocus
@@ -226,7 +226,93 @@ const ReceiptUploadForm = (props) => {
                             dropzoneText={
                                 'Drag and drop an image here or click'
                             }
-                            onChange={(files) => setImages(files)}
+                            onChange={(files) => {
+                                setImages(files);
+
+                                if (files.length == 1) {
+                                    //send request to API to get base64 string of image
+                                    const formData = new FormData();
+                                    formData.append('photo', files[0]);
+
+                                    const endpoint =
+                                        process.env.REACT_APP_API_BASE_URL +
+                                        'user/base64';
+
+                                    // request sent to API
+                                    sendRequest(
+                                        endpoint,
+                                        'POST',
+                                        formData
+                                    ).then((response) => {
+                                        
+                                        const base64String = response.results.base64; // base64 string of image received
+                                       
+                                        //Google API end point
+                                        const googleEndPoint = process.env.REACT_APP_GOOGLE_VISION_API_ENDPOINT;
+
+                                        let body = JSON.stringify({
+                                            requests: [
+                                                {
+                                                    features: [
+                                                        {
+                                                            type:
+                                                                'TEXT_DETECTION',
+                                                            maxResults: 5,
+                                                        },
+                                                    ],
+                                                    image: {
+                                                        content: base64String,
+                                                    },
+                                                },
+                                            ],
+                                        });
+                                        
+                                      //Send request to google API
+                                        sendRequest(
+                                            googleEndPoint,
+                                            'POST',
+                                            body,
+                                            {
+                                                Accept: 'application/json',
+                                                'Content-Type':
+                                                    'application/json',
+                                            }
+                                        ).then((responseJson) => {
+                                          
+                                            setGoogleResponse(responseJson);
+
+                                            if (
+                                                JSON.stringify(
+                                                    responseJson.data
+                                                ) != '{}'
+                                            ) {
+                                                const words =
+                                                    responseJson.responses[0]
+                                                        .textAnnotations;
+
+                                                let arrayWords = [];
+
+                                                let document = '';
+                                                words.forEach((text) => {
+                                                    document +=
+                                                        text.description;
+                                                        arrayWords.push(text.description);
+                                                });
+
+                                                //console.log(arrayWords);
+                                               
+                                                setGoogleResponseText(arrayWords);
+                                                setTitle(arrayWords[1]);
+                                              // console.log(document);
+                                            } else {
+                                                console.log(
+                                                    'No discernable text found.'
+                                                );
+                                            }
+                                        });
+                                    });
+                                }
+                            }}
                         />
                     </Grid>
                     <Button
@@ -235,9 +321,9 @@ const ReceiptUploadForm = (props) => {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        disabled={!isValid}
-                    >
-                        Save
+                        // disabled={!isValid}
+                     >
+                    Save
                     </Button>
                 </form>
             </Grid>
