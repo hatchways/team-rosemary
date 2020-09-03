@@ -2,19 +2,6 @@ import React, { useState, useEffect } from "react";
 
 import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer, ReferenceLine, ReferenceDot } from 'recharts';
 
-import { makeStyles } from '@material-ui/core/styles';
-
-const useStyles = makeStyles({
-  container: {
-    width: '100%',
-    padding: '1rem'
-  },
-  txtExpensesTotal: {
-    margin: '1rem 0',
-    fontSize: '2rem'
-  }
-});
-
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const formatter = (value, ...params) => [`$${value.toLocaleString()}`, ...params];
 
@@ -65,20 +52,15 @@ const initChart = (month, year) => {
 }
 
 export function Chart(props) {
-  const classes = useStyles();
   const { data, year, month } = props;
   const { receipts, reference } = initChart(month, year);
 
   const getReceipt = (source, ref) => source.find(receipt => receipt._id === ref);
 
   const [monthlyReceipts, setMonthlyReceipts] = useState(receipts);
-  const [total, setTotal] = useState(0);
   const [latestValue, setlatestValue] = useState(getReceipt(receipts, reference).total);
 
   useEffect(() => {
-    const total = data.reduce((a, b) => a + b.total, 0);
-
-    setTotal(total);
     setMonthlyReceipts(receipts => {
       const mergedReceipts = receipts.map(receipt => {
         return getReceipt(data, receipt._id) || receipt;
@@ -96,7 +78,7 @@ export function Chart(props) {
     setlatestValue(latestValue);
   }, [monthlyReceipts])
 
-  const renderLineChart = (
+  return (
     <ResponsiveContainer height={120} debounce={100}>
       <LineChart data={monthlyReceipts}>
         <XAxis
@@ -126,12 +108,5 @@ export function Chart(props) {
         <Tooltip separator=": " formatter={formatter} />
       </LineChart>
     </ResponsiveContainer>
-  );
-
-  return (
-    <div>
-      <p className={classes.txtExpensesTotal}><sup>$</sup>{total.toLocaleString()}</p>
-      {renderLineChart}
-    </div>
   )
 }
