@@ -8,7 +8,7 @@ import { DateSelector } from '../shared/components/MainElements/DateSelector';
 import { AuthContext } from '../shared/context/auth-context';
 import { useHttpClient } from '../shared/hooks/http-hook';
 
-import TotalExpense from '../shared/components/general/TotalExpense';
+import TotalExpense from '../shared/components/MainElements/TotalExpense';
 
 export default function Dashboard(props) {
   const [month, setMonth] = useState(new Date().getMonth()); // month starts from 0

@@ -21,9 +21,9 @@ import { green } from '@material-ui/core/colors';
 import { AuthContext } from '../shared/context/auth-context';
 import { useHttpClient } from '../shared/hooks/http-hook';
 
-import { Panel } from '../shared/components/general/Panel';
-import { DateSelector } from '../shared/components/general/DateSelector';
-import TotalExpense from '../shared/components/general/TotalExpense';
+import { Panel } from '../shared/components/MainElements/Panel';
+import { DateSelector } from '../shared/components/MainElements/DateSelector';
+import TotalExpense from '../shared/components/MainElements/TotalExpense';
 
 import { makeStyles } from '@material-ui/core/styles';
 
