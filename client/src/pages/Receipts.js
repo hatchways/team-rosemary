@@ -3,6 +3,7 @@ import React, { useEffect, useContext, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
+import AppDialog from '../shared/components/UIElements/AppDialog';
 
 import Receipt from '../assets/receipt.png';
 
@@ -12,6 +13,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import { useHttpClient } from '../shared/hooks/http-hook';
 import { AuthContext } from '../shared/context/auth-context';
+
+import ModifyReceipt from '../receipts/components/ModifyReceipt';
 
 const imgSize = '15rem';
 const imgSizeXs = '18rem';
@@ -74,11 +77,30 @@ export default function Receipts(props) {
     const { sendRequest } = useHttpClient();
     // const userId = auth.userId;
 
+    const { receiptCount, onReceiptUpload } = props;
+
     const [receipts, setReceipts] = useState([]);
     const [duration, setDuration] = useState('all');
+    const [isOpen, setIsOpen] = useState(false);
+    const [reloadTransactions, setReloadTransactions] = useState(false);
+
+    const [ind, setInd] = useState(null);
 
     const getDuration = (duration) => {
         setDuration(duration);
+    };
+
+    const handleDialogOpen = (index) => {
+        //set receipt
+        setInd(index);
+        setIsOpen(true);
+    };
+    const handleDialogClose = () => {
+        setIsOpen(false);
+    };
+    const handleReceiptUpload = () => {
+        props.onReceiptUpload();
+        setIsOpen(false);
     };
 
     useEffect(() => {
@@ -96,7 +118,38 @@ export default function Receipts(props) {
         };
 
         fetchReceipts();
-    }, [auth.token, sendRequest, duration]);
+    }, [auth.token, sendRequest, duration, receiptCount]);
+
+    const data = [
+        {
+            id: '0',
+            name: 'Select Category',
+        },
+        {
+            id: 'Food & Drinks',
+            name: 'Food & Drinks',
+        },
+        {
+            id: 'Housing',
+            name: 'Housing',
+        },
+        {
+            id: 'Transportation',
+            name: 'Transportation',
+        },
+        {
+            id: 'Health Care',
+            name: 'Health Care',
+        },
+        {
+            id: 'Recreation & Entertainment',
+            name: 'Recreation & Entertainment',
+        },
+        {
+            id: 'Grocery',
+            name: 'Grocery',
+        },
+    ];
 
     return (
         <Grid container spacing={2} xs={12} lg={10} className={classes.pRel}>
@@ -115,7 +168,10 @@ export default function Receipts(props) {
                         key={index + '-' + newDate}
                         className={classes.imgRoot}
                     >
-                        <ButtonBase className={classes.imgContainer}>
+                        <ButtonBase
+                            className={classes.imgContainer}
+                            onClick={() => handleDialogOpen(index)}
+                        >
                             <img
                                 src={picture}
                                 alt={`Receipt on ${newDate}`}
@@ -132,6 +188,21 @@ export default function Receipts(props) {
                     </Grid>
                 );
             })}
+
+            <AppDialog
+                size="md"
+                isOpen={isOpen}
+                handleOpen={handleDialogOpen}
+                handleClose={handleDialogClose}
+                title="Modify Receipt"
+            >
+                <ModifyReceipt
+                    receipt={receipts[ind]}
+                    data={data}
+                    reloadTrans={reloadTransactions}
+                    onReceiptUpload={handleReceiptUpload}
+                />
+            </AppDialog>
         </Grid>
     );
 }
