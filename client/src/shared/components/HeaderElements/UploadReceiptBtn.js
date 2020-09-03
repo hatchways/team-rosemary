@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export function LoginUploadBtn(props) {
+export function UploadReceiptBtn(props) {
   const classes = useStyles();
   const isMobile = useMediaQuery(useTheme().breakpoints.down('xs'));
 

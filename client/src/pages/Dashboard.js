@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import Grid from "@material-ui/core/Grid";
-import { Panel } from '../shared/components/general/Panel';
-import { Chart } from '../shared/components/general/Chart';
-import TopCategories from '../shared/components/general/TopCategories';
-import RecentTransactions from '../shared/components/general/RecentTransactions';
-import { DateSelector } from '../shared/components/general/DateSelector';
+import { Panel } from '../shared/components/MainElements/Panel';
+import { Chart } from '../shared/components/MainElements/Chart';
+import TopCategories from '../shared/components/MainElements/TopCategories';
+import RecentTransactions from '../shared/components/MainElements/RecentTransactions';
+import { DateSelector } from '../shared/components/MainElements/DateSelector';
 import { AuthContext } from '../shared/context/auth-context';
 import { useHttpClient } from '../shared/hooks/http-hook';
 

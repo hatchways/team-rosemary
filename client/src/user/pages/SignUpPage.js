@@ -212,7 +212,7 @@ export default function SignUp() {
             className={classes.submit}
             disabled={!isValid}
           >
-            Sign In
+            Sign Up
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
