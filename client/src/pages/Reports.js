@@ -3,6 +3,7 @@ import React, { useEffect, useContext, useState } from 'react';
 import moment from 'moment';
 
 import { Avatar } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -33,6 +34,13 @@ const useStyles = makeStyles({
   },
   container: {
     whiteSpace: 'nowrap'
+  },
+  button: {
+    position: 'absolute',
+    top: '1.5rem',
+    right: '1rem',
+    color: '#1b3460',
+    textTransform: 'none'
   },
   thead: {
     display: 'flex',
@@ -135,6 +143,7 @@ export default function Reports(props) {
       <Grid item xs>
         <Panel title="TOTAL EXPENSES" height="auto">
           <TotalExpense total={total} float />
+          <Button className={classes.button}>Export CSV</Button>
           <TableContainer>
             <Table className={classes.container}>
               <TableBody>
