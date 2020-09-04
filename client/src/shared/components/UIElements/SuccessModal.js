@@ -12,7 +12,7 @@ const SuccessModal = (props) => {
   
     <Snackbar
       open={!!props.success} 
-      autoHideDuration={4000}
+      autoHideDuration={5000}
       onClose={props.onClear}
       anchorOrigin={{
         vertical: 'bottom',
