@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const { json, urlencoded, Request, Response } = express;
 const kue = require('kue');
+const HttpError = require('../helpers/http-error');
 
 const error = require('../middleware/error');
 
@@ -13,7 +14,8 @@ const receiptRoutes = require('../routes/receipt-routes');
 const s3routes = require('../routes/s3-routes');
 
 module.exports = function (app) {
-    app.use(bodyParser.json());
+   app.use(bodyParser.json({limit: '50mb'}));
+   app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
     app.use(json());
     app.use(
         urlencoded({

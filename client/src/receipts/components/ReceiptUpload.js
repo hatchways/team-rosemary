@@ -93,7 +93,7 @@ const ReceiptUploadForm = (props) => {
                         let fileType = image.name.split('.')[1];
 
                         try {
-                          
+                            console.log('making call to S3');
                             const endpoint = process.env.REACT_APP_API_BASE_URL + 'sign_s3/';
                              await sendRequest(
                                 endpoint,
@@ -107,11 +107,11 @@ const ReceiptUploadForm = (props) => {
                                     'Content-Type': 'application/json',
                                 }
                             ).then((resp) => {
-                                const returnData = resp.data.returnData;
-                                const signedRequest = returnData.signedRequest;
-                                const url = returnData.url;
-
-                                sendRequest(
+                                console.log(resp);
+                                const signedRequest = resp.signedRequest;
+                                const url = resp.url;
+                                console.log('making call to sign');
+                                 sendRequest(
                                     signedRequest,
                                     'PUT',
                                     image,
@@ -119,35 +119,41 @@ const ReceiptUploadForm = (props) => {
                                         'Content-Type': fileType,
                                     },
                                     false
-                                );
-                                imagesUrl.push(url);
+                                ).then(() => {
+                                    imagesUrl.push(url);
+                                    console.log(imagesUrl);
+    
+                                    if (imagesUrl.length === images.length) {
+                                        console.log('making call to get save receipt');
+                                        const endpoint =
+                                            process.env.REACT_APP_API_BASE_URL +
+                                            'receipt';
+                                         sendRequest(
+                                            endpoint,
+                                            'POST',
+                                            JSON.stringify({
+                                                title: values.name,
+                                                user: auth.userId,
+                                                amount: values.amount,
+                                                category: values.category,
+                                                date: new Date(),
+                                                picture: imagesUrl,
+                                            }),
+                                            {
+                                                'Content-Type': 'application/json',
+                                                 Authorization:
+                                                    'Bearer ' + auth.token,
+                                            }
+                                        );
+                                        props.onReceiptUpload();
+                                        setMessage(
+                                            'Receipt uploaded successfully!'
+                                        );
+                                    }
 
-                                if (imagesUrl.length === images.length) {
-                                    const endpoint =
-                                        process.env.REACT_APP_API_BASE_URL +
-                                        'receipt';
-                                    sendRequest(
-                                        endpoint,
-                                        'POST',
-                                        JSON.stringify({
-                                            title: values.name,
-                                            user: auth.userId,
-                                            amount: values.amount,
-                                            category: values.category,
-                                            date: new Date(),
-                                            picture: imagesUrl,
-                                        }),
-                                        {
-                                            'Content-Type': 'application/json',
-                                             Authorization:
-                                                'Bearer ' + auth.token,
-                                        }
-                                    );
-                                    props.onReceiptUpload();
-                                    setMessage(
-                                        'Receipt uploaded successfully!'
-                                    );
-                                }
+
+                                });
+              
                             });
 
                         } catch (error) {
@@ -165,11 +171,13 @@ const ReceiptUploadForm = (props) => {
     return (
         <React.Fragment>
             <ErrorModal error={error} onClear={clearError} />
+            {message !== '' &&
             <SuccessModal
                 success={success}
                 successMessage={message}
                 onClear={clearSuccess}
-            />{' '}
+            />
+          }
             {isLoading && <LoadingSpinner asOverlay />}
             <Grid
                 container
