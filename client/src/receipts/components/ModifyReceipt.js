@@ -46,7 +46,6 @@ const validationSchema = Yup.object().shape({
 
 const ModifyReceiptForm = (props) => {
     const { receipt } = props;
-    console.log(receipt);
     const classes = useStyles();
     const [data] = useState(props.data);
     const [category, setCategory] = useState(receipt.category);

@@ -16,12 +16,16 @@ import CustomSelect from '../../shared/components/FormElements/Select';
 import { AuthContext } from '../../shared/context/auth-context';
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-        height: '100vh',
-    },
     form: {
-        width: '100%', // Fix IE 11 issue.
         marginTop: theme.spacing(1),
+        [theme.breakpoints.down('xs')]: {
+            width: '90%'
+        }
+    },
+    dropzone: {
+        [theme.breakpoints.down('xs')]: {
+            minHeight: '12rem'
+        }
     },
     submit: {
         margin: theme.spacing(3, 0, 2),
@@ -29,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const validationSchema = Yup.object().shape({
-  //  name: Yup.string().required('Name is required'),
+    //  name: Yup.string().required('Name is required'),
     amount: Yup.number().required('Amount is required'),
 });
 
@@ -58,8 +62,8 @@ const ReceiptUploadForm = (props) => {
         setCategory(event.target.value);
     }
 
-   function  _handleTitleTextFieldChange(e) {
-      setTitle(e.target.value);
+    function _handleTitleTextFieldChange(e) {
+        setTitle(e.target.value);
     }
 
     const {
@@ -77,14 +81,14 @@ const ReceiptUploadForm = (props) => {
         },
         validationSchema,
         async onSubmit(values, { resetForm }) {
-           
-                values.name = title;
-                   
+
+            values.name = title;
+
             const imagesUrl = [];
             if (category !== '0') {
                 values.category = category;
             }
-         
+
             try {
                 //upload the images to S3
                 if (images.length > 0) {
@@ -95,7 +99,7 @@ const ReceiptUploadForm = (props) => {
                         try {
                             console.log('making call to S3');
                             const endpoint = process.env.REACT_APP_API_BASE_URL + 'sign_s3/';
-                             await sendRequest(
+                            await sendRequest(
                                 endpoint,
                                 'POST',
                                 JSON.stringify({
@@ -111,7 +115,7 @@ const ReceiptUploadForm = (props) => {
                                 const signedRequest = resp.signedRequest;
                                 const url = resp.url;
                                 console.log('making call to sign');
-                                 sendRequest(
+                                sendRequest(
                                     signedRequest,
                                     'PUT',
                                     image,
@@ -122,13 +126,13 @@ const ReceiptUploadForm = (props) => {
                                 ).then(() => {
                                     imagesUrl.push(url);
                                     console.log(imagesUrl);
-    
+
                                     if (imagesUrl.length === images.length) {
                                         console.log('making call to get save receipt');
                                         const endpoint =
                                             process.env.REACT_APP_API_BASE_URL +
                                             'receipt';
-                                         sendRequest(
+                                        sendRequest(
                                             endpoint,
                                             'POST',
                                             JSON.stringify({
@@ -141,7 +145,7 @@ const ReceiptUploadForm = (props) => {
                                             }),
                                             {
                                                 'Content-Type': 'application/json',
-                                                 Authorization:
+                                                Authorization:
                                                     'Bearer ' + auth.token,
                                             }
                                         );
@@ -153,7 +157,7 @@ const ReceiptUploadForm = (props) => {
 
 
                                 });
-              
+
                             });
 
                         } catch (error) {
@@ -172,12 +176,12 @@ const ReceiptUploadForm = (props) => {
         <React.Fragment>
             <ErrorModal error={error} onClear={clearError} />
             {message !== '' &&
-            <SuccessModal
-                success={success}
-                successMessage={message}
-                onClear={clearSuccess}
-            />
-          }
+                <SuccessModal
+                    success={success}
+                    successMessage={message}
+                    onClear={clearSuccess}
+                />
+            }
             {isLoading && <LoadingSpinner asOverlay />}
             <Grid
                 container
@@ -187,9 +191,12 @@ const ReceiptUploadForm = (props) => {
                 alignItems="center"
                 justify="center"
             >
-                <form onSubmit={handleSubmit} noValidate>
+                <form
+                    noValidate
+                    className={classes.form}
+                    onSubmit={handleSubmit}>
                     <Grid item xs={12}>
-                    <TextField
+                        <TextField
                             required
                             fullWidth
                             id="name"
@@ -231,6 +238,9 @@ const ReceiptUploadForm = (props) => {
                     </Grid>
                     <Grid item xs={12}>
                         <DropzoneArea
+                            classes={{
+                                root: classes.dropzone
+                            }}
                             acceptedFiles={['image/*']}
                             dropzoneText={
                                 'Drag and drop an image here or click'
@@ -253,9 +263,9 @@ const ReceiptUploadForm = (props) => {
                                         'POST',
                                         formData
                                     ).then((response) => {
-                                        
+
                                         const base64String = response.results.base64; // base64 string of image received
-                                       
+
                                         //Google API end point
                                         const googleEndPoint = process.env.REACT_APP_GOOGLE_VISION_API_ENDPOINT;
 
@@ -275,8 +285,8 @@ const ReceiptUploadForm = (props) => {
                                                 },
                                             ],
                                         });
-                                        
-                                      //Send request to google API
+
+                                        //Send request to google API
                                         sendRequest(
                                             googleEndPoint,
                                             'POST',
@@ -287,7 +297,7 @@ const ReceiptUploadForm = (props) => {
                                                     'application/json',
                                             }
                                         ).then((responseJson) => {
-                                          
+
                                             setGoogleResponse(responseJson);
 
                                             if (
@@ -305,14 +315,14 @@ const ReceiptUploadForm = (props) => {
                                                 words.forEach((text) => {
                                                     document +=
                                                         text.description;
-                                                        arrayWords.push(text.description);
+                                                    arrayWords.push(text.description);
                                                 });
 
                                                 //console.log(arrayWords);
-                                               
+
                                                 setGoogleResponseText(arrayWords);
                                                 setTitle(arrayWords[1]);
-                                              // console.log(document);
+                                                // console.log(document);
                                             } else {
                                                 console.log(
                                                     'No discernable text found.'
@@ -330,9 +340,9 @@ const ReceiptUploadForm = (props) => {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        // disabled={!isValid}
-                     >
-                    Save
+                    // disabled={!isValid}
+                    >
+                        Save
                     </Button>
                 </form>
             </Grid>
