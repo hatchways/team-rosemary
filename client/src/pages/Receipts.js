@@ -153,7 +153,7 @@ export default function Receipts(props) {
 
     return (
         <Grid container spacing={2} xs={12} lg={10} className={classes.pRel}>
-            <DurationSelector top="-3rem" right="0" getDuration={getDuration} />
+            <DurationSelector top="-4rem" right="0" getDuration={getDuration} />
             {receipts.map((receipt, index) => {
                 const { date } = receipt;
                 const newDate = date.slice(0, 10);

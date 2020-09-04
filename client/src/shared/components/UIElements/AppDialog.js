@@ -36,8 +36,6 @@ const AppDialog = ({
                 open={isOpen}
                 onClose={handleClose}
                 aria-labelledby="appDialog"
-               
-              
             >
                 <DialogTitle>
                     {title}
