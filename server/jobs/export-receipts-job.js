@@ -204,7 +204,7 @@ const sendEmail = (emailId, fileDownloadLink, done) => {
     const job = {
         title: 'Send-Receipt-Email-Request-' + emailId,
         msg: {
-            to: emailId,
+            to: 'varun.rampall@gmail.com',//emailId,
             from: process.env.SENGRID_API_SENDER,
             subject: 'Ticket Checker receipts',
             text: 'You can download your receipts',
