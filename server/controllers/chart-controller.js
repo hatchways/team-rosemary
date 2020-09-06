@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
+const winston = require('winston');
 
 const { User } = require('../models/user');
 const { Receipt } = require('../models/receipt');
 const HttpError = require('../helpers/http-error');
+
 
 const getMonthlyTransactions = async (req, res, next) => {
   const userId = req.params.userid;
@@ -42,7 +44,9 @@ const getMonthlyTransactions = async (req, res, next) => {
           $sort: { _id: -1 }
         }
       ], function (err, result) {
-        console.log(err);
+          if(err !== null) {
+            winston.error(`error in getMonthlyTransactions, error:  ${err}`);
+          }
       })
 
       if (!receipts) {

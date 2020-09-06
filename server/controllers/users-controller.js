@@ -246,7 +246,9 @@ const getTopCategories = async (req, res, next) => {
                 },
             ],
             function (err, result) {
-                console.log(err);
+                if(err !== null) {
+                    winston.error(`error in getMonthlyTransactions, error:  ${err}`);
+                  }
             }
         );
         return res.status(200).json(

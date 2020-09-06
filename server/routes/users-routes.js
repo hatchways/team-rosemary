@@ -44,7 +44,7 @@ router.post(
 
 router.post('/base64', upload.single('photo'), (req, res) => {
     if (req.file) {
-        console.log(req.file.path);
+       
         imageToBase64(req.file.path) // Path to the image
             .then((response) => {
                 fs.unlink(req.file.path, (err) => {
