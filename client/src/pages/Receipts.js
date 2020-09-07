@@ -15,6 +15,8 @@ import { useHttpClient } from '../shared/hooks/http-hook';
 import { AuthContext } from '../shared/context/auth-context';
 
 import ModifyReceipt from '../receipts/components/ModifyReceipt';
+import ErrorBoundary from '../shared/components/UIElements/ErrorBoundary';
+import RollbarErrorTracking from '../helpers/RollbarErrorTracking';
 
 const imgSize = '15rem';
 const imgSizeXs = '18rem';
@@ -114,7 +116,10 @@ export default function Receipts(props) {
                 });
 
                 setReceipts(responseData);
-            } catch (error) {}
+            } catch (error) {
+                RollbarErrorTracking.logErrorInRollbar(error);
+
+            }
         };
 
         fetchReceipts();
@@ -152,6 +157,7 @@ export default function Receipts(props) {
     ];
 
     return (
+        <ErrorBoundary>
         <Grid container spacing={2} xs={12} lg={10} className={classes.pRel}>
             <DurationSelector top="-4rem" right="0" getDuration={getDuration} />
             {receipts.map((receipt, index) => {
@@ -204,5 +210,6 @@ export default function Receipts(props) {
                 />
             </AppDialog>
         </Grid>
+        </ErrorBoundary>
     );
 }

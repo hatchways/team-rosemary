@@ -14,6 +14,8 @@ import SuccessModal from '../../shared/components/UIElements/SuccessModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import CustomSelect from '../../shared/components/FormElements/Select';
 import { AuthContext } from '../../shared/context/auth-context';
+import ErrorBoundary from '../../shared/components/UIElements/ErrorBoundary';
+import RollbarErrorTracking from '../../helpers/RollbarErrorTracking';
 
 const useStyles = makeStyles((theme) => ({
     form: {
@@ -97,7 +99,7 @@ const ReceiptUploadForm = (props) => {
                         let fileType = image.name.split('.')[1];
 
                         try {
-                            console.log('making call to S3');
+                           
                             const endpoint = process.env.REACT_APP_API_BASE_URL + 'sign_s3/';
                             await sendRequest(
                                 endpoint,
@@ -114,7 +116,7 @@ const ReceiptUploadForm = (props) => {
                                 console.log(resp);
                                 const signedRequest = resp.signedRequest;
                                 const url = resp.url;
-                                console.log('making call to sign');
+                              
                                 sendRequest(
                                     signedRequest,
                                     'PUT',
@@ -125,8 +127,7 @@ const ReceiptUploadForm = (props) => {
                                     false
                                 ).then(() => {
                                     imagesUrl.push(url);
-                                    console.log(imagesUrl);
-
+                                   
                                     if (imagesUrl.length === images.length) {
                                         console.log('making call to get save receipt');
                                         const endpoint =
@@ -161,18 +162,21 @@ const ReceiptUploadForm = (props) => {
                             });
 
                         } catch (error) {
-                            console.log('ERROR ' + JSON.stringify(error));
+                            //console.log('ERROR ' + JSON.stringify(error));
+                            RollbarErrorTracking.logErrorInRollbar(error);
                         }
                     });
                 }
                 //resetForm({values: ''});
             } catch (err) {
-                console.log(err);
+                RollbarErrorTracking.logErrorInRollbar(err);
+
             }
         },
     });
 
     return (
+        <ErrorBoundary>
         <React.Fragment>
             <ErrorModal error={error} onClear={clearError} />
             {message !== '' &&
@@ -347,6 +351,7 @@ const ReceiptUploadForm = (props) => {
                 </form>
             </Grid>
         </React.Fragment>
+        </ErrorBoundary>
     );
 };
 

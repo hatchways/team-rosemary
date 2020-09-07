@@ -7,6 +7,8 @@ import RecentTransactions from '../shared/components/MainElements/RecentTransact
 import { DateSelector } from '../shared/components/MainElements/DateSelector';
 import { AuthContext } from '../shared/context/auth-context';
 import { useHttpClient } from '../shared/hooks/http-hook';
+import ErrorBoundary from '../shared/components/UIElements/ErrorBoundary';
+import RollbarErrorTracking from '../helpers/RollbarErrorTracking';
 
 import TotalExpense from '../shared/components/MainElements/TotalExpense';
 
@@ -66,8 +68,8 @@ export default function Dashboard(props) {
 
         setTotal(total);
         setMonthlyReceipts(dataToDateString);
-      } catch {
-
+      } catch(err) {
+        RollbarErrorTracking.logErrorInRollbar(err);
       }
     };
     fetchMonthlyTransactions();
@@ -75,6 +77,7 @@ export default function Dashboard(props) {
 
   return (
     <>
+     <ErrorBoundary>
       <Grid container spacing={3} xs={12} lg={10}>
         <Grid item xs={12} md={6}>
           <Panel title={`TOTAL${isMobile ? '' : ' EXPENSES'}`}>
@@ -90,7 +93,9 @@ export default function Dashboard(props) {
         </Grid>
         <Grid item xs={12} md={6}>
           <Panel title="TOP CATEGORIES">
+            <ErrorBoundary>
             <TopCategories receiptCount={receiptCount} />
+            </ErrorBoundary>
           </Panel>
         </Grid>
       </Grid>
@@ -103,10 +108,14 @@ export default function Dashboard(props) {
         <Grid item xs={12}>
           <Panel>
             {/* <RecentTransactions reloadTrans={setReloadTransactions}/> */}
+            <ErrorBoundary>
             <RecentTransactions receiptCount={receiptCount} />
+            </ErrorBoundary>
           </Panel>
         </Grid>
       </Grid>
+      </ErrorBoundary>
+     
     </>
   );
 }

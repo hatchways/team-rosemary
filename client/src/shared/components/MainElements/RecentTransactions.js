@@ -19,6 +19,7 @@ import { green } from '@material-ui/core/colors';
 
 import { AuthContext } from '../../context/auth-context';
 import { useHttpClient } from '../../hooks/http-hook';
+import RollbarErrorTracking from '../../../helpers/RollbarErrorTracking';
 
 const useStyles = makeStyles({
     container: {
@@ -85,7 +86,7 @@ const RecentTransactions = (props) => {
              
                 setloadedReceipts(responseData.results.transactions); // set the transactions data
                 // props.onReceiptUpload();
-            } catch (err) { }
+            } catch (err) {  RollbarErrorTracking.logErrorInRollbar(err); }
         };
         fetchTransactions();
     }, [sendRequest, userId, auth.token, props.receiptCount]);

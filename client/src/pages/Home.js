@@ -11,6 +11,7 @@ import ErrorModal from '../shared/components/UIElements/ErrorModal';
 import LoadingSpinner from '../shared/components/UIElements/LoadingSpinner';
 import { useHttpClient } from '../shared/hooks/http-hook';
 import { theme } from '../themes/theme';
+import ErrorBoundary from '../shared/components/UIElements/ErrorBoundary';
 
 //Lazy loading or code splitting
 const Dashboard = React.lazy(() => import('./Dashboard'));
@@ -79,6 +80,7 @@ export default function Home(props) {
     ];
 
     return (
+        <ErrorBoundary>
         <Router>
             <Box display="flex">
                 <CssBaseline />
@@ -133,5 +135,6 @@ export default function Home(props) {
                 </ThemeProvider>
             </Box>
         </Router>
+        </ErrorBoundary>
     );
 }
