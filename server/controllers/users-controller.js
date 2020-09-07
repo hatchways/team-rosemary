@@ -24,7 +24,7 @@ const signup = async (req, res, next) => {
 
     // if user with the provided email already exists
     if (hasUser) {
-       return  res.status(422).json(error("User already exists.", res.statusCode));
+        return res.status(422).json(error("User already exists.", res.statusCode));
     }
 
     // hash the password
@@ -82,9 +82,9 @@ const login = async (req, res, next) => {
 
     //user not exists with the provide email-id
     if (!existingUser) {
-         return  res.status(401).json(error("Invalid credentials.", res.statusCode));
+        return res.status(401).json(error("Invalid credentials.", res.statusCode));
     }
-    
+
 
     // check if provided password is correct( compare the password with the password saved in the database)
     let isValidPassword = false;
@@ -93,7 +93,7 @@ const login = async (req, res, next) => {
 
     // Password is not valid
     if (!isValidPassword) {
-        return  res.status(401).json(error("Invalid credentials.", res.statusCode));
+        return res.status(401).json(error("Invalid credentials.", res.statusCode));
     }
 
     // generate token
@@ -130,8 +130,7 @@ const login = async (req, res, next) => {
 // @access Private
 const getAllReceipt = async (req, res, next) => {
     const userId = req.userData.userId;
-    const duration = req.params.duration;
-    // console.log(duration);
+    const { duration, timezone } = req.params;
     let days = 0;
     if (duration !== 'all') {
         switch (duration) {
@@ -150,23 +149,70 @@ const getAllReceipt = async (req, res, next) => {
         }
     }
     try {
+        const id = mongoose.Types.ObjectId(userId);
+
         if (duration !== 'all') {
-            const receipts = await Receipt.find({
-                user: userId,
-                date: {
-                    $gte: new Date(new Date() - days * 60 * 60 * 24 * 1000),
+            const dateSince = new Date(new Date() - days * 60 * 60 * 24 * 1000);
+            const receipts = await Receipt.aggregate([
+                {
+                    $match: {
+                        user: id,
+                        date: { $gte: dateSince }
+                    }
                 },
-            }).sort({
-                date: -1,
-            });
-            res.json(receipts);
+                {
+                    $project: {
+                        user: "$user",
+                        title: "$title",
+                        amount: "$amount",
+                        category: "$category",
+                        picture: "$picture",
+                        date: {
+                            $dateToString: {
+                                date: "$date",
+                                timezone: timezone
+                            }
+                        }
+                    }
+                },
+                {
+                    $sort: { date: -1 }
+                }
+            ], function (err, result) {
+                console.log(err);
+            })
+
+            res.status(200).json(receipts);
         } else {
-            const receipts = await Receipt.find({
-                user: userId,
-            }).sort({
-                date: -1,
-            });
-            res.json(receipts);
+            const receipts = await Receipt.aggregate([
+                {
+                    $match: {
+                        user: id,
+                    }
+                },
+                {
+                    $project: {
+                        user: "$user",
+                        title: "$title",
+                        amount: "$amount",
+                        category: "$category",
+                        picture: "$picture",
+                        date: {
+                            $dateToString: {
+                                date: "$date",
+                                timezone: timezone
+                            }
+                        }
+                    }
+                },
+                {
+                    $sort: { date: -1 }
+                }
+            ], function (err, result) {
+                console.log(err);
+            })
+
+            res.status(200).json(receipts);
         }
     } catch {
         const error = new HttpError('Server Error', 500);
@@ -183,7 +229,7 @@ const getRecentTransactions = async (req, res, next) => {
     const user = await User.findById(userId);
 
     if (!user) {
-        return  res.status(400).json(error("Invalid user details.", res.statusCode));
+        return res.status(400).json(error("Invalid user details.", res.statusCode));
     } else {
         const receipts = await Receipt.find({
             user: userId,
@@ -215,7 +261,7 @@ const getTopCategories = async (req, res, next) => {
     const user = await User.findById(userId);
 
     if (!user) {
-        return  res.status(400).json(error("Invalid user details.", res.statusCode));
+        return res.status(400).json(error("Invalid user details.", res.statusCode));
     } else {
         const userIdd = mongoose.Types.ObjectId(userId);
         const receipts = await Receipt.aggregate(
@@ -246,9 +292,9 @@ const getTopCategories = async (req, res, next) => {
                 },
             ],
             function (err, result) {
-                if(err !== null) {
+                if (err !== null) {
                     winston.error(`error in getMonthlyTransactions, error:  ${err}`);
-                  }
+                }
             }
         );
         return res.status(200).json(
@@ -268,45 +314,45 @@ const getTopCategories = async (req, res, next) => {
 // @access Private
 
 const exportReceipts = async (req, res, next) => {
-    
-        const userId = req.headers['userid'];
-        const month = parseInt(req.params.month);
-        const userIdd = mongoose.Types.ObjectId(userId);
 
-        //check if user exists with userid
-        const user = await User.findById(userIdd);
+    const userId = req.headers['userid'];
+    const month = parseInt(req.params.month);
+    const userIdd = mongoose.Types.ObjectId(userId);
 
-        if (!user) {
-           
-           return  res.status(400).json(error("Invalid user details.", res.statusCode));
-        }
+    //check if user exists with userid
+    const user = await User.findById(userIdd);
 
-        //create job by calling createJob method
-        const result = job.createJob({
-            title: 'Receipt-Export-Request-' + userId,
-            userId: userIdd,
-            month: month,
-            email: user.email,
-        });
+    if (!user) {
 
-        // check response from createJob method
-        const response = await result;
+        return res.status(400).json(error("Invalid user details.", res.statusCode));
+    }
 
-        if (response == appEnums.RECEIPT.OK) {
-            // send success response to the user
-             return res.status(201).json(
-                success(
-                    'File created successfully',
-                    {},
-                    res.statusCode
-                )
-            );
+    //create job by calling createJob method
+    const result = job.createJob({
+        title: 'Receipt-Export-Request-' + userId,
+        userId: userIdd,
+        month: month,
+        email: user.email,
+    });
 
-        } else if (response == appEnums.RECEIPT.NODATA) {
-            //send error response to the user
-            return  res.status(404).json(error("No receipts found.", res.statusCode));
-        }
-    
+    // check response from createJob method
+    const response = await result;
+
+    if (response == appEnums.RECEIPT.OK) {
+        // send success response to the user
+        return res.status(201).json(
+            success(
+                'File created successfully',
+                {},
+                res.statusCode
+            )
+        );
+
+    } else if (response == appEnums.RECEIPT.NODATA) {
+        //send error response to the user
+        return res.status(404).json(error("No receipts found.", res.statusCode));
+    }
+
 };
 
 module.exports = {
