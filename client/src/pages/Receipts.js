@@ -71,6 +71,18 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+// Get timezone offset of the user's current location, format: +HHmm or -HHmm
+// Aware that in mongoDB the +/- is reversed from JavaScript
+const getTimezoneOffset = () => {
+    const offset = new Date().getTimezoneOffset();
+    const hourOffset = Math.abs(Math.floor(offset / 60));
+    const minuteOffset = Math.abs(offset % 60);
+    const timezoneOffset = `${offset > 0 ? '-' : '+'}${
+        hourOffset > 9 ? hourOffset : '0' + hourOffset
+    }${minuteOffset > 9 ? minuteOffset : '0' + minuteOffset}`;
+    return timezoneOffset;
+};
+
 export default function Receipts(props) {
     const classes = useStyles();
     const auth = useContext(AuthContext);
@@ -106,9 +118,10 @@ export default function Receipts(props) {
     useEffect(() => {
         const fetchReceipts = async () => {
             try {
+                const timezone = getTimezoneOffset();
                 const endpoint =
                     process.env.REACT_APP_API_BASE_URL +
-                    `user/receipts/${duration}`;
+                    `user/receipts/${duration}&${timezone}`;
                 const responseData = await sendRequest(endpoint, 'GET', null, {
                     Authorization: 'Bearer ' + auth.token,
                 });

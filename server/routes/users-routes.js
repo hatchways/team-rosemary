@@ -72,7 +72,7 @@ router.post('/base64', upload.single('photo'), (req, res) => {
 
 router.use(checkAuth);
 
-router.get('/receipts/:duration', usersController.getAllReceipt);
+router.get('/receipts/:duration&:timezone', usersController.getAllReceipt);
 
 router.get(
     '/recenttransactions/:userid',
