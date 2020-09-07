@@ -66,7 +66,7 @@ export default function Home(props) {
             name: 'Dashboard',
             component: <Dashboard receiptCount={receiptCount} />,
         },
-        { name: 'Reports', component: <Reports /> },
+        { name: 'Reports', component: <Reports receiptCount={receiptCount} /> },
         {
             name: 'Receipts',
             component: (
