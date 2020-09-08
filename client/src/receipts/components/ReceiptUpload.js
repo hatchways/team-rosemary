@@ -60,12 +60,96 @@ const ReceiptUploadForm = (props) => {
     } = useHttpClient();
     const auth = useContext(AuthContext);
 
-    function onSelectChange(event) {
+    const onSelectChange = (event) => {
         setCategory(event.target.value);
-    }
+    };
 
-    function _handleTitleTextFieldChange(e) {
+    const _handleTitleTextFieldChange = (e) => {
         setTitle(e.target.value);
+    };
+
+    const handleChangeDropzone = (files) => {
+        setImages(files);
+
+        if (files.length === 1) {
+            //send request to API to get base64 string of image
+            const formData = new FormData();
+            formData.append('photo', files[0]);
+
+            const endpoint =
+                process.env.REACT_APP_API_BASE_URL +
+                'user/base64';
+
+            // request sent to API
+            sendRequest(
+                endpoint,
+                'POST',
+                formData
+            ).then((response) => {
+
+                const base64String = response.results.base64; // base64 string of image received
+
+                //Google API end point
+                const googleEndPoint = process.env.REACT_APP_GOOGLE_VISION_API_ENDPOINT;
+
+                let body = JSON.stringify({
+                    requests: [
+                        {
+                            features: [
+                                {
+                                    type:
+                                        'TEXT_DETECTION',
+                                    maxResults: 5,
+                                },
+                            ],
+                            image: {
+                                content: base64String,
+                            },
+                        },
+                    ],
+                });
+
+                //Send request to google API
+                sendRequest(
+                    googleEndPoint,
+                    'POST',
+                    body,
+                    {
+                        Accept: 'application/json',
+                        'Content-Type':
+                            'application/json',
+                    }
+                ).then((responseJson) => {
+
+                    setGoogleResponse(responseJson);
+
+                    if (JSON.stringify(responseJson.data) !== '{}') {
+                        const words =
+                            responseJson.responses[0]
+                                .textAnnotations;
+
+                        let arrayWords = [];
+
+                        let document = '';
+                        words.forEach((text) => {
+                            document +=
+                                text.description;
+                            arrayWords.push(text.description);
+                        });
+
+                        //console.log(arrayWords);
+
+                        setGoogleResponseText(arrayWords);
+                        setTitle(arrayWords[1]);
+                        // console.log(document);
+                    } else {
+                        console.log(
+                            'No discernable text found.'
+                        );
+                    }
+                });
+            });
+        }
     }
 
     const {
@@ -99,7 +183,7 @@ const ReceiptUploadForm = (props) => {
                         let fileType = image.name.split('.')[1];
 
                         try {
-                           
+
                             const endpoint = process.env.REACT_APP_API_BASE_URL + 'sign_s3/';
                             await sendRequest(
                                 endpoint,
@@ -116,7 +200,7 @@ const ReceiptUploadForm = (props) => {
                                 console.log(resp);
                                 const signedRequest = resp.signedRequest;
                                 const url = resp.url;
-                              
+
                                 sendRequest(
                                     signedRequest,
                                     'PUT',
@@ -127,7 +211,7 @@ const ReceiptUploadForm = (props) => {
                                     false
                                 ).then(() => {
                                     imagesUrl.push(url);
-                                   
+
                                     if (imagesUrl.length === images.length) {
                                         console.log('making call to get save receipt');
                                         const endpoint =
@@ -177,180 +261,92 @@ const ReceiptUploadForm = (props) => {
 
     return (
         <ErrorBoundary>
-        <React.Fragment>
-            <ErrorModal error={error} onClear={clearError} />
-            {message !== '' &&
-                <SuccessModal
-                    success={success}
-                    successMessage={message}
-                    onClear={clearSuccess}
-                />
-            }
-            {isLoading && <LoadingSpinner asOverlay />}
-            <Grid
-                container
-                spacing={5}
-                margin={3}
-                direction="column"
-                alignItems="center"
-                justify="center"
-            >
-                <form
-                    noValidate
-                    className={classes.form}
-                    onSubmit={handleSubmit}>
-                    <Grid item xs={12}>
-                        <TextField
-                            required
+            <React.Fragment>
+                <ErrorModal error={error} onClear={clearError} />
+                {message !== '' &&
+                    <SuccessModal
+                        success={success}
+                        successMessage={message}
+                        onClear={clearSuccess}
+                    />
+                }
+                {isLoading && <LoadingSpinner asOverlay />}
+                <Grid
+                    container
+                    spacing={5}
+                    margin={3}
+                    direction="column"
+                    alignItems="center"
+                    justify="center"
+                >
+                    <form
+                        noValidate
+                        className={classes.form}
+                        onSubmit={handleSubmit}>
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                fullWidth
+                                id="name"
+                                label="Name"
+                                name="name"
+                                type="text"
+                                value={title}
+                                autoComplete="name"
+                                onChange={_handleTitleTextFieldChange}
+                                helperText={touched.name ? errors.name : ''}
+                                error={touched.name && Boolean(errors.name)}
+                                autoFocus
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                fullWidth
+                                id="amount"
+                                label="Amount"
+                                name="amount"
+                                type="number"
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                helperText={touched.amount ? errors.amount : ''}
+                                error={touched.amount && Boolean(errors.amount)}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <CustomSelect
+                                name="category"
+                                id="category"
+                                title="Category"
+                                data={data}
+                                handleChange={onSelectChange}
+                                helperText={touched.category ? errors.category : ''}
+                                error={touched.category && errors.category}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <DropzoneArea
+                                classes={{
+                                    root: classes.dropzone
+                                }}
+                                acceptedFiles={['image/*']}
+                                dropzoneText="Drag and drop an image here or click"
+                                onChange={handleChangeDropzone}
+                            />
+                        </Grid>
+                        <Button
+                            type="submit"
                             fullWidth
-                            id="name"
-                            label="Name"
-                            name="name"
-                            type="text"
-                            value={title}
-                            autoComplete="name"
-                            onChange={_handleTitleTextFieldChange}
-                            helperText={touched.name ? errors.name : ''}
-                            error={touched.name && Boolean(errors.name)}
-                            autoFocus
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            required
-                            fullWidth
-                            id="amount"
-                            label="Amount"
-                            name="amount"
-                            type="number"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            helperText={touched.amount ? errors.amount : ''}
-                            error={touched.amount && Boolean(errors.amount)}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <CustomSelect
-                            name="category"
-                            id="category"
-                            title="Category"
-                            data={data}
-                            handleChange={onSelectChange}
-                            helperText={touched.category ? errors.category : ''}
-                            error={touched.category && errors.category}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <DropzoneArea
-                            classes={{
-                                root: classes.dropzone
-                            }}
-                            acceptedFiles={['image/*']}
-                            dropzoneText={
-                                'Drag and drop an image here or click'
-                            }
-                            onChange={(files) => {
-                                setImages(files);
-
-                                if (files.length == 1) {
-                                    //send request to API to get base64 string of image
-                                    const formData = new FormData();
-                                    formData.append('photo', files[0]);
-
-                                    const endpoint =
-                                        process.env.REACT_APP_API_BASE_URL +
-                                        'user/base64';
-
-                                    // request sent to API
-                                    sendRequest(
-                                        endpoint,
-                                        'POST',
-                                        formData
-                                    ).then((response) => {
-
-                                        const base64String = response.results.base64; // base64 string of image received
-
-                                        //Google API end point
-                                        const googleEndPoint = process.env.REACT_APP_GOOGLE_VISION_API_ENDPOINT;
-
-                                        let body = JSON.stringify({
-                                            requests: [
-                                                {
-                                                    features: [
-                                                        {
-                                                            type:
-                                                                'TEXT_DETECTION',
-                                                            maxResults: 5,
-                                                        },
-                                                    ],
-                                                    image: {
-                                                        content: base64String,
-                                                    },
-                                                },
-                                            ],
-                                        });
-
-                                        //Send request to google API
-                                        sendRequest(
-                                            googleEndPoint,
-                                            'POST',
-                                            body,
-                                            {
-                                                Accept: 'application/json',
-                                                'Content-Type':
-                                                    'application/json',
-                                            }
-                                        ).then((responseJson) => {
-
-                                            setGoogleResponse(responseJson);
-
-                                            if (
-                                                JSON.stringify(
-                                                    responseJson.data
-                                                ) != '{}'
-                                            ) {
-                                                const words =
-                                                    responseJson.responses[0]
-                                                        .textAnnotations;
-
-                                                let arrayWords = [];
-
-                                                let document = '';
-                                                words.forEach((text) => {
-                                                    document +=
-                                                        text.description;
-                                                    arrayWords.push(text.description);
-                                                });
-
-                                                //console.log(arrayWords);
-
-                                                setGoogleResponseText(arrayWords);
-                                                setTitle(arrayWords[1]);
-                                                // console.log(document);
-                                            } else {
-                                                console.log(
-                                                    'No discernable text found.'
-                                                );
-                                            }
-                                        });
-                                    });
-                                }
-                            }}
-                        />
-                    </Grid>
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.submit}
-                    // disabled={!isValid}
-                    >
-                        Save
+                            variant="contained"
+                            color="primary"
+                            className={classes.submit}
+                        // disabled={!isValid}
+                        >
+                            Save
                     </Button>
-                </form>
-            </Grid>
-        </React.Fragment>
+                    </form>
+                </Grid>
+            </React.Fragment>
         </ErrorBoundary>
     );
 };
