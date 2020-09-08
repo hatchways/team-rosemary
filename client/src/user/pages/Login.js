@@ -17,6 +17,8 @@ import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 
 import { LoginImg } from '../../shared/components/LoginElements/LoginImg';
 import { LoginTopBtn } from '../../shared/components/LoginElements/LoginTopBtn';
+import RollbarErrorTracking from '../../helpers/RollbarErrorTracking';
+import ErrorBoundary from '../../shared/components/UIElements/ErrorBoundary';
 
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -100,6 +102,7 @@ export default function Login(props) {
     validationSchema,
     async onSubmit(values) {
       try {
+       
         const endpoint =
           process.env.REACT_APP_API_BASE_URL + 'user/login';
         const responseData = await sendRequest(
@@ -119,13 +122,21 @@ export default function Login(props) {
         history.push('/dashboard');
 
       } catch (err) {
-        console.log(err);
+       // console.log('error:' +err);
+        RollbarErrorTracking.logErrorInRollbar(err);
       }
     },
   });
+  //throw Error("error!");
 
   return (
-    <div className={classes.container}>
+    <ErrorBoundary>
+    {/* {(() => {
+      
+                  throw new Error('Login page is crasheeeeed!');
+    })()} */}
+
+      <div className={classes.container}>
       {isLoading && <LoadingSpinner asOverlay />}
       <ErrorModal error={error} onClear={clearError} />
       <SuccessModal
@@ -181,5 +192,6 @@ export default function Login(props) {
         <Copyright />
       </main>
     </div>
+    </ErrorBoundary>
   )
 }

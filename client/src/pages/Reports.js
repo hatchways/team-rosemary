@@ -34,6 +34,8 @@ import TotalExpense from '../shared/components/MainElements/TotalExpense';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from '@material-ui/core/styles';
+import ErrorBoundary from '../shared/components/UIElements/ErrorBoundary';
+import RollbarErrorTracking from '../helpers/RollbarErrorTracking';
 
 const useStyles = makeStyles({
     pRel: {
@@ -109,15 +111,22 @@ export default function Reports(props) {
   } = useHttpClient();
 
     const handleExportClick = async () => {
+       try {
+            const endpoint = `${process.env.REACT_APP_API_BASE_URL}user/receipts/export/${month}`;
+            const responseData = await sendRequest(endpoint, 'GET', null, {
+                Authorization: 'Bearer ' + auth.token,
+                userid: userId
+        });
+      
+        if(responseData.code === 201) {
+        setMessage('A link to download report is sent to your registered email. Please check the junk & spam e-mails also.');
+       }
 
-      const endpoint = `${process.env.REACT_APP_API_BASE_URL}user/receipts/export/${month}`;
-                const responseData = await sendRequest(endpoint, 'GET', null, {
-                    Authorization: 'Bearer ' + auth.token,
-                    userid: userId
-                });
-               if(responseData.code === 201) {
-                setMessage('A link to download report is sent to your registered email. Please check the junk & spam e-mails also.');
-               }
+       } catch(err) {
+        RollbarErrorTracking.logErrorInRollbar(err);
+
+       }
+
     };
 
     //Get category icon based upon the category
@@ -159,12 +168,16 @@ export default function Reports(props) {
 
                 setMonthlyReport(responseData.receipts);
                 setTotal(total);
-            } catch (err) {}
+            } catch (err) {
+
+                RollbarErrorTracking.logErrorInRollbar(err);
+            }
         };
         fetchMonthlyReport();
     }, [sendRequest, userId, auth.token, receiptCount, month, year]);
 
     return (
+        <ErrorBoundary>
         <Grid container spacing={3} xs={12} lg={10} className={classes.pRel}>
             {isLoading && <LoadingSpinner asOverlay />}
 
@@ -234,5 +247,6 @@ export default function Reports(props) {
                 </Panel>
             </Grid>
         </Grid>
+        </ErrorBoundary>
     );
 }

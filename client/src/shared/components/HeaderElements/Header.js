@@ -13,6 +13,7 @@ import ReceiptUploadForm from '../../../receipts/components/ReceiptUpload';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from "@material-ui/core/styles";
+import ErrorBoundary from '../../../shared/components/UIElements/ErrorBoundary';
 
 const drawerWidth = "15rem";
 
@@ -88,6 +89,7 @@ export function Header(props) {
   ];
 
   return (
+    <ErrorBoundary>
     <header>
       <TopBar drawerWidth={drawerWidth}>
         <MenuBtn onClick={handleDrawerToggle} />
@@ -120,5 +122,6 @@ export function Header(props) {
         />
       </AppDialog>
     </header >
+    </ErrorBoundary>
   )
 }

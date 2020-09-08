@@ -14,6 +14,8 @@ import SuccessModal from '../../shared/components/UIElements/SuccessModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import CustomSelect from '../../shared/components/FormElements/Select';
 import { AuthContext } from '../../shared/context/auth-context';
+import ErrorBoundary from '../../shared/components/UIElements/ErrorBoundary';
+import RollbarErrorTracking from '../../helpers/RollbarErrorTracking';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -99,12 +101,14 @@ const ModifyReceiptForm = (props) => {
 
                 props.onReceiptUpload();
             } catch (error) {
-                alert('ERROR ' + JSON.stringify(error));
+                RollbarErrorTracking.logErrorInRollbar(error);
+                //alert('ERROR ' + JSON.stringify(error));
             }
         },
     });
 
     return (
+        <ErrorBoundary>
         <React.Fragment>
             <ErrorModal error={error} onClear={clearError} />
             <SuccessModal
@@ -189,6 +193,7 @@ const ModifyReceiptForm = (props) => {
                 </form>
             </Grid>
         </React.Fragment>
+        </ErrorBoundary>
     );
 };
 

@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
+import RollbarErrorTracking from '../../helpers/RollbarErrorTracking';
 
 export const useHttpClient = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -48,7 +49,7 @@ export const useHttpClient = () => {
                 setSuccess(true);
                 return responseData;
             } catch (err) {
-                console.log(err);
+                RollbarErrorTracking.logErrorInRollbar(err);
                 setError(err.message);
                 setIsLoading(false);
                 throw err;

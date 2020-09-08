@@ -17,6 +17,7 @@ import { green } from '@material-ui/core/colors';
 
 import { AuthContext } from '../../shared/context/auth-context';
 import { useHttpClient } from '../../shared/hooks/http-hook';
+import RollbarErrorTracking from '../../helpers/RollbarErrorTracking';
 
 const useStyles = makeStyles({
   container: {
@@ -44,7 +45,9 @@ export default function TopCategories(props) {
   const [loadedCategories, setloadedCategories] = useState([]);
   //Get category icon based upon the category
   const categoryIcon = (category) => {
+   
     switch (category) {
+     
         case 'Food & Drinks':
             return <FastfoodRoundedIcon />;
         case 'Housing':
@@ -76,7 +79,11 @@ export default function TopCategories(props) {
             });
             setloadedCategories(responseData.receipts); // set the transactions data
           
-        } catch (err) {}
+        } catch (err) {
+          RollbarErrorTracking.logErrorInRollbar(err);
+           
+
+        }
     };
     fetchTopCategories();
 }, [sendRequest, userId, auth.token, props.receiptCount]);
