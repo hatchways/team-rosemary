@@ -6,15 +6,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import { makeStyles } from '@material-ui/core/styles';
-import FastfoodRoundedIcon from '@material-ui/icons/FastfoodRounded';
-import LocalGroceryStoreRoundedIcon from '@material-ui/icons/LocalGroceryStoreRounded';
-import HelpOutlineRoundedIcon from '@material-ui/icons/HelpOutlineRounded';
-import DriveEtaRoundedIcon from '@material-ui/icons/DriveEtaRounded';
-import SportsHandballRoundedIcon from '@material-ui/icons/SportsHandballRounded';
-import LocalHospitalRoundedIcon from '@material-ui/icons/LocalHospitalRounded';
-import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
+
 import { green } from '@material-ui/core/colors';
 
+import CategoryContext from '../../context/category-context';
 import { AuthContext } from '../../context/auth-context';
 import { useHttpClient } from '../../hooks/http-hook';
 import RollbarErrorTracking from '../../../helpers/RollbarErrorTracking';
@@ -38,35 +33,15 @@ const useStyles = makeStyles({
 
 // May merge all Tables into one Template
 export default function TopCategories(props) {
-
   const classes = useStyles();
+
+  const categoryHash = useContext(CategoryContext);
   const auth = useContext(AuthContext);
   const {
     sendRequest,
   } = useHttpClient();
   const userId = auth.userId;
   const [loadedCategories, setloadedCategories] = useState([]);
-  //Get category icon based upon the category
-  const categoryIcon = (category) => {
-    
-    switch (category) {
-      case 'Food & Drinks':
-        return <FastfoodRoundedIcon />;
-      case 'Housing':
-        return <HomeRoundedIcon />;
-      case 'Transportation':
-        return <DriveEtaRoundedIcon />;
-      case 'Health Care':
-        return <LocalHospitalRoundedIcon />;
-      case 'Recreation & Entertainment':
-        return <SportsHandballRoundedIcon />;
-      case 'Grocery':
-        return <LocalGroceryStoreRoundedIcon />;
-
-      default:
-        return <HelpOutlineRoundedIcon />;
-    }
-  };
 
   // Fetch recent transations
   useEffect(() => {
@@ -80,7 +55,7 @@ export default function TopCategories(props) {
           Authorization: 'Bearer ' + auth.token,
         });
         setloadedCategories(responseData.results.receipts); // set the transactions data
-      } catch (err) { 
+      } catch (err) {
 
         RollbarErrorTracking.logErrorInRollbar(err);
       }
@@ -91,19 +66,23 @@ export default function TopCategories(props) {
     <TableContainer>
       <Table className={classes.container}>
         <TableBody>
-          {loadedCategories.map((receipt, index) => (
-            <TableRow key={index + ' ' + receipt._id}>
-              <TableCell component="th" scope="row">
-                <div className={classes.thead}>
-                  <Avatar className={classes.avatar}>
-                    {categoryIcon(receipt._id)}
-                  </Avatar>
-                  {receipt._id}
-                </div>
-              </TableCell>
-              <TableCell>{`-$${receipt.total.toLocaleString()}`}</TableCell>
-            </TableRow>
-          ))}
+          {loadedCategories.map((receipt, index) => {
+            const { total } = receipt;
+            const _id = receipt._id || 'Other';
+            return (
+              <TableRow key={index + ' ' + _id}>
+                <TableCell component="th" scope="row">
+                  <div className={classes.thead}>
+                    <Avatar className={classes.avatar}>
+                      {categoryHash[_id]}
+                    </Avatar>
+                    {_id}
+                  </div>
+                </TableCell>
+                <TableCell>{`-$${total.toLocaleString()}`}</TableCell>
+              </TableRow>
+            )
+          })}
         </TableBody>
       </Table>
     </TableContainer>

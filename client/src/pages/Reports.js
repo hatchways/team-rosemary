@@ -10,15 +10,16 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
-import FastfoodRoundedIcon from '@material-ui/icons/FastfoodRounded';
-import LocalGroceryStoreRoundedIcon from '@material-ui/icons/LocalGroceryStoreRounded';
-import HelpOutlineRoundedIcon from '@material-ui/icons/HelpOutlineRounded';
-import DriveEtaRoundedIcon from '@material-ui/icons/DriveEtaRounded';
-import SportsHandballRoundedIcon from '@material-ui/icons/SportsHandballRounded';
-import LocalHospitalRoundedIcon from '@material-ui/icons/LocalHospitalRounded';
-import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
+// import FastfoodRoundedIcon from '@material-ui/icons/FastfoodRounded';
+// import LocalGroceryStoreRoundedIcon from '@material-ui/icons/LocalGroceryStoreRounded';
+// import HelpOutlineRoundedIcon from '@material-ui/icons/HelpOutlineRounded';
+// import DriveEtaRoundedIcon from '@material-ui/icons/DriveEtaRounded';
+// import SportsHandballRoundedIcon from '@material-ui/icons/SportsHandballRounded';
+// import LocalHospitalRoundedIcon from '@material-ui/icons/LocalHospitalRounded';
+// import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
 import { green } from '@material-ui/core/colors';
 
+import CategoryContext from '../shared/context/category-context';
 import { AuthContext } from '../shared/context/auth-context';
 import { useHttpClient } from '../shared/hooks/http-hook';
 import ErrorModal from '../shared/components/UIElements/ErrorModal';
@@ -92,6 +93,7 @@ export default function Reports(props) {
     const [total, setTotal] = useState(0);
     const [message, setMessage] = useState('');
 
+    const categoryHash = useContext(CategoryContext);
     const auth = useContext(AuthContext);
     const userId = auth.userId;
     const { receiptCount } = props;
@@ -132,25 +134,25 @@ export default function Reports(props) {
     };
 
     //Get category icon based upon the category
-    const categoryIcon = (category) => {
-        switch (category) {
-            case 'Food & Drinks':
-                return <FastfoodRoundedIcon />;
-            case 'Housing':
-                return <HomeRoundedIcon />;
-            case 'Transportation':
-                return <DriveEtaRoundedIcon />;
-            case 'Health Care':
-                return <LocalHospitalRoundedIcon />;
-            case 'Recreation & Entertainment':
-                return <SportsHandballRoundedIcon />;
-            case 'Grocery':
-                return <LocalGroceryStoreRoundedIcon />;
+    // const categoryIcon = (category) => {
+    //     switch (category) {
+    //         case 'Food & Drinks':
+    //             return <FastfoodRoundedIcon />;
+    //         case 'Housing':
+    //             return <HomeRoundedIcon />;
+    //         case 'Transportation':
+    //             return <DriveEtaRoundedIcon />;
+    //         case 'Health Care':
+    //             return <LocalHospitalRoundedIcon />;
+    //         case 'Recreation & Entertainment':
+    //             return <SportsHandballRoundedIcon />;
+    //         case 'Grocery':
+    //             return <LocalGroceryStoreRoundedIcon />;
 
-            default:
-                return <HelpOutlineRoundedIcon />;
-        }
-    };
+    //         default:
+    //             return <HelpOutlineRoundedIcon />;
+    //     }
+    // };
 
     useEffect(() => {
         const fetchMonthlyReport = async () => {
@@ -198,46 +200,37 @@ export default function Reports(props) {
                     onChange={handleMonthYearChange}
                 />
                 <Grid item xs>
-                    <Panel
-                        title={`TOTAL${isMobile ? '' : ' EXPENSES'}`}
-                        height="auto"
-                    >
+                    <Panel title={`TOTAL${isMobile ? '' : ' EXPENSES'}`} height="auto">
                         <TotalExpense total={total} float />
-                        <Button
-                            className={classes.button}
-                            onClick={handleExportClick}
-                        >
+                        <Button className={classes.button} onClick={handleExportClick}>
                             Export CSV
-                    </Button>
-
+                        </Button>
                         <TableContainer>
                             <Table className={classes.container}>
                                 <TableBody>
-                                    {monthlyReport.map((receipt, index) => (
-                                        <TableRow key={index + ' ' + receipt._id}>
-                                            <TableCell component="th" scope="row">
-                                                <div className={classes.thead}>
-                                                    <Avatar
-                                                        className={classes.avatar}
-                                                    >
-                                                        {categoryIcon(
-                                                            receipt.category
-                                                        )}
-                                                    </Avatar>
-                                                    {receipt.title}
-                                                </div>
-                                            </TableCell>
-                                            <TableCell>{`-$${receipt.amount.toLocaleString()}`}</TableCell>
-                                            <TableCell>
-                                                {moment(receipt.date).format(
-                                                    'MMMM Do, YYYY'
-                                                )}
-                                            </TableCell>
-                                            <TableCell className={classes.txtCat}>
-                                                {receipt.category}
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
+                                    {monthlyReport.map((receipt, index) => {
+                                        const { _id, title, amount, date } = receipt;
+                                        const category = receipt.category || 'Other';
+                                        return (
+                                            <TableRow key={index + ' ' + _id}>
+                                                <TableCell component="th" scope="row">
+                                                    <div className={classes.thead}>
+                                                        <Avatar className={classes.avatar}>
+                                                            {categoryHash[category]}
+                                                        </Avatar>
+                                                        {title}
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell>{`-$${amount.toLocaleString()}`}</TableCell>
+                                                <TableCell>
+                                                    {moment(date).format('MMMM Do, YYYY')}
+                                                </TableCell>
+                                                <TableCell className={classes.txtCat}>
+                                                    {category}
+                                                </TableCell>
+                                            </TableRow>
+                                        )
+                                    })}
                                 </TableBody>
                             </Table>
                         </TableContainer>

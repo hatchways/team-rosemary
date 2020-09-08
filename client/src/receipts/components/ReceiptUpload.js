@@ -42,7 +42,6 @@ const validationSchema = Yup.object().shape({
 
 const ReceiptUploadForm = (props) => {
     const classes = useStyles();
-    const [data] = useState(props.data);
     const [category, setCategory] = useState('');
     const [message, setMessage] = useState('');
     const [images, setImages] = useState([]);
@@ -318,7 +317,6 @@ const ReceiptUploadForm = (props) => {
                                 name="category"
                                 id="category"
                                 title="Category"
-                                data={data}
                                 handleChange={onSelectChange}
                                 helperText={touched.category ? errors.category : ''}
                                 error={touched.category && errors.category}

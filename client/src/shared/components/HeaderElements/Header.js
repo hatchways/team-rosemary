@@ -57,37 +57,6 @@ export function Header(props) {
     setIsOpen(false);
   };
 
-  const data = [
-    {
-      id: "0",
-      name: "Select Category"
-    },
-    {
-      id: "Food & Drinks",
-      name: "Food & Drinks"
-    },
-    {
-      id: "Housing",
-      name: "Housing"
-    },
-    {
-      id: "Transportation",
-      name: "Transportation"
-    },
-    {
-      id: "Health Care",
-      name: "Health Care"
-    },
-    {
-      id: "Recreation & Entertainment",
-      name: "Recreation & Entertainment"
-    },
-    {
-      id: "Grocery",
-      name: "Grocery"
-    }
-  ];
-
   return (
     <ErrorBoundary>
     <header>
@@ -116,7 +85,6 @@ export function Header(props) {
         title='Upload receipt'
       >
         <ReceiptUploadForm
-          data={data}
           reloadTrans={reloadTransactions}
           onReceiptUpload={handleReceiptUpload}
         />

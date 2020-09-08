@@ -49,7 +49,6 @@ const validationSchema = Yup.object().shape({
 const ModifyReceiptForm = (props) => {
     const { receipt } = props;
     const classes = useStyles();
-    const [data] = useState(props.data);
     const [category, setCategory] = useState(receipt.category);
     const [message, setMessage] = useState('');
 
@@ -155,14 +154,11 @@ const ModifyReceiptForm = (props) => {
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <p>
-                            <b>Current category: {receipt.category} </b>
-                        </p>
+                        <p><b>Current category: {receipt.category}</b></p>
                         <CustomSelect
                             name="category"
                             id="category"
                             title="Category"
-                            data={data}
                             dvalue={receipt.category}
                             handleChange={onSelectChange}
                         />
