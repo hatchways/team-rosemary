@@ -17,7 +17,6 @@ import DriveEtaRoundedIcon from '@material-ui/icons/DriveEtaRounded';
 import SportsHandballRoundedIcon from '@material-ui/icons/SportsHandballRounded';
 import LocalHospitalRoundedIcon from '@material-ui/icons/LocalHospitalRounded';
 import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
-import DescriptionIcon from '@material-ui/icons/Description';
 import { green } from '@material-ui/core/colors';
 
 import { AuthContext } from '../shared/context/auth-context';
@@ -37,7 +36,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import ErrorBoundary from '../shared/components/UIElements/ErrorBoundary';
 import RollbarErrorTracking from '../helpers/RollbarErrorTracking';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     pRel: {
         position: 'relative',
     },
@@ -47,9 +46,12 @@ const useStyles = makeStyles({
     button: {
         position: 'absolute',
         top: '1.5rem',
-        right: '1rem',
+        right: '0.5rem',
         color: '#1b3460',
         textTransform: 'none',
+        [theme.breakpoints.up('sm')]: {
+            marginRight: theme.spacing(1)
+        }
     },
     thead: {
         display: 'flex',
@@ -66,7 +68,7 @@ const useStyles = makeStyles({
         color: 'grey',
         opacity: '0.8',
     },
-});
+}));
 
 // Get timezone offset of the user's current location, format: +HHmm or -HHmm
 // Aware that in mongoDB the +/- is reversed from JavaScript
@@ -76,7 +78,7 @@ const getTimezoneOffset = () => {
     const minuteOffset = Math.abs(offset % 60);
     const timezoneOffset = `${offset > 0 ? '-' : '+'}${
         hourOffset > 9 ? hourOffset : '0' + hourOffset
-    }${minuteOffset > 9 ? minuteOffset : '0' + minuteOffset}`;
+        }${minuteOffset > 9 ? minuteOffset : '0' + minuteOffset}`;
     return timezoneOffset;
 };
 
@@ -91,7 +93,7 @@ export default function Reports(props) {
     const [message, setMessage] = useState('');
 
     const auth = useContext(AuthContext);
-     const userId = auth.userId;
+    const userId = auth.userId;
     const { receiptCount } = props;
 
 
@@ -102,30 +104,30 @@ export default function Reports(props) {
     };
 
     const {
-      isLoading,
-      error,
-      success,
-      sendRequest,
-      clearError,
-      clearSuccess,
-  } = useHttpClient();
+        isLoading,
+        error,
+        success,
+        sendRequest,
+        clearError,
+        clearSuccess,
+    } = useHttpClient();
 
     const handleExportClick = async () => {
-       try {
+        try {
             const endpoint = `${process.env.REACT_APP_API_BASE_URL}user/receipts/export/${month}`;
             const responseData = await sendRequest(endpoint, 'GET', null, {
                 Authorization: 'Bearer ' + auth.token,
                 userid: userId
-        });
-      
-        if(responseData.code === 201) {
-        setMessage('A link to download report is sent to your registered email. Please check the junk & spam e-mails also.');
-       }
+            });
 
-       } catch(err) {
-        RollbarErrorTracking.logErrorInRollbar(err);
+            if (responseData.code === 201) {
+                setMessage('A link to download report is sent to your registered email. Please check the junk & spam e-mails also.');
+            }
 
-       }
+        } catch (err) {
+            RollbarErrorTracking.logErrorInRollbar(err);
+
+        }
 
     };
 
@@ -178,75 +180,70 @@ export default function Reports(props) {
 
     return (
         <ErrorBoundary>
-        <Grid container spacing={3} xs={12} lg={10} className={classes.pRel}>
-            {isLoading && <LoadingSpinner asOverlay />}
+            <Grid container spacing={3} xs={12} lg={10} className={classes.pRel}>
+                {isLoading && <LoadingSpinner asOverlay />}
 
-          <ErrorModal error={error} onClear={clearError} />
-          {message !== '' &&
-            <SuccessModal
-                success={success}
-                successMessage={message}
-                onClear={clearSuccess}
-            />
-          }
-            <DateSelector
-                top="-2.75rem"
-                right="0.5rem"
-                value={`${year}-${month}`}
-                onChange={handleMonthYearChange}
-            />
-            <Grid item xs>
-                <Panel
-                    title={`TOTAL${isMobile ? '' : ' EXPENSES'}`}
-                    height="auto"
-                >
-                    <TotalExpense total={total} float />
-                    {/* <Button className={classes.button}>
-                        {isMobile ? <DescriptionIcon /> : 'Export CSV'}
-                        onClick={handleExportClick}
-                    </Button> */}
-
-                    <Button
-                       className={classes.button}
-                       onClick = {handleExportClick}
-                      >
-                      Export CSV
+                <ErrorModal error={error} onClear={clearError} />
+                {message !== '' &&
+                    <SuccessModal
+                        success={success}
+                        successMessage={message}
+                        onClear={clearSuccess}
+                    />
+                }
+                <DateSelector
+                    top="-2.75rem"
+                    right="0.5rem"
+                    value={`${year}-${month}`}
+                    onChange={handleMonthYearChange}
+                />
+                <Grid item xs>
+                    <Panel
+                        title={`TOTAL${isMobile ? '' : ' EXPENSES'}`}
+                        height="auto"
+                    >
+                        <TotalExpense total={total} float />
+                        <Button
+                            className={classes.button}
+                            onClick={handleExportClick}
+                        >
+                            Export CSV
                     </Button>
 
-                    <TableContainer>
-                        <Table className={classes.container}>
-                            <TableBody>
-                                {monthlyReport.map((receipt, index) => (
-                                    <TableRow key={index + ' ' + receipt._id}>
-                                        <TableCell component="th" scope="row">
-                                            <div className={classes.thead}>
-                                                <Avatar
-                                                    className={classes.avatar}
-                                                >
-                                                    {categoryIcon(
-                                                        receipt.category
-                                                    )}
-                                                </Avatar>
-                                                {receipt.title}
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>{`-$${receipt.amount.toLocaleString()}`}</TableCell>
-                                        <TableCell>
-                                            {moment(receipt.date).format(
-                                                'MMMM Do, YYYY'
-                                            )}
-                                        </TableCell>
-                                        <TableCell className={classes.txtCat}>
-                                            {receipt.category}
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </Panel>
+                        <TableContainer>
+                            <Table className={classes.container}>
+                                <TableBody>
+                                    {monthlyReport.map((receipt, index) => (
+                                        <TableRow key={index + ' ' + receipt._id}>
+                                            <TableCell component="th" scope="row">
+                                                <div className={classes.thead}>
+                                                    <Avatar
+                                                        className={classes.avatar}
+                                                    >
+                                                        {categoryIcon(
+                                                            receipt.category
+                                                        )}
+                                                    </Avatar>
+                                                    {receipt.title}
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>{`-$${receipt.amount.toLocaleString()}`}</TableCell>
+                                            <TableCell>
+                                                {moment(receipt.date).format(
+                                                    'MMMM Do, YYYY'
+                                                )}
+                                            </TableCell>
+                                            <TableCell className={classes.txtCat}>
+                                                {receipt.category}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Panel>
+                </Grid>
             </Grid>
-        </Grid>
         </ErrorBoundary>
     );
 }
