@@ -10,13 +10,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
-// import FastfoodRoundedIcon from '@material-ui/icons/FastfoodRounded';
-// import LocalGroceryStoreRoundedIcon from '@material-ui/icons/LocalGroceryStoreRounded';
-// import HelpOutlineRoundedIcon from '@material-ui/icons/HelpOutlineRounded';
-// import DriveEtaRoundedIcon from '@material-ui/icons/DriveEtaRounded';
-// import SportsHandballRoundedIcon from '@material-ui/icons/SportsHandballRounded';
-// import LocalHospitalRoundedIcon from '@material-ui/icons/LocalHospitalRounded';
-// import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
+
 import { green } from '@material-ui/core/colors';
 
 import CategoryContext from '../shared/context/category-context';
@@ -25,7 +19,6 @@ import { useHttpClient } from '../shared/hooks/http-hook';
 import ErrorModal from '../shared/components/UIElements/ErrorModal';
 import SuccessModal from '../shared/components/UIElements/SuccessModal';
 import LoadingSpinner from '../shared/components/UIElements/LoadingSpinner';
-
 
 import { Panel } from '../shared/components/MainElements/Panel';
 import { DateSelector } from '../shared/components/MainElements/DateSelector';
