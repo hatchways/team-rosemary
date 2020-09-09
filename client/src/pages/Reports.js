@@ -133,27 +133,6 @@ export default function Reports(props) {
 
     };
 
-    //Get category icon based upon the category
-    // const categoryIcon = (category) => {
-    //     switch (category) {
-    //         case 'Food & Drinks':
-    //             return <FastfoodRoundedIcon />;
-    //         case 'Housing':
-    //             return <HomeRoundedIcon />;
-    //         case 'Transportation':
-    //             return <DriveEtaRoundedIcon />;
-    //         case 'Health Care':
-    //             return <LocalHospitalRoundedIcon />;
-    //         case 'Recreation & Entertainment':
-    //             return <SportsHandballRoundedIcon />;
-    //         case 'Grocery':
-    //             return <LocalGroceryStoreRoundedIcon />;
-
-    //         default:
-    //             return <HelpOutlineRoundedIcon />;
-    //     }
-    // };
-
     useEffect(() => {
         const fetchMonthlyReport = async () => {
             try {
