@@ -7,16 +7,10 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import { makeStyles } from '@material-ui/core/styles';
 import moment from 'moment';
-import FastfoodRoundedIcon from '@material-ui/icons/FastfoodRounded';
-import LocalGroceryStoreRoundedIcon from '@material-ui/icons/LocalGroceryStoreRounded';
-import HelpOutlineRoundedIcon from '@material-ui/icons/HelpOutlineRounded';
-import DriveEtaRoundedIcon from '@material-ui/icons/DriveEtaRounded';
-import SportsHandballRoundedIcon from '@material-ui/icons/SportsHandballRounded';
-import LocalHospitalRoundedIcon from '@material-ui/icons/LocalHospitalRounded';
-import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
 
 import { green } from '@material-ui/core/colors';
 
+import CategoryContext from '../../context/category-context';
 import { AuthContext } from '../../context/auth-context';
 import { useHttpClient } from '../../hooks/http-hook';
 import RollbarErrorTracking from '../../../helpers/RollbarErrorTracking';
@@ -44,33 +38,14 @@ const useStyles = makeStyles({
 
 const RecentTransactions = (props) => {
     const classes = useStyles();
-    const [loadedReceipts, setloadedReceipts] = useState([]);
+
+    const categoryHash = useContext(CategoryContext);
     const auth = useContext(AuthContext);
     const {
         sendRequest,
     } = useHttpClient();
     const userId = auth.userId;
-
-    //Get category icon based upon the category
-    const categoryIcon = (category) => {
-        switch (category) {
-            case 'Food & Drinks':
-                return <FastfoodRoundedIcon />;
-            case 'Housing':
-                return <HomeRoundedIcon />;
-            case 'Transportation':
-                return <DriveEtaRoundedIcon />;
-            case 'Health Care':
-                return <LocalHospitalRoundedIcon />;
-            case 'Recreation & Entertainment':
-                return <SportsHandballRoundedIcon />;
-            case 'Grocery':
-                return <LocalGroceryStoreRoundedIcon />;
-
-            default:
-                return <HelpOutlineRoundedIcon />;
-        }
-    };
+    const [loadedReceipts, setloadedReceipts] = useState([]);
 
     // Fetch recent transations
     useEffect(() => {
@@ -83,10 +58,10 @@ const RecentTransactions = (props) => {
                 const responseData = await sendRequest(endpoint, 'GET', null, {
                     Authorization: 'Bearer ' + auth.token,
                 });
-             
+
                 setloadedReceipts(responseData.results.transactions); // set the transactions data
                 // props.onReceiptUpload();
-            } catch (err) {  RollbarErrorTracking.logErrorInRollbar(err); }
+            } catch (err) { RollbarErrorTracking.logErrorInRollbar(err); }
         };
         fetchTransactions();
     }, [sendRequest, userId, auth.token, props.receiptCount]);
@@ -95,25 +70,29 @@ const RecentTransactions = (props) => {
         <TableContainer>
             <Table className={classes.container}>
                 <TableBody>
-                    {loadedReceipts.map((receipt, index) => (
-                        <TableRow key={index + ' ' + receipt._id}>
-                            <TableCell component="th" scope="row">
-                                <div className={classes.thead}>
-                                    <Avatar className={classes.avatar}>
-                                        {categoryIcon(receipt.category)}
-                                    </Avatar>
-                                    {receipt.title}
-                                </div>
-                            </TableCell>
-                            <TableCell>{`-$${receipt.amount.toLocaleString()}`}</TableCell>
-                            <TableCell>
-                                {moment(receipt.date).format('MMMM Do, YYYY')}
-                            </TableCell>
-                            <TableCell className={classes.txtCat}>
-                                {receipt.category}
-                            </TableCell>
-                        </TableRow>
-                    ))}
+                    {loadedReceipts.map((receipt, index) => {
+                        const { _id, title, amount, date } = receipt;
+                        const category = receipt.category || 'Other';
+                        return (
+                            <TableRow key={index + ' ' + _id}>
+                                <TableCell component="th" scope="row">
+                                    <div className={classes.thead}>
+                                        <Avatar className={classes.avatar}>
+                                            {categoryHash[category]}
+                                        </Avatar>
+                                        {title}
+                                    </div>
+                                </TableCell>
+                                <TableCell>{`-$${amount.toLocaleString()}`}</TableCell>
+                                <TableCell>
+                                    {moment(date).format('MMMM Do, YYYY')}
+                                </TableCell>
+                                <TableCell className={classes.txtCat}>
+                                    {category}
+                                </TableCell>
+                            </TableRow>
+                        )
+                    })}
                 </TableBody>
             </Table>
         </TableContainer>

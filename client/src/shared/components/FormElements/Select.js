@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
+
+import CategoryContext from '../../context/category-context';
+
 import './Select.css';
+
 function CustomSelect(props) {
-    const [data] = useState(props.data);
     const { dvalue } = props;
-    let options = data.map((data) => (
-        <option key={data.id} value={data.id}>
-            {data.name}
+    const categoryHash = useContext(CategoryContext);
+
+    const options = Object.keys(categoryHash).map(category => (
+        <option key={category} value={category}>
+            {category}
         </option>
     ));
 
@@ -17,6 +22,7 @@ function CustomSelect(props) {
             name="category"
             onChange={props.handleChange}
         >
+            <option value="0">Select Category</option>
             {options}
         </select>
     );

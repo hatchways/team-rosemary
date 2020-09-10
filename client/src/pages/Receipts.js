@@ -138,37 +138,6 @@ export default function Receipts(props) {
         fetchReceipts();
     }, [auth.token, sendRequest, duration, receiptCount]);
 
-    const data = [
-        {
-            id: '0',
-            name: 'Select Category',
-        },
-        {
-            id: 'Food & Drinks',
-            name: 'Food & Drinks',
-        },
-        {
-            id: 'Housing',
-            name: 'Housing',
-        },
-        {
-            id: 'Transportation',
-            name: 'Transportation',
-        },
-        {
-            id: 'Health Care',
-            name: 'Health Care',
-        },
-        {
-            id: 'Recreation & Entertainment',
-            name: 'Recreation & Entertainment',
-        },
-        {
-            id: 'Grocery',
-            name: 'Grocery',
-        },
-    ];
-
     return (
         <ErrorBoundary>
         <Grid container spacing={2} xs={12} lg={10} className={classes.pRel}>
@@ -217,7 +186,6 @@ export default function Receipts(props) {
             >
                 <ModifyReceipt
                     receipt={receipts[ind]}
-                    data={data}
                     reloadTrans={reloadTransactions}
                     onReceiptUpload={handleReceiptUpload}
                 />
