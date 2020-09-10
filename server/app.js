@@ -10,6 +10,7 @@ require('dotenv').config({
     path: `${__dirname}/.env.${process.env.NODE_ENV}`,
 });
 
+
 app.use(express.static(join(__dirname, 'public')));
 
 require('./startup/logging')(); //logging setup
@@ -17,4 +18,6 @@ require('./startup/routes')(app);// Routes setup
 require('./startup/db')();// database setup
 
 const port = process.env.PORT || 5000;
-app.listen(port, () => winston.info(`Listening on port ${port}...`));
+const server = app.listen(port, () => winston.info(`Listening on port ${port}...`));
+
+module.exports = server;
