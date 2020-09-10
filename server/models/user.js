@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
-const User = mongoose.model('User', new mongoose.Schema({
+const userSchema = new mongoose.Schema({
+
     name: {
         type: String,
         required: true,
@@ -15,6 +18,39 @@ const User = mongoose.model('User', new mongoose.Schema({
         required: true,
         minlength: 6
     }
-}));
+
+});
+
+//generate test user and token
+userSchema.methods.generateAuthToken = async() => {
+
+    // hash the password
+    let hashedPassword;
+    hashedPassword = await bcrypt.hash('123456', 12);
+
+    // user object to save in the db
+    let newUser = new User({
+        name: 'test_User',
+        email: 'test_User@xyz.com',
+        password: hashedPassword,
+    });
+
+    // save user in the db
+    await newUser.save();
+
+    const token = jwt.sign({
+            userId: newUser.id,
+            email: newUser.email,
+        },
+        process.env.JWT_KEY, {
+            expiresIn: '1h',
+        }
+    );
+
+    return {token, userId: newUser.id};
+}
+
+const User = mongoose.model('User', userSchema);
 
 exports.User = User;
+

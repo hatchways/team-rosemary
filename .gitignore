@@ -12,7 +12,7 @@ node_modules/
 .env.local
 .env.development
 .env.development.local
-.env.test.local
+.env.test
 .env.production.local
 .env.development.production
 npm-debug.log*
