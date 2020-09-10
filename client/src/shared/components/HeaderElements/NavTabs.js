@@ -35,6 +35,10 @@ const useStyles = makeStyles(theme => ({
     marginBottom: 0,
     fontSize: '0.7rem'
   },
+  divider: {
+    backgroundColor: '#fafafa',
+    width: '90%'
+  },
   btnOnfocus: {
     backgroundColor: '#4366a7',
     color: '#38cc89'
@@ -59,6 +63,28 @@ export function NavTabs(props) {
             key={tab}
             component={Link}
             to={`/${tab.toLowerCase()}`}
+            icon={
+              <FiberManualRecordIcon className={
+                `${classes.tabIcon} ${tab === props.value || classes.invisible}`
+              } />
+            }
+            label={tab}
+            value={tab}
+            classes={{
+              root: classes.tabRoot,
+              wrapper: classes.tabWrapper,
+              selected: classes.btnOnfocus
+            }}
+          />
+        )
+      })}
+      <Tab label="" icon={<hr className={classes.divider} />} disabled />
+      {['Profile', 'Log Out'].map(tab => {
+        return (
+          <Tab
+            key={tab}
+            // component={Link}
+            // to={`/${tab.toLowerCase()}`}
             icon={
               <FiberManualRecordIcon className={
                 `${classes.tabIcon} ${tab === props.value || classes.invisible}`
