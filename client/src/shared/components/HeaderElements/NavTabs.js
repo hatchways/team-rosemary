@@ -84,6 +84,8 @@ export function NavTabs(props) {
         disabled
       />
       <Tab
+        component={Link}
+        to="/profile"
         icon={<FiberManualRecordIcon className={classes.tabIcon} />}
         label="Profile"
         value="Profile"

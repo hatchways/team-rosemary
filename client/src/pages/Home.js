@@ -17,6 +17,7 @@ import ErrorBoundary from '../shared/components/UIElements/ErrorBoundary';
 const Dashboard = React.lazy(() => import('./Dashboard'));
 const Receipts = React.lazy(() => import('./Receipts'));
 const Reports = React.lazy(() => import('./Reports'));
+const Profile = React.lazy(() => import('./Profile'));
 
 const useStyles = makeStyles((theme) => ({
     utilbar: {
@@ -63,78 +64,68 @@ export default function Home(props) {
     };
 
     const pages = [
-        {
-            name: 'Dashboard',
-            component: <Dashboard receiptCount={receiptCount} />,
-        },
+        { name: 'Dashboard', component: <Dashboard receiptCount={receiptCount} /> },
         { name: 'Reports', component: <Reports receiptCount={receiptCount} /> },
-        {
-            name: 'Receipts',
-            component: (
-                <Receipts
-                    receiptCount={receiptCount}
-                    onReceiptUpload={handleReceiptUpload}
-                />
-            ),
-        },
+        { name: 'Receipts', component: <Receipts receiptCount={receiptCount} onReceiptUpload={handleReceiptUpload} /> },
+        { name: 'Profile', component: <Profile /> },
     ];
 
     return (
         <ErrorBoundary>
-        <Router>
-            <Box display="flex">
-                <CssBaseline />
-                <ThemeProvider theme={theme}>
-                    <Header
-                        page={page}
-                        onChange={handleChange}
-                        onReceiptUpload={handleReceiptUpload}
-                    />
-                    <main className={classes.main}>
-                        <ErrorModal error={error} onClear={clearError} />
-                        {isLoading && <LoadingSpinner asOverlay />}
-                        <div
-                            className={`${classes.utilbar} ${classes.utilbarMain}`}
+            <Router>
+                <Box display="flex">
+                    <CssBaseline />
+                    <ThemeProvider theme={theme}>
+                        <Header
+                            page={page}
+                            onChange={handleChange}
+                            onReceiptUpload={handleReceiptUpload}
                         />
-                        <Grid
-                            container
-                            spacing={3}
-                            xs={12}
-                            lg={10}
-                            classes={{ container: classes.title }}
-                        >
-                            <Grid item xs={12}>
-                                <h2>{page}</h2>
-                            </Grid>
-                        </Grid>
-                        <Switch>
-                            <React.Suspense
-                                fallback={
-                                    <div className="center">
-                                        <LoadingSpinner
-                                            asOverlay
-                                        ></LoadingSpinner>
-                                    </div>
-                                }
+                        <main className={classes.main}>
+                            <ErrorModal error={error} onClear={clearError} />
+                            {isLoading && <LoadingSpinner asOverlay />}
+                            <div
+                                className={`${classes.utilbar} ${classes.utilbarMain}`}
+                            />
+                            <Grid
+                                container
+                                spacing={3}
+                                xs={12}
+                                lg={10}
+                                classes={{ container: classes.title }}
                             >
-                                {pages.map((page, index) => {
-                                    const { name, component } = page;
-                                    return (
-                                        <Route
-                                            exact
-                                            path={`/${name.toLowerCase()}`}
-                                            key={name}
-                                        >
-                                            {component}
-                                        </Route>
-                                    );
-                                })}
-                            </React.Suspense>
-                        </Switch>
-                    </main>
-                </ThemeProvider>
-            </Box>
-        </Router>
+                                <Grid item xs={12}>
+                                    <h2>{page}</h2>
+                                </Grid>
+                            </Grid>
+                            <Switch>
+                                <React.Suspense
+                                    fallback={
+                                        <div className="center">
+                                            <LoadingSpinner
+                                                asOverlay
+                                            ></LoadingSpinner>
+                                        </div>
+                                    }
+                                >
+                                    {pages.map((page) => {
+                                        const { name, component } = page;
+                                        return (
+                                            <Route
+                                                exact
+                                                path={`/${name.toLowerCase()}`}
+                                                key={name}
+                                            >
+                                                {component}
+                                            </Route>
+                                        );
+                                    })}
+                                </React.Suspense>
+                            </Switch>
+                        </main>
+                    </ThemeProvider>
+                </Box>
+            </Router>
         </ErrorBoundary>
     );
 }
