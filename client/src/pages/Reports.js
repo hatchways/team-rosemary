@@ -195,7 +195,7 @@ export default function Reports(props) {
                                                 </TableCell>
                                                 <TableCell>{`-$${amount.toLocaleString()}`}</TableCell>
                                                 <TableCell>
-                                                    {moment(date).format('MMMM Do, YYYY')}
+                                                    {moment(date).add(new Date().getTimezoneOffset(), 'minutes').format('MMMM Do, YYYY')}
                                                 </TableCell>
                                                 <TableCell className={classes.txtCat}>
                                                     {category}
