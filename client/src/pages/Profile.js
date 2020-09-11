@@ -3,17 +3,13 @@ import React, { useEffect, useContext, useState } from 'react';
 import moment from 'moment';
 
 import { Avatar } from '@material-ui/core';
+import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableRow from '@material-ui/core/TableRow';
+import TextField from '@material-ui/core/TextField';
 
 import { green } from '@material-ui/core/colors';
 
-import CategoryContext from '../shared/context/category-context';
 import { AuthContext } from '../shared/context/auth-context';
 import { useHttpClient } from '../shared/hooks/http-hook';
 import ErrorModal from '../shared/components/UIElements/ErrorModal';
@@ -21,9 +17,11 @@ import SuccessModal from '../shared/components/UIElements/SuccessModal';
 import LoadingSpinner from '../shared/components/UIElements/LoadingSpinner';
 
 import { Panel } from '../shared/components/MainElements/Panel';
-import { DateSelector } from '../shared/components/MainElements/DateSelector';
 import TotalExpense from '../shared/components/MainElements/TotalExpense';
+import ProfileAvatar from '../shared/components/HeaderElements/ProfileAvatar';
 
+import profileTheme from '../themes/profile-theme';
+import { ThemeProvider } from '@material-ui/core/styles';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from '@material-ui/core/styles';
@@ -34,38 +32,43 @@ const useStyles = makeStyles(theme => ({
   pRel: {
     position: 'relative',
   },
-  container: {
-    whiteSpace: 'nowrap',
-  },
-  button: {
-    position: 'absolute',
-    top: '1.5rem',
-    right: '0.5rem',
-    color: '#1b3460',
-    textTransform: 'none',
-    [theme.breakpoints.up('sm')]: {
-      marginRight: theme.spacing(1)
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    margin: theme.spacing(10),
+    width: '20rem',
+    [theme.breakpoints.down("xs")]: {
+      margin: 'auto',
+      width: '100%'
     }
   },
-  thead: {
-    display: 'flex',
-    alignItems: 'center',
+  input: {
+    overflow: "hidden",
+    borderRadius: 10,
+    paddingLeft: "1rem",
   },
-  avatar: {
-    marginRight: '1rem',
-    width: '1.5rem',
-    height: '1.5rem',
-    color: '#fff',
-    backgroundColor: green[500],
+  button: {
+    textTransform: 'none'
   },
-  txtCat: {
-    color: 'grey',
-    opacity: '0.8',
+  btnSubmit: {
+    width: '9rem',
+    height: '2.5rem',
+    borderColor: '#38cc89',
+    color: '#38cc89'
   },
+  btnCancel: {
+    width: '5rem',
+  }
 }));
 
+// password encryption
 export default function Profile(props) {
   const classes = useStyles();
+
+  const [editing, setEditing] = useState(false);
+  const [userName, setUserName] = useState('sada');
+  const [email, setEmail] = useState('sada@gmail.com');
 
   const [message, setMessage] = useState('');
 
@@ -78,22 +81,179 @@ export default function Profile(props) {
     clearSuccess,
   } = useHttpClient();
 
+  const handleSubmitClick = () => {
+    // Error if input not valid but clicking
+    if (editing) {
+
+    }
+
+    setEditing(!editing)
+  }
+  const handleCancelClick = () => {
+    // Return the prev values
+
+    setEditing(!editing)
+  }
+
+
+
   return (
     <ErrorBoundary>
-      <Grid container spacing={3} xs={12} lg={10} className={classes.pRel}>
-        {isLoading && <LoadingSpinner asOverlay />}
-        <ErrorModal error={error} onClear={clearError} />
-        {message !== '' &&
-          <SuccessModal
-            success={success}
-            successMessage={message}
-            onClear={clearSuccess}
-          />
-        }
-        <Grid item xs>
-          <p>Profile</p>
+      <ThemeProvider theme={profileTheme}>
+        <Grid container direction="column" spacing={3} xs={12} lg={10} className={classes.pRel}>
+          {isLoading && <LoadingSpinner asOverlay />}
+          <ErrorModal error={error} onClear={clearError} />
+          {message !== '' &&
+            <SuccessModal
+              success={success}
+              successMessage={message}
+              onClear={clearSuccess}
+            />
+          }
+          <Grid item xs>
+            {/* <ProfileAvatar /> */}
+            <form
+              // noValidate
+              className={classes.form}
+            // onSubmit={handleSubmit}
+            >
+              <TextField
+                id="name"
+                label="User Name"
+                name="name"
+                type="text"
+                defaultValue={editing ? '' : userName}
+                InputProps={{
+                  classes: { root: classes.input },
+                  disableUnderline: !editing,
+                  readOnly: !editing
+                }}
+                disabled={!editing}
+              />
+              <TextField
+                id="email"
+                label="Email Address"
+                name="email"
+                type="email"
+                defaultValue={editing ? '' : email}
+                InputProps={{
+                  classes: { root: classes.input },
+                  disableUnderline: !editing,
+                  readOnly: !editing
+                }}
+                disabled={!editing}
+              />
+              <TextField
+                id="password"
+                label="Password"
+                name="password"
+                type="password"
+                defaultValue={editing ? '' : '****************'}
+                InputProps={{
+                  classes: { root: classes.input },
+                  disableUnderline: !editing,
+                  readOnly: !editing
+                }}
+                disabled={!editing}
+              />
+              {editing &&
+                <TextField
+                  id="confirmPassword"
+                  label="Confirm Password"
+                  name="confirmPassword"
+                  type="password"
+                  InputProps={{
+                    classes: { root: classes.input }
+                  }}
+                />
+              }
+
+              {/** 
+              <TextField
+                id="name"
+                label="Name"
+                name="name"
+                type="text"
+                autoComplete="name"
+                margin="dense"
+                // onChange={handleChange}
+                // onBlur={handleBlur}
+                // helperText={touched.name ? errors.name : ''}
+                // error={touched.name && Boolean(errors.name)}
+                // required
+                autoFocus
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                id="email"
+                label="Email Address"
+                name="email"
+                type="email"
+                autoComplete="email"
+                margin="dense"
+                // onChange={handleChange}
+                // onBlur={handleBlur}
+                // helperText={touched.email ? errors.email : ''}
+                // error={touched.email && Boolean(errors.email)}
+                required
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                margin="dense"
+                // onChange={handleChange}
+                // onBlur={handleBlur}
+                // helperText={touched.password ? errors.password : ''}
+                // error={touched.password && Boolean(errors.password)}
+                required
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+              <TextField
+                name="confirmPassword"
+                label="Confirm Password"
+                type="password"
+                id="confirmPassword"
+                autoComplete="current-password"
+                // margin="dense"
+                // onChange={handleChange}
+                // onBlur={handleBlur}
+                // helperText={touched.confirmPassword ? errors.confirmPassword : ''}
+                // error={touched.confirmPassword && Boolean(errors.confirmPassword)}
+                required
+                InputProps={{
+                  readOnly: true,
+                }}
+              />*/}
+              <Box display="flex" justifyContent="center" alignItems="center">
+                <Button
+                  variant="outlined"
+                  className={`${classes.button} ${classes.btnSubmit}`}
+                  onClick={handleSubmitClick}
+                >
+                  {editing ? 'Submit' : 'Edit'}
+                </Button>
+                {editing && <Button
+                  className={`${classes.button} ${classes.btnCancel}`}
+                  onClick={handleCancelClick}
+                >
+                  Cancel
+                </Button>
+                }
+              </Box>
+            </form>
+          </Grid>
         </Grid>
-      </Grid>
+      </ThemeProvider>
     </ErrorBoundary>
   )
 }

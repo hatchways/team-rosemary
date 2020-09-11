@@ -4,7 +4,7 @@ import { TopBar } from './TopBar';
 import { SideBar } from './SideBar';
 import { NavTabs } from './NavTabs';
 import { UploadReceiptBtn } from './UploadReceiptBtn';
-import { ProfileAvatar } from './ProfileAvatar';
+import ProfileAvatar from './ProfileAvatar';
 import { MenuBtn } from './MenuBtn';
 import { Logo } from '../UIElements/Logo';
 
