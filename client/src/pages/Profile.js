@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    margin: theme.spacing(10),
+    margin: theme.spacing(5),
     width: '20rem',
     [theme.breakpoints.down("xs")]: {
       margin: 'auto',
@@ -66,9 +66,10 @@ const useStyles = makeStyles(theme => ({
 export default function Profile(props) {
   const classes = useStyles();
 
-  const [editing, setEditing] = useState(false);
-  const [userName, setUserName] = useState('sada');
-  const [email, setEmail] = useState('sada@gmail.com');
+  const [isEditing, setIsEditing] = useState(false);
+  // const [userName, setUserName] = useState('sada');
+  // const [email, setEmail] = useState('sada@gmail.com');
+  // const [password, setPassword] = useState('**********');
 
   const [message, setMessage] = useState('');
 
@@ -83,16 +84,16 @@ export default function Profile(props) {
 
   const handleSubmitClick = () => {
     // Error if input not valid but clicking
-    if (editing) {
+    if (isEditing) {
 
     }
 
-    setEditing(!editing)
+    setIsEditing(!isEditing)
   }
   const handleCancelClick = () => {
     // Return the prev values
 
-    setEditing(!editing)
+    setIsEditing(!isEditing)
   }
 
 
@@ -122,50 +123,58 @@ export default function Profile(props) {
                 label="User Name"
                 name="name"
                 type="text"
-                defaultValue={editing ? '' : userName}
+                // defaultValue={isEditing ? '' : userName}
                 InputProps={{
                   classes: { root: classes.input },
-                  disableUnderline: !editing,
-                  readOnly: !editing
+                  disableUnderline: !isEditing,
+                  readOnly: !isEditing
                 }}
-                disabled={!editing}
+                disabled={!isEditing}
               />
               <TextField
                 id="email"
                 label="Email Address"
                 name="email"
                 type="email"
-                defaultValue={editing ? '' : email}
+                // defaultValue={isEditing ? '' : email}
                 InputProps={{
                   classes: { root: classes.input },
-                  disableUnderline: !editing,
-                  readOnly: !editing
+                  disableUnderline: !isEditing,
+                  readOnly: !isEditing
                 }}
-                disabled={!editing}
+                disabled={!isEditing}
               />
               <TextField
-                id="password"
-                label="Password"
-                name="password"
+                id="oldPassword"
+                label={isEditing ? 'Old Password' : 'Password'}
+                name="oldPassword"
                 type="password"
-                defaultValue={editing ? '' : '****************'}
+                // value={isEditing ? '' : '*************'}
                 InputProps={{
                   classes: { root: classes.input },
-                  disableUnderline: !editing,
-                  readOnly: !editing
+                  disableUnderline: !isEditing,
+                  readOnly: !isEditing
                 }}
-                disabled={!editing}
               />
-              {editing &&
+              {isEditing && <>
                 <TextField
-                  id="confirmPassword"
-                  label="Confirm Password"
-                  name="confirmPassword"
+                  id="newPassword"
+                  label="New Password"
+                  name="newPassword"
                   type="password"
                   InputProps={{
                     classes: { root: classes.input }
                   }}
                 />
+                <TextField
+                  id="confirmNewPassword"
+                  label="Confirm New Password"
+                  name="confirmNewPassword"
+                  type="password"
+                  InputProps={{
+                    classes: { root: classes.input }
+                  }}
+                /></>
               }
 
               {/** 
@@ -240,9 +249,9 @@ export default function Profile(props) {
                   className={`${classes.button} ${classes.btnSubmit}`}
                   onClick={handleSubmitClick}
                 >
-                  {editing ? 'Submit' : 'Edit'}
+                  {isEditing ? 'Submit' : 'Edit'}
                 </Button>
-                {editing && <Button
+                {isEditing && <Button
                   className={`${classes.button} ${classes.btnCancel}`}
                   onClick={handleCancelClick}
                 >
