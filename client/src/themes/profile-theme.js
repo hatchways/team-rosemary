@@ -19,6 +19,11 @@ const profileTheme = createMuiTheme({
       }
     },
     MuiInput: {
+      root: {
+        overflow: "hidden",
+        borderRadius: 10,
+        paddingLeft: "1rem"
+      },
       formControl: {
         'label + &': {
           margin: '2rem 0'

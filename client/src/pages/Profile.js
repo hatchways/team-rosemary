@@ -1,6 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
 
-import moment from 'moment';
 
 import { Avatar } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
@@ -8,16 +7,12 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 
-import { green } from '@material-ui/core/colors';
-
 import { AuthContext } from '../shared/context/auth-context';
 import { useHttpClient } from '../shared/hooks/http-hook';
 import ErrorModal from '../shared/components/UIElements/ErrorModal';
 import SuccessModal from '../shared/components/UIElements/SuccessModal';
 import LoadingSpinner from '../shared/components/UIElements/LoadingSpinner';
 
-import { Panel } from '../shared/components/MainElements/Panel';
-import TotalExpense from '../shared/components/MainElements/TotalExpense';
 import ProfileAvatar from '../shared/components/HeaderElements/ProfileAvatar';
 
 import profileTheme from '../themes/profile-theme';
@@ -42,11 +37,6 @@ const useStyles = makeStyles(theme => ({
       margin: 'auto',
       width: '100%'
     }
-  },
-  input: {
-    overflow: "hidden",
-    borderRadius: 10,
-    paddingLeft: "1rem",
   },
   button: {
     textTransform: 'none'
@@ -125,7 +115,6 @@ export default function Profile(props) {
                 type="text"
                 // defaultValue={isEditing ? '' : userName}
                 InputProps={{
-                  classes: { root: classes.input },
                   disableUnderline: !isEditing,
                   readOnly: !isEditing
                 }}
@@ -138,7 +127,6 @@ export default function Profile(props) {
                 type="email"
                 // defaultValue={isEditing ? '' : email}
                 InputProps={{
-                  classes: { root: classes.input },
                   disableUnderline: !isEditing,
                   readOnly: !isEditing
                 }}
@@ -151,7 +139,6 @@ export default function Profile(props) {
                 type="password"
                 // value={isEditing ? '' : '*************'}
                 InputProps={{
-                  classes: { root: classes.input },
                   disableUnderline: !isEditing,
                   readOnly: !isEditing
                 }}
@@ -162,18 +149,12 @@ export default function Profile(props) {
                   label="New Password"
                   name="newPassword"
                   type="password"
-                  InputProps={{
-                    classes: { root: classes.input }
-                  }}
                 />
                 <TextField
                   id="confirmNewPassword"
                   label="Confirm New Password"
                   name="confirmNewPassword"
                   type="password"
-                  InputProps={{
-                    classes: { root: classes.input }
-                  }}
                 /></>
               }
 
