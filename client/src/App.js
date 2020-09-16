@@ -14,7 +14,7 @@ const Signup = React.lazy(() => import('./user/pages/Signup'));
 const Home = React.lazy(() => import('./pages/Home'));
 
 const App = () => {
-    const { token, login, logout, userId, userName } = useAuth();
+    const { token, login, logout, userId, userName, email } = useAuth();
 
     let routes;
     if (!token) {
@@ -53,6 +53,7 @@ const App = () => {
                 token: token,
                 userId: userId,
                 userName: userName,
+                email: email,
                 login: login,
                 logout: logout,
             }}

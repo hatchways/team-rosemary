@@ -121,7 +121,7 @@ export default function Signup(props) {
             'Content-Type': 'application/json',
           }
         );
-        auth.login(responseData.results.userId, responseData.results.userName, responseData.results.token);
+        auth.login(responseData.results.userId, responseData.results.userName, responseData.results.email, responseData.results.token);
         setMessage('You have signed up successfully!');
         setTimeout(() => {
           history.push('/dashboard');

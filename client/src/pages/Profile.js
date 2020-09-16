@@ -55,10 +55,11 @@ const useStyles = makeStyles(theme => ({
 // password encryption
 export default function Profile(props) {
   const classes = useStyles();
+  const auth = useContext(AuthContext);
 
   const [isEditing, setIsEditing] = useState(false);
-  // const [userName, setUserName] = useState('sada');
-  // const [email, setEmail] = useState('sada@gmail.com');
+  const [userName, setUserName] = useState(auth.userName);
+  const [email, setEmail] = useState(auth.email);
   // const [password, setPassword] = useState('**********');
 
   const [message, setMessage] = useState('');
@@ -113,7 +114,7 @@ export default function Profile(props) {
                 label="User Name"
                 name="name"
                 type="text"
-                // defaultValue={isEditing ? '' : userName}
+                value={userName}
                 InputProps={{
                   disableUnderline: !isEditing,
                   readOnly: !isEditing
@@ -125,7 +126,7 @@ export default function Profile(props) {
                 label="Email Address"
                 name="email"
                 type="email"
-                // defaultValue={isEditing ? '' : email}
+                value={email}
                 InputProps={{
                   disableUnderline: !isEditing,
                   readOnly: !isEditing
