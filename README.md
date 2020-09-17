@@ -4,7 +4,7 @@ A web tool where someone can upload a receipt by taking a photo, and the app wil
 
 ## Contributors
 
-[George Wan](https://www.github.com/singonwan), [Varun Rampal](https://www.github.com/varunrampal), [Siyuan](https://www.github.com/legenddaniel)
+[George Wan](https://www.github.com/singonwan), [Varun Rampal](https://www.github.com/varunrampal), [Siyuan Zuo](https://www.github.com/legenddaniel)
 
 ## Tech/Framework
 
@@ -18,3 +18,4 @@ A web tool where someone can upload a receipt by taking a photo, and the app wil
 - SendGrid
 - Kue
 - Winston
+- Recharts
