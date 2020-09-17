@@ -19,3 +19,14 @@ A web tool where someone can upload a receipt by taking a photo, and the app wil
 - Kue
 - Winston
 - Recharts
+
+## Features
+
+- Upload a photo of your receipt and some information are extracted directly
+- monthly charts that show your budgeting habits
+- Displays the Top categories of expenses that you spend on
+- See all your receipts based on daily/weekly/monthly/annually/all-time duration
+- modify receipts
+- see a monthly report of your expenses
+- get sent a CSV via email of your monthly spending report
+- all pages are responsive
