@@ -9,7 +9,7 @@ A web tool where someone can upload a receipt by taking a photo, and the app wil
 ## Tech/Framework
 
 - React.js/ Material UI
-- Express/Node
+- Node.js/ Express
 - MongoDB
 - JWT/ BCrypt
 - Amazon S3
