@@ -59,7 +59,8 @@ export default function Profile(props) {
   const auth = useContext(AuthContext);
 
   const [isOpen, setIsOpen] = useState(false);
-  const [openedField, setOpenField] = useState(null);
+  const [openedField, setOpenedField] = useState(null);
+
   const [userName, setUserName] = useState(auth.userName);
   const [email, setEmail] = useState(auth.email);
   const [password, setPassword] = useState('**********');
@@ -77,11 +78,11 @@ export default function Profile(props) {
 
   const handleDialogOpen = field => {
     setIsOpen(true);
-    setOpenField(field);
+    setOpenedField(field);
   };
   const handleDialogClose = () => {
     setIsOpen(false);
-    setTimeout(() => setOpenField(null), 200);
+    setTimeout(() => setOpenedField(null), 200);
   };
 
   return (

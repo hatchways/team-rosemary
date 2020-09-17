@@ -11,6 +11,7 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute',
     top: '0.5rem',
     right: '-5rem',
+    textTransform: 'none',
     [theme.breakpoints.down('xs')]: {
       top: '-0.6rem',
       left: '5rem'
