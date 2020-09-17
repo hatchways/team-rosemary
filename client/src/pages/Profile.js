@@ -12,8 +12,9 @@ import { useHttpClient } from '../shared/hooks/http-hook';
 import ErrorModal from '../shared/components/UIElements/ErrorModal';
 import SuccessModal from '../shared/components/UIElements/SuccessModal';
 import LoadingSpinner from '../shared/components/UIElements/LoadingSpinner';
+import AppDialog from '../shared/components/UIElements/AppDialog.js';
 
-import ProfileAvatar from '../shared/components/HeaderElements/ProfileAvatar';
+import ProfileTextField from '../shared/components/FormElements/ProfileTextField';
 
 import profileTheme from '../themes/profile-theme';
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -57,10 +58,11 @@ export default function Profile(props) {
   const classes = useStyles();
   const auth = useContext(AuthContext);
 
-  const [isEditing, setIsEditing] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [openedField, setOpenField] = useState(null);
   const [userName, setUserName] = useState(auth.userName);
   const [email, setEmail] = useState(auth.email);
-  // const [password, setPassword] = useState('**********');
+  const [password, setPassword] = useState('**********');
 
   const [message, setMessage] = useState('');
 
@@ -73,21 +75,14 @@ export default function Profile(props) {
     clearSuccess,
   } = useHttpClient();
 
-  const handleSubmitClick = () => {
-    // Error if input not valid but clicking
-    if (isEditing) {
-
-    }
-
-    setIsEditing(!isEditing)
-  }
-  const handleCancelClick = () => {
-    // Return the prev values
-
-    setIsEditing(!isEditing)
-  }
-
-
+  const handleDialogOpen = field => {
+    setIsOpen(true);
+    setOpenField(field);
+  };
+  const handleDialogClose = () => {
+    setIsOpen(false);
+    setTimeout(() => setOpenField(null), 200);
+  };
 
   return (
     <ErrorBoundary>
@@ -103,147 +98,47 @@ export default function Profile(props) {
             />
           }
           <Grid item xs>
-            {/* <ProfileAvatar /> */}
             <form
               // noValidate
               className={classes.form}
             // onSubmit={handleSubmit}
             >
-              <TextField
+              <ProfileTextField
                 id="name"
                 label="User Name"
                 name="name"
                 type="text"
                 value={userName}
-                InputProps={{
-                  disableUnderline: !isEditing,
-                  readOnly: !isEditing
-                }}
-                disabled={!isEditing}
+                onOpen={handleDialogOpen}
               />
-              <TextField
+              <ProfileTextField
                 id="email"
                 label="Email Address"
                 name="email"
                 type="email"
                 value={email}
-                InputProps={{
-                  disableUnderline: !isEditing,
-                  readOnly: !isEditing
-                }}
-                disabled={!isEditing}
+                onOpen={handleDialogOpen}
               />
-              <TextField
-                id="oldPassword"
-                label={isEditing ? 'Old Password' : 'Password'}
-                name="oldPassword"
-                type="password"
-                // value={isEditing ? '' : '*************'}
-                InputProps={{
-                  disableUnderline: !isEditing,
-                  readOnly: !isEditing
-                }}
-              />
-              {isEditing && <>
-                <TextField
-                  id="newPassword"
-                  label="New Password"
-                  name="newPassword"
-                  type="password"
-                />
-                <TextField
-                  id="confirmNewPassword"
-                  label="Confirm New Password"
-                  name="confirmNewPassword"
-                  type="password"
-                /></>
-              }
-
-              {/** 
-              <TextField
-                id="name"
-                label="Name"
-                name="name"
-                type="text"
-                autoComplete="name"
-                margin="dense"
-                // onChange={handleChange}
-                // onBlur={handleBlur}
-                // helperText={touched.name ? errors.name : ''}
-                // error={touched.name && Boolean(errors.name)}
-                // required
-                autoFocus
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
-              <TextField
-                id="email"
-                label="Email Address"
-                name="email"
-                type="email"
-                autoComplete="email"
-                margin="dense"
-                // onChange={handleChange}
-                // onBlur={handleBlur}
-                // helperText={touched.email ? errors.email : ''}
-                // error={touched.email && Boolean(errors.email)}
-                required
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
-              <TextField
-                name="password"
-                label="Password"
-                type="password"
+              <ProfileTextField
                 id="password"
-                autoComplete="current-password"
-                margin="dense"
-                // onChange={handleChange}
-                // onBlur={handleBlur}
-                // helperText={touched.password ? errors.password : ''}
-                // error={touched.password && Boolean(errors.password)}
-                required
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
-              <TextField
-                name="confirmPassword"
-                label="Confirm Password"
+                label="Password"
+                name="password"
                 type="password"
-                id="confirmPassword"
-                autoComplete="current-password"
-                // margin="dense"
-                // onChange={handleChange}
-                // onBlur={handleBlur}
-                // helperText={touched.confirmPassword ? errors.confirmPassword : ''}
-                // error={touched.confirmPassword && Boolean(errors.confirmPassword)}
-                required
-                InputProps={{
-                  readOnly: true,
-                }}
-              />*/}
-              <Box display="flex" justifyContent="center" alignItems="center">
-                <Button
-                  variant="outlined"
-                  className={`${classes.button} ${classes.btnSubmit}`}
-                  onClick={handleSubmitClick}
-                >
-                  {isEditing ? 'Submit' : 'Edit'}
-                </Button>
-                {isEditing && <Button
-                  className={`${classes.button} ${classes.btnCancel}`}
-                  onClick={handleCancelClick}
-                >
-                  Cancel
-                </Button>
-                }
-              </Box>
+                value={password}
+                onOpen={handleDialogOpen}
+              />
             </form>
           </Grid>
         </Grid>
+        <AppDialog
+          size="md"
+          isOpen={isOpen}
+          handleOpen={handleDialogOpen}
+          handleClose={handleDialogClose}
+          title={`Change ${openedField}`}
+        >
+          {`Change ${openedField}`}
+        </AppDialog>
       </ThemeProvider>
     </ErrorBoundary>
   )

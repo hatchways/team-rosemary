@@ -20,9 +20,9 @@ const profileTheme = createMuiTheme({
     },
     MuiInput: {
       root: {
-        overflow: "hidden",
-        borderRadius: 10,
-        paddingLeft: "1rem"
+        overflow: 'hidden',
+        paddingLeft: '1rem',
+        width: '15rem'
       },
       formControl: {
         'label + &': {
@@ -34,6 +34,10 @@ const profileTheme = createMuiTheme({
   props: {
     MuiButtonBase: {
       disableRipple: true
+    },
+    MuiInput: {
+      disableUnderline: true,
+      disabled: true
     }
   }
 });
