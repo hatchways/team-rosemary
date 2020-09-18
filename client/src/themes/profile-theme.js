@@ -34,10 +34,6 @@ const profileTheme = createMuiTheme({
   props: {
     MuiButtonBase: {
       disableRipple: true
-    },
-    MuiInput: {
-      disableUnderline: true,
-      disabled: true
     }
   }
 });

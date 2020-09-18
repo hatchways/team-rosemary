@@ -15,6 +15,7 @@ import LoadingSpinner from '../shared/components/UIElements/LoadingSpinner';
 import AppDialog from '../shared/components/UIElements/AppDialog.js';
 
 import ProfileTextField from '../shared/components/FormElements/ProfileTextField';
+import ProfileEdit from '../shared/components/FormElements/ProfileEdit';
 
 import profileTheme from '../themes/profile-theme';
 import { ThemeProvider } from '@material-ui/core/styles';
@@ -31,25 +32,11 @@ const useStyles = makeStyles(theme => ({
   form: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
-    margin: theme.spacing(5),
-    width: '20rem',
+    alignItems: 'flex-start',
+    margin: theme.spacing(10),
     [theme.breakpoints.down("xs")]: {
       margin: 'auto',
-      width: '100%'
     }
-  },
-  button: {
-    textTransform: 'none'
-  },
-  btnSubmit: {
-    width: '9rem',
-    height: '2.5rem',
-    borderColor: '#38cc89',
-    color: '#38cc89'
-  },
-  btnCancel: {
-    width: '5rem',
   }
 }));
 
@@ -138,7 +125,8 @@ export default function Profile(props) {
           handleClose={handleDialogClose}
           title={`Change ${openedField}`}
         >
-          {`Change ${openedField}`}
+          {/* {`Change ${openedField}`} */}
+          <ProfileEdit field={openedField} />
         </AppDialog>
       </ThemeProvider>
     </ErrorBoundary>

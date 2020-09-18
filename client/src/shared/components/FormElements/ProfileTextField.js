@@ -36,6 +36,7 @@ export default function ProfileTextField(props) {
         name={name}
         type={type}
         value={value}
+        InputProps={{ disableUnderline: true, disabled: true }}
       />
       <Button className={classes.button} onClick={handleClick}>Edit</Button>
     </Box>
