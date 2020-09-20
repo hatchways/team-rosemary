@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 
-import { Link } from "react-router-dom";
-
 import Avatar from "@material-ui/core/Avatar";
 import Button from '@material-ui/core/Button';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
