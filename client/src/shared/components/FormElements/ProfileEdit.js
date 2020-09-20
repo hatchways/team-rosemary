@@ -1,24 +1,19 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import Box from '@material-ui/core/Box';
 import Button from "@material-ui/core/Button";
-import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 
-import { useHttpClient } from '../../hooks/http-hook';
-import ErrorModal from '../UIElements/ErrorModal';
-import SuccessModal from '../UIElements/SuccessModal';
-import LoadingSpinner from '../UIElements/LoadingSpinner';
 import { AuthContext } from '../../context/auth-context';
 import ErrorBoundary from '../UIElements/ErrorBoundary';
 import RollbarErrorTracking from '../../../helpers/RollbarErrorTracking';
 
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   form: {
     display: 'flex',
     flexDirection: 'column',
@@ -31,9 +26,9 @@ const useStyles = makeStyles(theme => ({
     borderColor: '#38cc89',
     textTransform: 'none'
   }
-}));
+});
 
-const fields = {
+const formConfig = {
   'User Name': {
     id: "name",
     label: "New User Name",
@@ -42,9 +37,22 @@ const fields = {
     validation: {
       name: Yup.string()
         .trim()
-        .required('User name is required')
-    }
+        .required('User name is required'),
+      password: Yup.string()
+        .required('Validate your password'),
+      confirmPassword: Yup.string()
+        .required('Confirm your password')
+        .oneOf([Yup.ref('password')], 'Password does not match')
+    },
+    initialValidation: {
+      name: '',
+      password: '',
+      confirmPassword: ''
+    },
+    route: 'user/changeNameEmail',
+    reqBodyKeys: ['name', 'password']
   },
+
   'Email Address': {
     id: "email",
     label: "New Email Address",
@@ -53,63 +61,68 @@ const fields = {
     validation: {
       email: Yup.string()
         .email('Enter a valid email')
-        .required('Email is required')
-    }
+        .required('Email is required'),
+      password: Yup.string()
+        .required('Validate your password'),
+      confirmPassword: Yup.string()
+        .required('Confirm your password')
+        .oneOf([Yup.ref('password')], 'Password does not match')
+    },
+    initialValidation: {
+      email: '',
+      password: '',
+      confirmPassword: ''
+    },
+    route: 'user/changeNameEmail',
+    reqBodyKeys: ['email', 'password']
   },
+
   'Password': {
-    id: "password",
+    id: "oldPassword",
     label: "Old Password",
-    name: "password",
-    type: "password"
+    name: "oldPassword",
+    type: "password",
+    validation: {
+      oldPassword: Yup.string()
+        .required('Validate your password'),
+      newPassword: Yup.string()
+        .min(6, 'Password must contain at least 6 characters')
+        .required('Enter new password'),
+      confirmNewPassword: Yup.string()
+        .required('Confirm your password')
+        .oneOf([Yup.ref('newPassword')], 'Password does not match')
+    },
+    initialValidation: {
+      oldPassword: '',
+      newPassword: '',
+      confirmNewPassword: ''
+    },
+    route: 'user/changePassword',
+    reqBodyKeys: ['oldPassword', 'newPassword']
   }
 };
-
-const nameEmailValidationShape = {
-  password: Yup.string()
-    .required('Validate your password'),
-  confirmPassword: Yup.string()
-    .required('Confirm your password')
-    .oneOf([Yup.ref('password')], 'Password does not match'),
-};
-
-const passwordValidationShape = {
-  oldPassword: Yup.string()
-    .required('Validate your password'),
-  newPassword: Yup.string()
-    .min(6, 'Password must contain at least 6 characters')
-    .required('Enter new password'),
-  confirmNewPassword: Yup.string()
-    .required('Confirm your password')
-    .oneOf([Yup.ref('newPassword')], 'Password does not match'),
-}
 
 export default function ProfileEdit(props) {
   const classes = useStyles();
   const auth = useContext(AuthContext);
 
   const { field } = props;
-  const { id, label, name, type } = field ? fields[field] : {};
   const isEditingPassword = field === 'Password';
+  
+  const {
+    id,
+    label,
+    name,
+    type,
+    validation,
+    initialValidation,
+    route,
+    reqBodyKeys
+  } = field ? formConfig[field] : {};
 
   const { token, userId, userName, email } = auth;
 
-  const initialValidation =
-    isEditingPassword ?
-      {
-        oldPassword: '',
-        newPassword: '',
-        confirmNewPassword: ''
-      } : {
-        [id]: '',
-        password: '',
-        confirmPassword: '',
-      }
-
-  const validationSchema = Yup.object().shape(
-    isEditingPassword ?
-      passwordValidationShape :
-      field && { ...fields[field].validation, ...nameEmailValidationShape }
-  );
+  const validationSchema = Yup.object().shape(validation);
 
   const sendRequest = props.onSubmit;
   const handleSuccessSubmit = props.onSuccess;
@@ -126,15 +139,7 @@ export default function ProfileEdit(props) {
     validationSchema,
     async onSubmit(values) {
       try {
-        const route = isEditingPassword ? 'user/changePassword' : 'user/changeNameEmail';
-        const body = isEditingPassword ?
-          {
-            oldPassword: values.oldPassword,
-            newPassword: values.newPassword
-          } : {
-            [id]: values[id],
-            password: values.password
-          }
+        const body = reqBodyKeys.reduce((a, b) => ({ ...a, [b]: values[b] }), {});
         const endpoint = process.env.REACT_APP_API_BASE_URL + route;
 
         const responseData = await sendRequest(
@@ -159,13 +164,47 @@ export default function ProfileEdit(props) {
 
         handleSuccessSubmit(`${field} has been successfully changed!`);
       } catch (err) {
-        console.log(err);
+        RollbarErrorTracking.logErrorInRollbar(err);
       }
     }
   })
 
-  const editNameEmail = (
-    <>
+  const editTextFields = isEditingPassword ?
+    (<>
+      <TextField
+        name={name}
+        label={label}
+        type={type}
+        id={id}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        helperText={touched.oldPassword ? errors.oldPassword : ''}
+        error={touched.oldPassword && Boolean(errors.oldPassword)}
+        required
+      />
+      <TextField
+        name="newPassword"
+        label="New Password"
+        type="password"
+        id="newPassword"
+        onChange={handleChange}
+        onBlur={handleBlur}
+        helperText={touched.newPassword ? errors.newPassword : ''}
+        error={touched.newPassword && Boolean(errors.newPassword)}
+        required
+      />
+      <TextField
+        name="confirmNewPassword"
+        label="Confirm New Password"
+        type="password"
+        id="confirmNewPassword"
+        onChange={handleChange}
+        onBlur={handleBlur}
+        helperText={touched.confirmNewPassword ? errors.confirmNewPassword : ''}
+        error={touched.confirmNewPassword && Boolean(errors.confirmNewPassword)}
+        required
+      />
+    </>) : (<>
       <TextField
         id={id}
         label={label}
@@ -199,46 +238,7 @@ export default function ProfileEdit(props) {
         error={touched.confirmPassword && Boolean(errors.confirmPassword)}
         required
       />
-    </>
-  )
-
-  const editPassword = (
-    <>
-      <TextField
-        name="oldPassword"
-        label="Old Password"
-        type="password"
-        id="oldPassword"
-        onChange={handleChange}
-        onBlur={handleBlur}
-        helperText={touched.oldPassword ? errors.oldPassword : ''}
-        error={touched.oldPassword && Boolean(errors.oldPassword)}
-        required
-      />
-      <TextField
-        name="newPassword"
-        label="New Password"
-        type="password"
-        id="newPassword"
-        onChange={handleChange}
-        onBlur={handleBlur}
-        helperText={touched.newPassword ? errors.newPassword : ''}
-        error={touched.newPassword && Boolean(errors.newPassword)}
-        required
-      />
-      <TextField
-        name="confirmNewPassword"
-        label="Confirm New Password"
-        type="password"
-        id="confirmNewPassword"
-        onChange={handleChange}
-        onBlur={handleBlur}
-        helperText={touched.confirmNewPassword ? errors.confirmNewPassword : ''}
-        error={touched.confirmNewPassword && Boolean(errors.confirmNewPassword)}
-        required
-      />
-    </>
-  )
+    </>)
 
   return (
     <ErrorBoundary>
@@ -251,7 +251,7 @@ export default function ProfileEdit(props) {
         onSubmit={handleSubmit}
         noValidate
       >
-        {isEditingPassword ? editPassword : editNameEmail}
+        {editTextFields}
         <Button
           variant="outlined"
           type="submit"

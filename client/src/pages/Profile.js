@@ -1,11 +1,6 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 
-
-import { Avatar } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
 
 import { AuthContext } from '../shared/context/auth-context';
 import { useHttpClient } from '../shared/hooks/http-hook';
@@ -13,17 +8,14 @@ import ErrorModal from '../shared/components/UIElements/ErrorModal';
 import SuccessModal from '../shared/components/UIElements/SuccessModal';
 import LoadingSpinner from '../shared/components/UIElements/LoadingSpinner';
 import AppDialog from '../shared/components/UIElements/AppDialog.js';
+import ErrorBoundary from '../shared/components/UIElements/ErrorBoundary';
 
 import ProfileTextField from '../shared/components/FormElements/ProfileTextField';
 import ProfileEdit from '../shared/components/FormElements/ProfileEdit';
 
 import profileTheme from '../themes/profile-theme';
 import { ThemeProvider } from '@material-ui/core/styles';
-import { useTheme } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from '@material-ui/core/styles';
-import ErrorBoundary from '../shared/components/UIElements/ErrorBoundary';
-import RollbarErrorTracking from '../helpers/RollbarErrorTracking';
 
 const useStyles = makeStyles(theme => ({
   textFields: {
