@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, forwardRef } from "react";
 
 import { Link } from "react-router-dom";
 
@@ -48,7 +48,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export function NavTabs(props) {
+export const NavTabs = forwardRef((props, ref) => {
   const classes = useStyles();
   const auth = useContext(AuthContext);
 
@@ -59,7 +59,9 @@ export function NavTabs(props) {
       classes={{
         indicator: classes.hidden
       }}
-      {...props}
+      value={props.value}
+      onChange={props.onChange}
+      onClick={props.onClick}
     >
       {['Dashboard', 'Reports', 'Receipts'].map(tab => {
         return (
@@ -89,6 +91,7 @@ export function NavTabs(props) {
         icon={<FiberManualRecordIcon className={classes.tabIcon} />}
         label="Profile"
         value="Profile"
+        ref={ref}
         classes={{
           root: classes.tabRoot,
           wrapper: classes.tabWrapper,
@@ -107,4 +110,4 @@ export function NavTabs(props) {
       />
     </Tabs>
   )
-}
+})

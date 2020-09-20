@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
+
+import { Link } from "react-router-dom";
+
 import Avatar from "@material-ui/core/Avatar";
 import Button from '@material-ui/core/Button';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -7,10 +10,11 @@ import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
-import { makeStyles } from '@material-ui/core/styles';
 
 import User from '../../../assets/user.png';
 import { AuthContext } from '../../context/auth-context';
+
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -48,7 +52,12 @@ export default function ProfileAvatar(props) {
     setOpen(false);
   };
 
-  function handleListKeyDown(event) {
+  const handleClickProfile = () => {
+    props.onClickProfile();
+    setOpen(false);
+  }
+
+  const handleListKeyDown = (event) => {
     if (event.key === 'Tab') {
       event.preventDefault();
       setOpen(false);
@@ -91,8 +100,12 @@ export default function ProfileAvatar(props) {
               >
                 <Paper>
                   <ClickAwayListener onClickAway={handleClose}>
-                    <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                      <MenuItem onClick={handleClose}>Profile</MenuItem>
+                    <MenuList
+                      autoFocusItem={open}
+                      id="menu-list-grow"
+                      onKeyDown={handleListKeyDown}
+                    >
+                      <MenuItem onClick={handleClickProfile}>Profile</MenuItem>
                       <MenuItem onClick={auth.logout}>Logout</MenuItem>
                     </MenuList>
                   </ClickAwayListener>
