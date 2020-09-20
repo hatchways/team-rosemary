@@ -1,27 +1,42 @@
-const { body, validationResult } = require('express-validator');
+const { body, validationResult, oneOf } = require('express-validator');
+
+// User Name cannot be empty
+const userNameRules = body('name').trim().notEmpty().withMessage('must be provided');
+
+// Email must be in valid format
+const emailRules = body('email').notEmpty().withMessage('must be provided').isEmail().normalizeEmail().withMessage('invalid email-id');
+
+// Password must be validated
+const passwordRules = body('password').notEmpty().withMessage('must be provided');
+const oldPasswordRules = body('oldPassword').notEmpty().withMessage('must be provided');
+
+// Pasword must be at least 6 chars long
+const newPasswordRules = body('password').notEmpty().withMessage('must be provided').isLength({ min: 6 }).withMessage('The password must be 6 chars long');
+const newModifiedPasswordRules = body('newPassword').notEmpty().withMessage('must be provided').isLength({ min: 6 }).withMessage('The password must be 6 chars long');
+
 
 //Signup request validations
 const userSignupValidationRules = () => {
-  return [
-
-     // name
-     body('name').notEmpty().withMessage('must be provided'),
-    // username must be an email
-    body('email').notEmpty().withMessage('must be provided').isEmail().normalizeEmail().withMessage('invalid email-id'),
-    // password must be at least 6 chars long
-    body('password').notEmpty().withMessage('must be provided').isLength({ min: 6 }).withMessage('The password must be 6 chars long'),
-  ]
+  return [userNameRules, emailRules, newPasswordRules];
 }
 
 //login request validations
 const userloginValidationRules = () => {
+  return [emailRules, passwordRules];
+}
+
+// Username/Email changing validations
+// Field being changed is verified in the controller
+const changeNameEmailRules = () => {
   return [
-  
-    // username must be an email
-    body('email').notEmpty().withMessage('must be provided').isEmail().normalizeEmail().withMessage('invalid email-id'),
-    // password must be provided
-    body('password').notEmpty().withMessage('must be provided')
-  ]
+    oneOf([userNameRules, emailRules]),
+    passwordRules
+  ];
+}
+
+// Password changing validations
+const changePasswordRules = () => {
+  return [oldPasswordRules, newModifiedPasswordRules];
 }
 
 const validate = (req, res, next) => {
@@ -40,5 +55,7 @@ const validate = (req, res, next) => {
 module.exports = {
   userSignupValidationRules,
   userloginValidationRules,
+  changeNameEmailRules,
+  changePasswordRules,
   validate,
 }

@@ -124,6 +124,101 @@ const login = async (req, res, next) => {
     );
 };
 
+// @route PUT /changeNameEmail
+// @desc change user name or email
+// @access Private
+const changeNameEmail = async (req, res, next) => {
+    const { name, email, password } = req.body;
+    const userId = req.userData.userId;
+    const fieldToUpdate = name ? 'name' : 'email';
+
+    // Check if and only if one of name and email is in the request
+    const valueToUpdate = name || email;
+    const bothInReq = name && email;
+
+    // Verify user by userId
+    const user = await User.findById(userId);
+    if (!user) {
+        return res.status(401).json(error("Invalid user.", res.statusCode));
+    }
+
+    // May integrate this validation method into Schema
+    let isValidPassword = false;
+    isValidPassword = await bcrypt.compare(password, user.password);
+    if (!isValidPassword) {
+        return res.status(401).json(error("Wrong password.", res.statusCode));
+    }
+
+    // Update database only when one of user name and email is provided
+    if (!valueToUpdate || bothInReq) {
+        return res.status(400).json(error("Check request body", res.statusCode));
+    }
+
+    const newInfo = await User.findByIdAndUpdate(
+        userId,
+        { [fieldToUpdate]: valueToUpdate },
+        { new: true }
+    );
+    await newInfo.save();
+
+    /** 
+     *  Example:
+     *  Either @return {fieldUpdated: 'name', value: 'Siyuan'}
+     *  or @return {fieldUpdated: 'email', value: 'siyuan@gmail.com'}
+     */
+    return res.status(200).json(
+        success(
+            `Successfully change ${fieldToUpdate}!`,
+            {
+                fieldUpdated: fieldToUpdate,
+                value: newInfo[fieldToUpdate]
+            },
+            res.statusCode
+        )
+    )
+};
+
+// @route PUT /changePassword
+// @desc change password
+// @access Private
+const changePassword = async (req, res, next) => {
+    const { oldPassword, newPassword } = req.body;
+    const userId = req.userData.userId;
+
+    // Verify user by userId
+    const user = await User.findById(userId);
+    if (!user) {
+        return res.status(401).json(error("Invalid user.", res.statusCode));
+    }
+
+    // May integrate this validation method into Schema
+    let isValidPassword = false;
+    isValidPassword = await bcrypt.compare(oldPassword, user.password);
+    if (!isValidPassword) {
+        return res.status(401).json(error("Wrong password.", res.statusCode));
+    }
+
+    // hash the password
+    let hashedPassword;
+    hashedPassword = await bcrypt.hash(newPassword, 12);
+
+    const newInfo = await User.findByIdAndUpdate(
+        userId,
+        { password: hashedPassword },
+        { new: true }
+    );
+    await newInfo.save();
+
+    /** @return {null} */
+    return res.status(200).json(
+        success(
+            `Successfully change password!`,
+            null,
+            res.statusCode
+        )
+    )
+}
+
 // @route GET user/receipts
 // @desc get ALL receipts for that user with given duration.
 // duration can be: daily, weekly, monthly, annual
@@ -358,6 +453,8 @@ const exportReceipts = async (req, res, next) => {
 module.exports = {
     signup,
     login,
+    changeNameEmail,
+    changePassword,
     getAllReceipt,
     getRecentTransactions,
     getTopCategories,

@@ -10,13 +10,14 @@ export const useAuth = () => {
   const [email, setEmail] = useState(false);
 
   const login = useCallback((uid, uname, email, token, expirationDate) => {
+    const tokenExpirationDate = expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60);
+
     setToken(token);
     setUserId(uid);
     setuserName(uname);
     setEmail(email);
-    const tokenExpirationDate =
-      expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60);
     setTokenExpirationDate(tokenExpirationDate);
+    
     localStorage.setItem(
       'userData',
       JSON.stringify({

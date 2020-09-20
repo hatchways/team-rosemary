@@ -26,16 +26,13 @@ import ErrorBoundary from '../shared/components/UIElements/ErrorBoundary';
 import RollbarErrorTracking from '../helpers/RollbarErrorTracking';
 
 const useStyles = makeStyles(theme => ({
-  pRel: {
-    position: 'relative',
-  },
-  form: {
+  textFields: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
     margin: theme.spacing(10),
     [theme.breakpoints.down("xs")]: {
-      margin: 'auto',
+      margin: '5rem auto'
     }
   }
 }));
@@ -48,11 +45,11 @@ export default function Profile(props) {
   const [isOpen, setIsOpen] = useState(false);
   const [openedField, setOpenedField] = useState(null);
 
-  const [userName, setUserName] = useState(auth.userName);
-  const [email, setEmail] = useState(auth.email);
-  const [password, setPassword] = useState('**********');
-
   const [message, setMessage] = useState('');
+
+  const { userName, email } = auth;
+
+  const password = '*********';
 
   const {
     isLoading,
@@ -72,50 +69,46 @@ export default function Profile(props) {
     setTimeout(() => setOpenedField(null), 200);
   };
 
+  const handleSuccessSubmit = msg => {
+    setMessage(msg);
+    handleDialogClose();
+  }
+
   return (
     <ErrorBoundary>
       <ThemeProvider theme={profileTheme}>
-        <Grid container direction="column" spacing={3} xs={12} lg={10} className={classes.pRel}>
-          {isLoading && <LoadingSpinner asOverlay />}
+        <Grid container spacing={3} xs={12} lg={10}>
           <ErrorModal error={error} onClear={clearError} />
-          {message !== '' &&
-            <SuccessModal
-              success={success}
-              successMessage={message}
-              onClear={clearSuccess}
+          <SuccessModal
+            success={success}
+            successMessage={message}
+            onClear={clearSuccess}
+          />
+          <Grid item xs className={classes.textFields}>
+            <ProfileTextField
+              id="name"
+              label="User Name"
+              name="name"
+              type="text"
+              value={userName}
+              onOpen={handleDialogOpen}
             />
-          }
-          <Grid item xs>
-            <form
-              // noValidate
-              className={classes.form}
-            // onSubmit={handleSubmit}
-            >
-              <ProfileTextField
-                id="name"
-                label="User Name"
-                name="name"
-                type="text"
-                value={userName}
-                onOpen={handleDialogOpen}
-              />
-              <ProfileTextField
-                id="email"
-                label="Email Address"
-                name="email"
-                type="email"
-                value={email}
-                onOpen={handleDialogOpen}
-              />
-              <ProfileTextField
-                id="password"
-                label="Password"
-                name="password"
-                type="password"
-                value={password}
-                onOpen={handleDialogOpen}
-              />
-            </form>
+            <ProfileTextField
+              id="email"
+              label="Email Address"
+              name="email"
+              type="email"
+              value={email}
+              onOpen={handleDialogOpen}
+            />
+            <ProfileTextField
+              id="password"
+              label="Password"
+              name="password"
+              type="password"
+              value={password} // Maybe risky
+              onOpen={handleDialogOpen}
+            />
           </Grid>
         </Grid>
         <AppDialog
@@ -125,8 +118,10 @@ export default function Profile(props) {
           handleClose={handleDialogClose}
           title={`Change ${openedField}`}
         >
-          {/* {`Change ${openedField}`} */}
-          <ProfileEdit field={openedField} />
+          <ProfileEdit
+            field={openedField}
+            onSuccess={handleSuccessSubmit}
+          />
         </AppDialog>
       </ThemeProvider>
     </ErrorBoundary>
