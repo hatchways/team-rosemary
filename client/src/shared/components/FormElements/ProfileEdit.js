@@ -93,11 +93,6 @@ export default function ProfileEdit(props) {
 
   const { token, userId, userName, email } = auth;
 
-  const {
-    isLoading,
-    sendRequest
-  } = useHttpClient();
-
   const initialValidation =
     isEditingPassword ?
       {
@@ -115,6 +110,9 @@ export default function ProfileEdit(props) {
       passwordValidationShape :
       field && { ...fields[field].validation, ...nameEmailValidationShape }
   );
+
+  const sendRequest = props.onSubmit;
+  const handleSuccessSubmit = props.onSuccess;
 
   const {
     handleSubmit,
@@ -159,7 +157,7 @@ export default function ProfileEdit(props) {
           );
         }
 
-        props.onSuccess(`${field} has been successfully changed!`);
+        handleSuccessSubmit(`${field} has been successfully changed!`);
       } catch (err) {
         console.log(err);
       }
@@ -244,7 +242,7 @@ export default function ProfileEdit(props) {
 
   return (
     <ErrorBoundary>
-      {isLoading && <LoadingSpinner asOverlay />}
+      {props.children}
       <Box
         component="form"
         display="flex"

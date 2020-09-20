@@ -49,8 +49,6 @@ export default function Profile(props) {
 
   const { userName, email } = auth;
 
-  const password = '*********';
-
   const {
     isLoading,
     error,
@@ -106,7 +104,7 @@ export default function Profile(props) {
               label="Password"
               name="password"
               type="password"
-              value={password} // Maybe risky
+              value="************"
               onOpen={handleDialogOpen}
             />
           </Grid>
@@ -121,7 +119,10 @@ export default function Profile(props) {
           <ProfileEdit
             field={openedField}
             onSuccess={handleSuccessSubmit}
-          />
+            onSubmit={sendRequest}
+          >
+            {isLoading && <LoadingSpinner asOverlay />}
+          </ProfileEdit>
         </AppDialog>
       </ThemeProvider>
     </ErrorBoundary>
