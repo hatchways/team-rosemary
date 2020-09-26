@@ -81,7 +81,7 @@ const getTimezoneOffset = () => {
     const minuteOffset = Math.abs(offset % 60);
     const timezoneOffset = `${offset > 0 ? '-' : '+'}${
         hourOffset > 9 ? hourOffset : '0' + hourOffset
-    }${minuteOffset > 9 ? minuteOffset : '0' + minuteOffset}`;
+        }${minuteOffset > 9 ? minuteOffset : '0' + minuteOffset}`;
     return timezoneOffset;
 };
 
@@ -140,57 +140,51 @@ export default function Receipts(props) {
 
     return (
         <ErrorBoundary>
-        <Grid container spacing={2} xs={12} lg={10} className={classes.pRel}>
-            <DurationSelector top="-4rem" right="0" getDuration={getDuration} />
-            {receipts.map((receipt, index) => {
-                const { date } = receipt;
-                const newDate = date.slice(0, 10);
-                // if no pic, use dummy pic
-                const picture =
-                    receipt.picture.length > 0 ? receipt.picture[0] : Receipt;
+            <Grid container spacing={2} xs={12} lg={10} className={classes.pRel}>
+                <DurationSelector top="-4rem" right="0" getDuration={getDuration} />
+                {receipts.map((receipt, index) => {
+                    const { date } = receipt;
+                    const newDate = date.slice(0, 10);
+                    // if no pic, use dummy pic
+                    const picture = receipt.picture[0] || Receipt;
 
-                return (
-                    <Grid
-                        item
-                        xs
-                        key={index + '-' + newDate}
-                        className={classes.imgRoot}
-                    >
-                        <ButtonBase
-                            className={classes.imgContainer}
-                            onClick={() => handleDialogOpen(index)}
+                    return (
+                        <Grid
+                            item
+                            xs
+                            key={index + '-' + newDate}
+                            className={classes.imgRoot}
                         >
-                            <img
-                                src={picture}
-                                alt={`Receipt on ${newDate}`}
-                                className={classes.img}
-                            />
-                            <span
-                                className={`${classes.imgBackdrop} ${classes.imgMask}`}
-                            />
-                            <ZoomInIcon
-                                className={`${classes.imgBackdrop} ${classes.imgIcon}`}
-                            />
-                        </ButtonBase>
-                        <p>{newDate}</p>
-                    </Grid>
-                );
-            })}
-
-            <AppDialog
-                size="md"
-                isOpen={isOpen}
-                handleOpen={handleDialogOpen}
-                handleClose={handleDialogClose}
-                title="Modify Receipt"
-            >
-                <ModifyReceipt
-                    receipt={receipts[ind]}
-                    reloadTrans={reloadTransactions}
-                    onReceiptUpload={handleReceiptUpload}
-                />
-            </AppDialog>
-        </Grid>
+                            <ButtonBase
+                                className={classes.imgContainer}
+                                onClick={() => handleDialogOpen(index)}
+                            >
+                                <img
+                                    src={picture}
+                                    alt={`Receipt on ${newDate}`}
+                                    className={classes.img}
+                                />
+                                <span className={`${classes.imgBackdrop} ${classes.imgMask}`} />
+                                <ZoomInIcon className={`${classes.imgBackdrop} ${classes.imgIcon}`} />
+                            </ButtonBase>
+                            <p>{newDate}</p>
+                        </Grid>
+                    );
+                })}
+                <AppDialog
+                    size="md"
+                    isOpen={isOpen}
+                    handleOpen={handleDialogOpen}
+                    handleClose={handleDialogClose}
+                    title="Modify Receipt"
+                >
+                    <ModifyReceipt
+                        receipt={receipts[ind]}
+                        reloadTrans={reloadTransactions}
+                        onReceiptUpload={handleReceiptUpload}
+                    />
+                </AppDialog>
+            </Grid>
         </ErrorBoundary>
     );
 }

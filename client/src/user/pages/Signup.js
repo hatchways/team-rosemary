@@ -64,7 +64,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const validationSchema = Yup.object().shape({
-  name: Yup.string().required('Name is required'),
+  name: Yup.string()
+    .trim()
+    .required('Name is required'),
   email: Yup.string()
     .email('Enter a valid email')
     .required('Email is required'),
@@ -103,7 +105,7 @@ export default function Signup(props) {
       name: '',
       email: '',
       password: '',
-      confirmpassword: '',
+      confirmPassword: '',
     },
     validationSchema,
     async onSubmit(values) {
@@ -121,7 +123,7 @@ export default function Signup(props) {
             'Content-Type': 'application/json',
           }
         );
-        auth.login(responseData.results.userId, responseData.results.userName, responseData.results.token);
+        auth.login(responseData.results.userId, responseData.results.userName, responseData.results.email, responseData.results.token);
         setMessage('You have signed up successfully!');
         setTimeout(() => {
           history.push('/dashboard');

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, forwardRef } from "react";
 
 import { Link } from "react-router-dom";
 
@@ -6,14 +6,13 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 
+import { AuthContext } from '../../context/auth-context';
+
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles(theme => ({
   hidden: {
     display: 'none'
-  },
-  invisible: {
-    visibility: 'hidden'
   },
   tabs: {
     marginTop: theme.spacing(3)
@@ -33,16 +32,25 @@ const useStyles = makeStyles(theme => ({
   tabIcon: {
     marginRight: '1rem',
     marginBottom: 0,
-    fontSize: '0.7rem'
+    fontSize: '0.7rem',
+    visibility: 'hidden'
+  },
+  divider: {
+    backgroundColor: '#fafafa',
+    width: '90%'
   },
   btnOnfocus: {
     backgroundColor: '#4366a7',
-    color: '#38cc89'
+    color: '#38cc89',
+    '& .MuiSvgIcon-root': {
+      visibility: 'visible'
+    }
   },
 }));
 
-export function NavTabs(props) {
+export const NavTabs = forwardRef((props, ref) => {
   const classes = useStyles();
+  const auth = useContext(AuthContext);
 
   return (
     <Tabs
@@ -51,7 +59,9 @@ export function NavTabs(props) {
       classes={{
         indicator: classes.hidden
       }}
-      {...props}
+      value={props.value}
+      onChange={props.onChange}
+      onClick={props.onClick}
     >
       {['Dashboard', 'Reports', 'Receipts'].map(tab => {
         return (
@@ -59,11 +69,7 @@ export function NavTabs(props) {
             key={tab}
             component={Link}
             to={`/${tab.toLowerCase()}`}
-            icon={
-              <FiberManualRecordIcon className={
-                `${classes.tabIcon} ${tab === props.value || classes.invisible}`
-              } />
-            }
+            icon={<FiberManualRecordIcon className={classes.tabIcon} />}
             label={tab}
             value={tab}
             classes={{
@@ -74,6 +80,34 @@ export function NavTabs(props) {
           />
         )
       })}
+      <Tab
+        label=""
+        icon={<hr className={classes.divider} />}
+        disabled
+      />
+      <Tab
+        component={Link}
+        to="/profile"
+        icon={<FiberManualRecordIcon className={classes.tabIcon} />}
+        label="Profile"
+        value="Profile"
+        ref={ref}
+        classes={{
+          root: classes.tabRoot,
+          wrapper: classes.tabWrapper,
+          selected: classes.btnOnfocus
+        }}
+      />
+      <Tab
+        icon={<FiberManualRecordIcon className={classes.tabIcon} />}
+        label="Log Out"
+        value="Log Out"
+        classes={{
+          root: classes.tabRoot,
+          wrapper: classes.tabWrapper
+        }}
+        onClick={auth.logout}
+      />
     </Tabs>
   )
-}
+})

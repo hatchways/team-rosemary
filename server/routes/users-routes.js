@@ -1,6 +1,8 @@
 const {
     userSignupValidationRules,
     userloginValidationRules,
+    changeNameEmailRules,
+    changePasswordRules,
     validate,
 } = require('../validators/user-validators');
 const fs = require('fs');
@@ -44,7 +46,7 @@ router.post(
 
 router.post('/base64', upload.single('photo'), (req, res) => {
     if (req.file) {
-       
+
         imageToBase64(req.file.path) // Path to the image
             .then((response) => {
                 fs.unlink(req.file.path, (err) => {
@@ -72,6 +74,19 @@ router.post('/base64', upload.single('photo'), (req, res) => {
 
 router.use(checkAuth);
 
+router.put(
+    '/changeNameEmail',
+    changeNameEmailRules(),
+    validate,
+    usersController.changeNameEmail
+);
+router.put(
+    '/changePassword',
+    changePasswordRules(),
+    validate,
+    usersController.changePassword
+);
+
 router.get('/receipts/:duration&:timezone', usersController.getAllReceipt);
 
 router.get(
@@ -80,10 +95,10 @@ router.get(
 );
 
 router.get('/topcategories/:userid', usersController.getTopCategories);
-router.get('/monthlytransactions/:userid&:year&:month&:timezone', 
-chartController.getMonthlyTransactions);
-router.get('/monthlyreport/:userid&:year&:month&:timezone', 
-reportController.getMonthlyReport);
+router.get('/monthlytransactions/:userid&:year&:month&:timezone',
+    chartController.getMonthlyTransactions);
+router.get('/monthlyreport/:userid&:year&:month&:timezone',
+    reportController.getMonthlyReport);
 router.get('/receipts/export/:month', usersController.exportReceipts);
 
 module.exports = router;

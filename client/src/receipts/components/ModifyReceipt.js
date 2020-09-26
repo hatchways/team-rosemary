@@ -108,7 +108,6 @@ const ModifyReceiptForm = (props) => {
 
     return (
         <ErrorBoundary>
-        <React.Fragment>
             <ErrorModal error={error} onClear={clearError} />
             <SuccessModal
                 success={success}
@@ -188,7 +187,6 @@ const ModifyReceiptForm = (props) => {
                     </Button>
                 </form>
             </Grid>
-        </React.Fragment>
         </ErrorBoundary>
     );
 };

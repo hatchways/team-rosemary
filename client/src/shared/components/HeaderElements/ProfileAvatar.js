@@ -1,4 +1,5 @@
-import React, {useContext} from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
+
 import Avatar from "@material-ui/core/Avatar";
 import Button from '@material-ui/core/Button';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -7,10 +8,11 @@ import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
-import { makeStyles } from '@material-ui/core/styles';
 
 import User from '../../../assets/user.png';
 import { AuthContext } from '../../context/auth-context';
+
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -32,10 +34,10 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-export function ProfileAvatar(props) {
+export default function ProfileAvatar(props) {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef(null);
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef(null);
   const auth = useContext(AuthContext);
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -45,11 +47,15 @@ export function ProfileAvatar(props) {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-
     setOpen(false);
   };
 
-  function handleListKeyDown(event) {
+  const handleClickProfile = () => {
+    props.onClickProfile();
+    setOpen(false);
+  }
+
+  const handleListKeyDown = (event) => {
     if (event.key === 'Tab') {
       event.preventDefault();
       setOpen(false);
@@ -57,8 +63,8 @@ export function ProfileAvatar(props) {
   }
 
   // return focus to the button when we transitioned from !open -> open
-  const prevOpen = React.useRef(open);
-  React.useEffect(() => {
+  const prevOpen = useRef(open);
+  useEffect(() => {
     if (prevOpen.current === true && open === false) {
       anchorRef.current.focus();
     }
@@ -68,36 +74,45 @@ export function ProfileAvatar(props) {
   return (
     <div className={classes.container}>
       <Avatar alt="User Avatar" src={User} className={classes.avatar} />
-      {/* <div className={classes.text}>Profile</div>    */}
       {auth.isLoggedIn && (
-      <div>
-        <Button
-          ref={anchorRef}
-          aria-controls={open ? 'menu-list-grow' : undefined}
-          aria-haspopup="true"
-          onClick={handleToggle}
-        >
-        {auth.userName}
-        </Button>
-        <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-            >
-              <Paper>
-                <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                    <MenuItem onClick={handleClose}>Profile</MenuItem>
-                    <MenuItem onClick={handleClose}>My account</MenuItem>
-                    <MenuItem onClick={auth.logout}>Logout</MenuItem>
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
-      </div>)}
+        <div>
+          <Button
+            ref={anchorRef}
+            aria-controls={open ? 'menu-list-grow' : undefined}
+            aria-haspopup="true"
+            onClick={handleToggle}
+          >
+            {auth.userName}
+          </Button>
+          <Popper
+            open={open}
+            anchorEl={anchorRef.current}
+            role={undefined}
+            transition
+            disablePortal
+          >
+            {({ TransitionProps, placement }) => (
+              <Grow
+                {...TransitionProps}
+                style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+              >
+                <Paper>
+                  <ClickAwayListener onClickAway={handleClose}>
+                    <MenuList
+                      autoFocusItem={open}
+                      id="menu-list-grow"
+                      onKeyDown={handleListKeyDown}
+                    >
+                      <MenuItem onClick={handleClickProfile}>Profile</MenuItem>
+                      <MenuItem onClick={auth.logout}>Logout</MenuItem>
+                    </MenuList>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Popper>
+        </div>
+      )}
     </div>
   )
 }

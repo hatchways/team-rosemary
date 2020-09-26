@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
 import { TopBar } from './TopBar';
 import { SideBar } from './SideBar';
 import { NavTabs } from './NavTabs';
 import { UploadReceiptBtn } from './UploadReceiptBtn';
-import { ProfileAvatar } from './ProfileAvatar';
+import ProfileAvatar from './ProfileAvatar';
 import { MenuBtn } from './MenuBtn';
 import { Logo } from '../UIElements/Logo';
 
@@ -37,6 +37,7 @@ const useStyles = makeStyles(theme => ({
 
 export function Header(props) {
   const classes = useStyles();
+  const profileRef = useRef(null);
  
   const isMobile = useMediaQuery(useTheme().breakpoints.down('xs'));
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -56,6 +57,9 @@ export function Header(props) {
     props.onReceiptUpload();
     setIsOpen(false);
   };
+  const handleClickProfile = () => {
+    profileRef.current.click();
+  };
 
   return (
     <ErrorBoundary>
@@ -63,7 +67,7 @@ export function Header(props) {
       <TopBar drawerWidth={drawerWidth}>
         <MenuBtn onClick={handleDrawerToggle} />
         <UploadReceiptBtn onClick={handleDialogOpen}>Upload Receipt</UploadReceiptBtn>
-        <ProfileAvatar/>
+        <ProfileAvatar onClickProfile={handleClickProfile} />
       </TopBar>
       <SideBar
         drawerWidth={drawerWidth}
@@ -75,6 +79,7 @@ export function Header(props) {
           value={props.page}
           onChange={props.onChange}
           onClick={isMobile ? handleDrawerToggle : null}
+          ref={profileRef}
         />
       </SideBar>
       <AppDialog

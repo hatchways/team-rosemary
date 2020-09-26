@@ -68,7 +68,7 @@ export default function Dashboard(props) {
 
         setTotal(total);
         setMonthlyReceipts(dataToDateString);
-      } catch(err) {
+      } catch (err) {
         RollbarErrorTracking.logErrorInRollbar(err);
       }
     };
@@ -77,45 +77,45 @@ export default function Dashboard(props) {
 
   return (
     <>
-     <ErrorBoundary>
-      <Grid container spacing={3} xs={12} lg={10}>
-        <Grid item xs={12} md={6}>
-          <Panel title={`TOTAL${isMobile ? '' : ' EXPENSES'}`}>
-            <DateSelector
-              top="1rem"
-              right="0.5rem"
-              value={`${year}-${month}`}
-              onChange={handleMonthYearChange}
-            />
-            <TotalExpense total={total} />
-            <Chart year={year} month={month} data={monthlyReceipts} />
-          </Panel>
+      <ErrorBoundary>
+        <Grid container spacing={3} xs={12} lg={10}>
+          <Grid item xs={12} md={6}>
+            <Panel title={`TOTAL${isMobile ? '' : ' EXPENSES'}`}>
+              <DateSelector
+                top="1rem"
+                right="0.5rem"
+                value={`${year}-${month}`}
+                onChange={handleMonthYearChange}
+              />
+              <TotalExpense total={total} />
+              <Chart year={year} month={month} data={monthlyReceipts} />
+            </Panel>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Panel title="TOP CATEGORIES">
+              <ErrorBoundary>
+                <TopCategories receiptCount={receiptCount} />
+              </ErrorBoundary>
+            </Panel>
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={6}>
-          <Panel title="TOP CATEGORIES">
-            <ErrorBoundary>
-            <TopCategories receiptCount={receiptCount} />
-            </ErrorBoundary>
-          </Panel>
+        <Grid container spacing={3} xs={12} lg={10}>
+          <Grid item xs={12}>
+            <h3>Recent Transactions</h3>
+          </Grid>
         </Grid>
-      </Grid>
-      <Grid container spacing={3} xs={12} lg={10}>
-        <Grid item xs={12}>
-          <h3>Recent Transactions</h3>
+        <Grid container spacing={3} xs={12} lg={10}>
+          <Grid item xs={12}>
+            <Panel>
+              {/* <RecentTransactions reloadTrans={setReloadTransactions}/> */}
+              <ErrorBoundary>
+                <RecentTransactions receiptCount={receiptCount} />
+              </ErrorBoundary>
+            </Panel>
+          </Grid>
         </Grid>
-      </Grid>
-      <Grid container spacing={3} xs={12} lg={10}>
-        <Grid item xs={12}>
-          <Panel>
-            {/* <RecentTransactions reloadTrans={setReloadTransactions}/> */}
-            <ErrorBoundary>
-            <RecentTransactions receiptCount={receiptCount} />
-            </ErrorBoundary>
-          </Panel>
-        </Grid>
-      </Grid>
       </ErrorBoundary>
-     
+
     </>
   );
 }

@@ -117,7 +117,7 @@ export default function Login(props) {
           }
         );
 
-        auth.login(responseData.results.userId, responseData.results.userName, responseData.results.token);
+        auth.login(responseData.results.userId, responseData.results.userName, responseData.results.email, responseData.results.token);
         setMessage('Signed in successfully!');
         history.push('/dashboard');
 
