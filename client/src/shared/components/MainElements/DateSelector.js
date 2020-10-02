@@ -33,6 +33,7 @@ export function DateSelector(props) {
         <ListSubheader>2020</ListSubheader>
         <MenuItem value="2020-7">August</MenuItem>
         <MenuItem value="2020-8">September</MenuItem>
+        <MenuItem value="2020-9">October</MenuItem>
         <ListSubheader>2019</ListSubheader>
         <MenuItem value="2019-7">August</MenuItem>
       </Select>
