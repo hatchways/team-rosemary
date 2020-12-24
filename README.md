@@ -6,6 +6,10 @@ A web tool where someone can upload a receipt by taking a photo, and the app wil
 
 [George Wan](https://www.github.com/singonwan), [Varun Rampal](https://www.github.com/varunrampal), [Siyuan Zuo](https://www.github.com/legenddaniel)
 
+## Video Demo
+
+https://youtu.be/2YVlmCJqjWs
+
 ## Tech/Framework
 
 - React.js/ Material UI
